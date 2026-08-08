@@ -21,10 +21,10 @@
 
 <section id="camera" class="screen">
 <div class="topbar"><button class="icon-btn" id="stopCamera">✕</button><div><div class="eyebrow">LIVE SCANNER</div><strong>SCANNING</strong></div><div class="pill" id="frameCounter">0 samples</div></div>
-<div class="camera-wrap"><video id="video" playsinline muted autoplay></video><div class="scan-overlay"><div class="target"><div class="target-label">🐽 NOSE ZONE</div></div><div class="instruction" id="instruction">Move the nose into the circle.</div></div><canvas id="frameCanvas" hidden></canvas></div>
+<div class="camera-wrap"><video id="video" playsinline muted autoplay></video><canvas id="detectionOverlay"></canvas><div class="scan-overlay"><div class="target"><div class="target-label">🐽 NOSE ZONE</div></div><div class="instruction" id="instruction">Move the nose into the circle.</div></div><canvas id="frameCanvas" hidden></canvas></div>
 <div class="meter"><div class="meter-label"><span>IMAGE QUALITY</span><b id="qualityText">—</b></div><div class="bar"><div id="qualityBar"></div></div></div>
 <div class="controls"><button class="secondary" id="captureNow">CAPTURE BEST FRAME</button><button class="primary" id="finishScan">FINISH SCAN</button></div>
-<p class="tiny">v0.1 scores image quality and captures samples. Dedicated nose detection and biometric embedding come next.</p>
+<p class="tiny" id="detectorNote">v0.3 finds a nose candidate inside the detected cat face region. This is still an experimental vision heuristic, not biometric identification.</p>
 </section>
 
 <section id="videoTest" class="screen">
@@ -44,5 +44,5 @@
 <div id="savedInfo" class="result-card hidden"></div>
 </section>
 </main>
-<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script><script src="app.js"></script>
 </body></html>

@@ -12,62 +12,38 @@
 const ROBOFLOW_PUBLISHABLE_KEY =
   "rf_JGgApuVxUWez8vuNZfsIqbojNwp1";
 
+
+/*
+   IMPORTANT:
+   The complete Roboflow project slug is required.
+
+   NOT:
+   cat-nose
+
+   CORRECT:
+   blanciagabriel/cat-nose
+*/
+
 const ROBOFLOW_MODEL =
-  "cat-nose";
+  "blanciagabriel/cat-nose";
 
 const ROBOFLOW_VERSION =
   1;
 
 
-/*
-   We deliberately start with a relatively permissive
-   threshold so the application does not miss the nose
-   too easily during the first live tests.
-*/
+/* =========================================================
+   DETECTION SETTINGS
+========================================================= */
 
 const MODEL_SCORE_THRESHOLD = 0.20;
 
-
-/*
-   A frame must reach at least this confidence before
-   it becomes a candidate for automatic capture.
-*/
-
-const CAPTURE_CONFIDENCE = 0.35;
-
-
-/*
-   Maximum number of automatically selected samples.
-*/
+const CAPTURE_CONFIDENCE = 0.30;
 
 const MAX_SAMPLES = 5;
 
-
-/*
-   Minimum time between accepted samples.
-
-   This prevents the application from capturing
-   five almost identical frames in a fraction of
-   a second.
-*/
-
 const MIN_SAMPLE_INTERVAL = 450;
 
-
-/*
-   Maximum scan duration.
-*/
-
-const MAX_SCAN_TIME = 8000;
-
-
-/*
-   Inference interval.
-
-   We deliberately do not run inference on every
-   camera frame. The camera can run at 30/60 FPS,
-   while AI inference runs at a sensible rate.
-*/
+const MAX_SCAN_TIME = 10000;
 
 const INFERENCE_INTERVAL = 120;
 
@@ -84,7 +60,13 @@ let inferEngine = null;
 
 let modelWorkerId = null;
 
+let modelReady = false;
+
+let modelLoading = false;
+
 let inferenceRunning = false;
+
+let inferenceBusy = false;
 
 let lastInferenceTime = 0;
 
@@ -97,8 +79,6 @@ let samples = [];
 let bestDetection = null;
 
 let scanFinished = false;
-
-let modelReady = false;
 
 
 /* =========================================================
@@ -166,19 +146,21 @@ const videoSamples =
 
 
 /* =========================================================
-   BASIC SCREEN CONTROL
+   SCREEN CONTROL
 ========================================================= */
 
 function showScreen(name) {
 
   screens.forEach(id => {
 
-    const el =
+    const element =
       document.getElementById(id);
 
-    if (!el) return;
+    if (!element) {
+      return;
+    }
 
-    el.classList.toggle(
+    element.classList.toggle(
       "active",
       id === name
     );
@@ -196,7 +178,8 @@ function showScreen(name) {
 function setStatus(text) {
 
   if (engineStatus) {
-    engineStatus.textContent = text;
+    engineStatus.textContent =
+      text;
   }
 
 }
@@ -205,7 +188,8 @@ function setStatus(text) {
 function setInstruction(text) {
 
   if (instruction) {
-    instruction.textContent = text;
+    instruction.textContent =
+      text;
   }
 
 }
@@ -217,66 +201,101 @@ function setInstruction(text) {
 
 async function initializeRoboflow() {
 
+  if (modelReady) {
+    return true;
+  }
+
+
+  if (modelLoading) {
+
+    return false;
+
+  }
+
+
+  modelLoading = true;
+
+
   try {
 
+    setStatus(
+      "Načítavam AI model nosa..."
+    );
+
+
     if (
-      typeof inferencejs === "undefined"
+      typeof inferencejs ===
+      "undefined"
     ) {
 
       throw new Error(
-        "Roboflow inferencejs library did not load."
+        "Knižnica inferencejs sa nenačítala."
       );
 
     }
 
 
-    setStatus(
-      "Loading cat nose AI model..."
-    );
-
+    /*
+       Create Roboflow inference engine.
+    */
 
     inferEngine =
       new inferencejs.InferenceEngine();
 
 
+    /*
+       Load the actual public model.
+
+       IMPORTANT:
+       blanciagabriel/cat-nose
+       version 1
+    */
+
     modelWorkerId =
       await inferEngine.startWorker(
         ROBOFLOW_MODEL,
         ROBOFLOW_VERSION,
-        ROBOFLOW_PUBLISHABLE_KEY,
-        {
-          scoreThreshold:
-            MODEL_SCORE_THRESHOLD,
-
-          iouThreshold:
-            0.50,
-
-          maxNumBoxes:
-            5
-        }
+        ROBOFLOW_PUBLISHABLE_KEY
       );
+
+
+    if (
+      modelWorkerId ===
+      undefined ||
+      modelWorkerId ===
+      null
+    ) {
+
+      throw new Error(
+        "Roboflow nevrátil ID modelu."
+      );
+
+    }
 
 
     modelReady = true;
 
 
     setStatus(
-      "Cat nose AI ready"
+      "AI model nosa je pripravený"
     );
 
 
     if (detectorNote) {
 
       detectorNote.textContent =
-        "Roboflow cat-nose detection model is active. Detection is experimental and is not biometric identification.";
+        "Roboflow model na detekciu nosa je aktívny.";
 
     }
+
+
+    return true;
 
 
   } catch (error) {
 
     console.error(
-      "Roboflow initialization error:",
+      "ROBOFLOW ERROR:",
       error
     );
 
@@ -284,17 +303,55 @@ async function initializeRoboflow() {
     modelReady = false;
 
 
+    const message =
+      error &&
+      error.message
+        ? error.message
+        : String(error);
+
+
     setStatus(
-      "AI model failed to load"
+      "Načítanie AI modelu zlyhalo"
     );
 
 
     if (detectorNote) {
 
       detectorNote.textContent =
-        "The AI model could not be loaded. Check the browser connection and console.";
+        "AI model sa nepodarilo načítať.";
 
     }
+
+
+    /*
+       IMPORTANT:
+       Instead of hiding the real problem,
+       show the actual error.
+    */
+
+    console.error(
+      "Roboflow model:",
+      ROBOFLOW_MODEL
+    );
+
+    console.error(
+      "Roboflow version:",
+      ROBOFLOW_VERSION
+    );
+
+    console.error(
+      "Roboflow error message:",
+      message
+    );
+
+
+    modelLoading = false;
+
+    return false;
+
+  } finally {
+
+    modelLoading = false;
 
   }
 
@@ -302,43 +359,40 @@ async function initializeRoboflow() {
 
 
 /* =========================================================
-   CAMERA START
+   START CAMERA
 ========================================================= */
 
 async function startCamera() {
 
+  setStatus(
+    "Pripravujem skener..."
+  );
+
+
+  /*
+     Load AI first.
+  */
+
+  const ready =
+    await initializeRoboflow();
+
+
+  if (!ready) {
+
+    alert(
+      "AI model nosa sa nepodarilo načítať.\n\nModel: blanciagabriel/cat-nose/1\n\nSkontrolujeme presnú chybu v ďalšom kroku."
+    );
+
+    return;
+
+  }
+
+
   try {
 
-    if (!modelReady) {
-
-      setStatus(
-        "Loading AI model..."
-      );
-
-      await initializeRoboflow();
-
-    }
-
-
-    if (!modelReady) {
-
-      alert(
-        "The AI model could not be loaded."
-      );
-
-      return;
-
-    }
-
-
-    if (
-      cameraStream
-    ) {
-
-      stopCamera();
-
-    }
-
+    /*
+       Request camera.
+    */
 
     cameraStream =
       await navigator.mediaDevices.getUserMedia({
@@ -388,12 +442,12 @@ async function startCamera() {
 
 
     setStatus(
-      "Camera active — searching for nose"
+      "Kamera aktívna — hľadám nos"
     );
 
 
     setInstruction(
-      "Looking for the nose..."
+      "Hľadám nos mačky..."
     );
 
 
@@ -413,18 +467,18 @@ async function startCamera() {
   } catch (error) {
 
     console.error(
-      "Camera error:",
+      "CAMERA ERROR:",
       error
     );
 
 
     setStatus(
-      "Camera could not be started"
+      "Kameru sa nepodarilo spustiť"
     );
 
 
     alert(
-      "Camera access could not be started. Please allow camera access in the browser."
+      "Kamera sa nepodarilo spustiť.\n\nSkontrolujte povolenie kamery v prehliadači."
     );
 
   }
@@ -433,14 +487,13 @@ async function startCamera() {
 
 
 /* =========================================================
-   CAMERA STOP
+   STOP CAMERA
 ========================================================= */
 
 function stopCamera() {
 
   inferenceRunning =
     false;
-
 
   scanFinished =
     true;
@@ -450,11 +503,10 @@ function stopCamera() {
 
     cameraStream
       .getTracks()
-      .forEach(track => {
-
-        track.stop();
-
-      });
+      .forEach(
+        track =>
+          track.stop()
+      );
 
     cameraStream =
       null;
@@ -482,7 +534,7 @@ function stopCamera() {
 
   setStatus(
     modelReady
-      ? "Cat nose AI ready"
+      ? "AI model nosa je pripravený"
       : "Capture engine ready"
   );
 
@@ -501,6 +553,8 @@ function resetScan() {
 
   scanFinished = false;
 
+  inferenceBusy = false;
+
   lastInferenceTime = 0;
 
   lastAcceptedSampleTime = 0;
@@ -512,17 +566,29 @@ function resetScan() {
   updateCounter();
 
 
-  qualityText.textContent =
-    "—";
+  if (qualityText) {
+
+    qualityText.textContent =
+      "—";
+
+  }
 
 
-  qualityBar.style.width =
-    "0%";
+  if (qualityBar) {
+
+    qualityBar.style.width =
+      "0%";
+
+  }
 
 
-  scanResult.classList.add(
-    "hidden"
-  );
+  if (scanResult) {
+
+    scanResult.classList.add(
+      "hidden"
+    );
+
+  }
 
 
   clearOverlay();
@@ -531,7 +597,7 @@ function resetScan() {
 
 
 /* =========================================================
-   OVERLAY SETUP
+   OVERLAY
 ========================================================= */
 
 function setupOverlay() {
@@ -555,11 +621,12 @@ function setupOverlay() {
 }
 
 
-/* =========================================================
-   CLEAR OVERLAY
-========================================================= */
-
 function clearOverlay() {
+
+  if (!detectionOverlay) {
+    return;
+  }
+
 
   const ctx =
     detectionOverlay.getContext(
@@ -596,16 +663,17 @@ async function inferenceLoop(
 
 
   /*
-     Automatic timeout.
+     Scan timeout.
   */
 
   if (
-    timestamp - scanStartedAt >
+    timestamp -
+    scanStartedAt >
     MAX_SCAN_TIME
   ) {
 
     finishAutomaticScan(
-      "Scan time completed."
+      "Automatické skenovanie dokončené."
     );
 
     return;
@@ -614,11 +682,30 @@ async function inferenceLoop(
 
 
   /*
-     Avoid overlapping inference calls.
+     Prevent multiple AI requests
+     from running simultaneously.
   */
 
   if (
-    timestamp - lastInferenceTime <
+    inferenceBusy
+  ) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+    return;
+
+  }
+
+
+  /*
+     Control inference frequency.
+  */
+
+  if (
+    timestamp -
+    lastInferenceTime <
     INFERENCE_INTERVAL
   ) {
 
@@ -635,6 +722,10 @@ async function inferenceLoop(
     timestamp;
 
 
+  inferenceBusy =
+    true;
+
+
   try {
 
     await runCameraInference();
@@ -642,9 +733,14 @@ async function inferenceLoop(
   } catch (error) {
 
     console.error(
-      "Inference error:",
+      "INFERENCE ERROR:",
       error
     );
+
+  } finally {
+
+    inferenceBusy =
+      false;
 
   }
 
@@ -671,7 +767,8 @@ async function runCameraInference() {
 
   if (
     !modelReady ||
-    !modelWorkerId ||
+    modelWorkerId === null ||
+    !video ||
     video.readyState < 2
   ) {
 
@@ -679,6 +776,11 @@ async function runCameraInference() {
 
   }
 
+
+  /*
+     Roboflow officially supports
+     CVImage(HTMLVideoElement).
+  */
 
   const image =
     new inferencejs.CVImage(
@@ -708,10 +810,6 @@ async function runCameraInference() {
   }
 
 
-  /*
-     Find the strongest cat-nose detection.
-  */
-
   const detection =
     selectBestDetection(
       predictions
@@ -725,15 +823,26 @@ async function runCameraInference() {
 
   if (!detection) {
 
-    qualityText.textContent =
-      "Searching...";
+    if (qualityText) {
 
-    qualityBar.style.width =
-      "5%";
+      qualityText.textContent =
+        "Hľadám...";
+
+    }
+
+
+    if (qualityBar) {
+
+      qualityBar.style.width =
+        "5%";
+
+    }
+
 
     setInstruction(
-      "Move the cat's nose closer to the camera..."
+      "Hľadám nos mačky..."
     );
+
 
     return;
 
@@ -750,18 +859,26 @@ async function runCameraInference() {
     );
 
 
-  qualityText.textContent =
-    `${score}%`;
+  if (qualityText) {
+
+    qualityText.textContent =
+      `${score}%`;
+
+  }
 
 
-  qualityBar.style.width =
-    `${Math.max(
-      5,
-      Math.min(
-        100,
-        score
-      )
-    )}%`;
+  if (qualityBar) {
+
+    qualityBar.style.width =
+      `${Math.max(
+        5,
+        Math.min(
+          100,
+          score
+        )
+      )}%`;
+
+  }
 
 
   bestDetection =
@@ -769,12 +886,12 @@ async function runCameraInference() {
 
 
   setInstruction(
-    `Nose detected — ${score}%`
+    `Nos detegovaný — ${score}%`
   );
 
 
   /*
-     Automatic sample selection.
+     Automatically capture suitable frame.
   */
 
   if (
@@ -802,7 +919,15 @@ function selectBestDetection(
   if (
     !Array.isArray(
       predictions
-    ) ||
+    )
+  ) {
+
+    return null;
+
+  }
+
+
+  if (
     predictions.length === 0
   ) {
 
@@ -820,18 +945,15 @@ function selectBestDetection(
     of predictions
   ) {
 
-    if (
-      !prediction
-    ) {
-
+    if (!prediction) {
       continue;
-
     }
 
 
     const confidence =
       Number(
-        prediction.confidence || 0
+        prediction.confidence ||
+        0
       );
 
 
@@ -854,7 +976,8 @@ function selectBestDetection(
       confidence,
 
       className:
-        prediction.class || "catnose",
+        prediction.class ||
+        "catnose",
 
       bbox: {
 
@@ -910,6 +1033,11 @@ function drawDetection(
   detection
 ) {
 
+  if (!detectionOverlay) {
+    return;
+  }
+
+
   const ctx =
     detectionOverlay.getContext(
       "2d"
@@ -946,10 +1074,7 @@ function drawDetection(
 
 
   ctx.lineWidth =
-    Math.max(
-      3,
-      detectionOverlay.width / 320
-    );
+    4;
 
 
   ctx.strokeStyle =
@@ -965,10 +1090,7 @@ function drawDetection(
 
 
   ctx.font =
-    `${Math.max(
-      18,
-      detectionOverlay.width / 35
-    )}px Arial`;
+    "bold 20px Arial";
 
 
   ctx.fillStyle =
@@ -977,7 +1099,8 @@ function drawDetection(
 
   ctx.fillText(
     `NOSE ${Math.round(
-      detection.confidence * 100
+      detection.confidence *
+      100
     )}%`,
     left,
     Math.max(
@@ -990,7 +1113,7 @@ function drawDetection(
 
 
 /* =========================================================
-   AUTOMATIC SAMPLE SELECTION
+   AUTOMATIC SAMPLE CAPTURE
 ========================================================= */
 
 async function considerAutomaticCapture(
@@ -1012,7 +1135,7 @@ async function considerAutomaticCapture(
   ) {
 
     finishAutomaticScan(
-      "Five suitable nose samples captured."
+      "Päť vhodných záberov zachytených."
     );
 
     return;
@@ -1035,26 +1158,20 @@ async function considerAutomaticCapture(
   }
 
 
-  /*
-     Calculate a simple quality score.
-
-     This is NOT biometric scoring.
-     It is only a capture-quality heuristic.
-  */
-
   const quality =
     calculateCaptureQuality(
       detection
     );
 
 
-  if (
-    quality < 45
-  ) {
+  /*
+     We intentionally use a
+     relatively permissive quality threshold.
+  */
 
-    setInstruction(
-      "Nose detected — improving image quality..."
-    );
+  if (
+    quality < 30
+  ) {
 
     return;
 
@@ -1072,13 +1189,8 @@ async function considerAutomaticCapture(
   }
 
 
-  /*
-     Prevent near-duplicate samples.
-  */
-
   if (
     isDuplicateSample(
-      frame,
       detection
     )
   ) {
@@ -1115,7 +1227,7 @@ async function considerAutomaticCapture(
 
 
   setInstruction(
-    `Good nose sample captured — ${samples.length} / ${MAX_SAMPLES}`
+    `Záber ${samples.length} / ${MAX_SAMPLES} zachytený`
   );
 
 
@@ -1125,7 +1237,7 @@ async function considerAutomaticCapture(
   ) {
 
     finishAutomaticScan(
-      "Five suitable nose samples captured."
+      "Päť vhodných záberov zachytených."
     );
 
   }
@@ -1134,12 +1246,13 @@ async function considerAutomaticCapture(
 
 
 /* =========================================================
-   CAPTURE FRAME
+   CAPTURE CURRENT FRAME
 ========================================================= */
 
 function captureCurrentFrame() {
 
   if (
+    !video ||
     !video.videoWidth ||
     !video.videoHeight
   ) {
@@ -1149,27 +1262,16 @@ function captureCurrentFrame() {
   }
 
 
-  const width =
+  frameCanvas.width =
     video.videoWidth;
 
-
-  const height =
-    video.videoHeight;
-
-
-  frameCanvas.width =
-    width;
-
   frameCanvas.height =
-    height;
+    video.videoHeight;
 
 
   const ctx =
     frameCanvas.getContext(
-      "2d",
-      {
-        willReadFrequently: true
-      }
+      "2d"
     );
 
 
@@ -1177,8 +1279,8 @@ function captureCurrentFrame() {
     video,
     0,
     0,
-    width,
-    height
+    frameCanvas.width,
+    frameCanvas.height
   );
 
 
@@ -1221,10 +1323,6 @@ function calculateCaptureQuality(
   }
 
 
-  /*
-     Nose should not be extremely tiny.
-  */
-
   const area =
     b.width *
     b.height;
@@ -1240,43 +1338,20 @@ function calculateCaptureQuality(
     frameArea;
 
 
-  let sizeScore;
-
-
-  if (
-    areaRatio >=
-    0.003
-  ) {
-
-    sizeScore =
-      100;
-
-  } else {
-
-    sizeScore =
-      Math.min(
-        100,
+  const sizeScore =
+    Math.min(
+      100,
+      (
         areaRatio /
-        0.003 *
-        100
-      );
+        0.003
+      ) * 100
+    );
 
-  }
-
-
-  /*
-     Confidence.
-  */
 
   const confidenceScore =
     detection.confidence *
     100;
 
-
-  /*
-     Prefer detections reasonably close
-     to the centre of the camera frame.
-  */
 
   const centerX =
     b.x /
@@ -1305,14 +1380,9 @@ function calculateCaptureQuality(
     Math.max(
       0,
       100 -
-      distance *
-      140
+      distance * 140
     );
 
-
-  /*
-     Weighted quality score.
-  */
 
   return Math.round(
 
@@ -1335,11 +1405,10 @@ function calculateCaptureQuality(
 
 
 /* =========================================================
-   DUPLICATE SAMPLE CHECK
+   DUPLICATE DETECTION
 ========================================================= */
 
 function isDuplicateSample(
-  frame,
   detection
 ) {
 
@@ -1356,15 +1425,15 @@ function isDuplicateSample(
     detection.bbox;
 
 
-  const last =
+  const previous =
     samples[
       samples.length - 1
     ].bbox;
 
 
   if (
-    !last ||
-    !current
+    !current ||
+    !previous
   ) {
 
     return false;
@@ -1375,14 +1444,14 @@ function isDuplicateSample(
   const dx =
     Math.abs(
       current.x -
-      last.x
+      previous.x
     );
 
 
   const dy =
     Math.abs(
       current.y -
-      last.y
+      previous.y
     );
 
 
@@ -1393,30 +1462,29 @@ function isDuplicateSample(
     );
 
 
-  /*
-     If the nose has moved enough,
-     consider it a different sample.
-  */
-
-  return movement < 12;
+  return movement < 15;
 
 }
 
 
 /* =========================================================
-   UPDATE SAMPLE COUNTER
+   COUNTER
 ========================================================= */
 
 function updateCounter() {
 
-  frameCounter.textContent =
-    `${samples.length} / ${MAX_SAMPLES}`;
+  if (frameCounter) {
+
+    frameCounter.textContent =
+      `${samples.length} / ${MAX_SAMPLES}`;
+
+  }
 
 }
 
 
 /* =========================================================
-   FINISH AUTOMATIC SCAN
+   FINISH SCAN
 ========================================================= */
 
 function finishAutomaticScan(
@@ -1461,10 +1529,15 @@ function finishAutomaticScan(
 
 
 /* =========================================================
-   SCAN RESULT
+   SUCCESS RESULT
 ========================================================= */
 
 function showScanResult() {
+
+  if (!scanResult) {
+    return;
+  }
+
 
   scanResult.classList.remove(
     "hidden"
@@ -1474,24 +1547,20 @@ function showScanResult() {
   scanResult.innerHTML = `
 
     <p style="margin:0;font-weight:700;">
-      NOSE SAMPLES CAPTURED
+      NOS SAMPLES CAPTURED
     </p>
 
     <p style="margin:8px 0 0;">
-      ${samples.length} suitable frame${samples.length === 1 ? "" : "s"} selected automatically.
+      Automaticky zachytených:
+      ${samples.length}
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      The next stage is biometric comparison.
+      Ďalšia fáza bude porovnávanie charakteristických znakov.
     </p>
 
   `;
 
-
-  /*
-     After successful capture,
-     move to profile after a short delay.
-  */
 
   setTimeout(
     () => {
@@ -1515,10 +1584,15 @@ function showScanResult() {
 
 
 /* =========================================================
-   SCAN FAILURE
+   FAILURE RESULT
 ========================================================= */
 
 function showScanFailure() {
+
+  if (!scanResult) {
+    return;
+  }
+
 
   scanResult.classList.remove(
     "hidden"
@@ -1528,70 +1602,52 @@ function showScanFailure() {
   scanResult.innerHTML = `
 
     <p style="margin:0;font-weight:700;">
-      NO SUITABLE NOSE FRAME
+      NOS NEBOL DETEGOVANÝ
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      The camera did not obtain a sufficiently confident nose detection.
-    </p>
-
-    <p style="margin:8px 0 0;opacity:.75;">
-      Try moving the cat slightly closer and keeping the nose visible.
+      AI model počas skenovania nenašiel dostatočne spoľahlivý záber nosa.
     </p>
 
   `;
 
 
   setInstruction(
-    "No suitable nose frame found."
+    "Nos sa nepodarilo spoľahlivo detegovať."
   );
 
 }
 
 
 /* =========================================================
-   MANUAL CAPTURE BUTTON
-   Kept internally for compatibility, but the UI
-   intentionally does not expose a capture button.
-========================================================= */
-
-function captureNow() {
-
-  if (
-    bestDetection
-  ) {
-
-    considerAutomaticCapture(
-      bestDetection
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   PROFILE SAVE
+   PROFILE
 ========================================================= */
 
 function saveProfile() {
 
   const name =
-    document.getElementById(
-      "catName"
-    ).value.trim();
+    document
+      .getElementById(
+        "catName"
+      )
+      .value
+      .trim();
 
 
   const nickname =
-    document.getElementById(
-      "catNickname"
-    ).value.trim();
+    document
+      .getElementById(
+        "catNickname"
+      )
+      .value
+      .trim();
 
 
   const savedInfo =
-    document.getElementById(
-      "savedInfo"
-    );
+    document
+      .getElementById(
+        "savedInfo"
+      );
 
 
   if (
@@ -1607,10 +1663,6 @@ function saveProfile() {
 
       <p style="margin:0;font-weight:700;">
         NO SAMPLE AVAILABLE
-      </p>
-
-      <p style="margin:8px 0 0;opacity:.75;">
-        The application needs at least one detected nose sample.
       </p>
 
     `;
@@ -1637,23 +1689,22 @@ function saveProfile() {
     </p>
 
     <p style="margin:8px 0 0;">
-      Cat: ${escapeHtml(catName)}
+      Cat:
+      ${escapeHtml(catName)}
     </p>
 
     ${
       nickname
-        ? `<p style="margin:4px 0 0;opacity:.75;">
-             ${escapeHtml(nickname)}
-           </p>`
+        ? `
+          <p style="margin:4px 0 0;opacity:.75;">
+            ${escapeHtml(nickname)}
+          </p>
+        `
         : ""
     }
 
     <p style="margin:8px 0 0;opacity:.75;">
-      ${samples.length} nose samples captured.
-    </p>
-
-    <p style="margin:8px 0 0;opacity:.75;">
-      Biometric identification is not implemented yet.
+      ${samples.length} vzoriek nosa.
     </p>
 
   `;
@@ -1662,7 +1713,7 @@ function saveProfile() {
 
 
 /* =========================================================
-   ESCAPE HTML
+   HTML ESCAPE
 ========================================================= */
 
 function escapeHtml(
@@ -1695,88 +1746,91 @@ function escapeHtml(
 
 
 /* =========================================================
-   VIDEO / PHOTO TEST
+   VIDEO / PHOTO
 ========================================================= */
 
-mediaInput.addEventListener(
-  "change",
-  async event => {
+if (mediaInput) {
 
-    const file =
-      event.target.files[0];
+  mediaInput.addEventListener(
+    "change",
+    async event => {
 
-
-    if (!file) {
-
-      return;
-
-    }
+      const file =
+        event.target.files[0];
 
 
-    if (
-      file.type.startsWith(
-        "image/"
-      )
-    ) {
-
-      await analyzeImageFile(
-        file
-      );
-
-      return;
-
-    }
+      if (!file) {
+        return;
+      }
 
 
-    if (
-      file.type.startsWith(
-        "video/"
-      )
-    ) {
+      if (
+        file.type.startsWith(
+          "image/"
+        )
+      ) {
 
-      const url =
-        URL.createObjectURL(
+        await analyzeImageFile(
           file
         );
 
+        return;
 
-      sourceVideo.src =
-        url;
+      }
 
 
-      showScreen(
-        "videoTest"
-      );
+      if (
+        file.type.startsWith(
+          "video/"
+        )
+      ) {
+
+        const url =
+          URL.createObjectURL(
+            file
+          );
+
+
+        sourceVideo.src =
+          url;
+
+
+        showScreen(
+          "videoTest"
+        );
+
+      }
 
     }
+  );
 
-  }
-);
+}
 
 
 /* =========================================================
-   IMAGE FILE ANALYSIS
+   IMAGE ANALYSIS
 ========================================================= */
 
 async function analyzeImageFile(
   file
 ) {
 
+  const ready =
+    await initializeRoboflow();
+
+
+  if (!ready) {
+
+    alert(
+      "AI model sa nepodarilo načítať."
+    );
+
+    return;
+
+  }
+
+
   try {
-
-    if (!modelReady) {
-
-      await initializeRoboflow();
-
-    }
-
-
-    if (!modelReady) {
-
-      return;
-
-    }
-
 
     const url =
       URL.createObjectURL(
@@ -1825,9 +1879,7 @@ async function analyzeImageFile(
     } finally {
 
       try {
-
         image.dispose();
-
       } catch (_) {}
 
     }
@@ -1844,14 +1896,12 @@ async function analyzeImageFile(
     );
 
 
-    if (
-      detection
-    ) {
+    videoResult.classList.remove(
+      "hidden"
+    );
 
-      videoResult.classList.remove(
-        "hidden"
-      );
 
+    if (detection) {
 
       videoResult.innerHTML = `
 
@@ -1862,7 +1912,8 @@ async function analyzeImageFile(
         <p style="margin:8px 0 0;">
           Confidence:
           ${Math.round(
-            detection.confidence * 100
+            detection.confidence *
+            100
           )}%
         </p>
 
@@ -1870,19 +1921,10 @@ async function analyzeImageFile(
 
     } else {
 
-      videoResult.classList.remove(
-        "hidden"
-      );
-
-
       videoResult.innerHTML = `
 
         <p style="margin:0;font-weight:700;">
           NOSE NOT DETECTED
-        </p>
-
-        <p style="margin:8px 0 0;opacity:.75;">
-          Try another photograph with the cat facing the camera.
         </p>
 
       `;
@@ -1911,19 +1953,26 @@ async function analyzeImageFile(
    VIDEO ANALYSIS
 ========================================================= */
 
-document
-  .getElementById(
+const analyzeVideoButton =
+  document.getElementById(
     "analyzeVideo"
-  )
-  .addEventListener(
+  );
+
+
+if (analyzeVideoButton) {
+
+  analyzeVideoButton.addEventListener(
     "click",
     analyzeUploadedVideo
   );
+
+}
 
 
 async function analyzeUploadedVideo() {
 
   if (
+    !sourceVideo ||
     !sourceVideo.src
   ) {
 
@@ -1932,14 +1981,11 @@ async function analyzeUploadedVideo() {
   }
 
 
-  if (!modelReady) {
-
+  const ready =
     await initializeRoboflow();
 
-  }
 
-
-  if (!modelReady) {
+  if (!ready) {
 
     return;
 
@@ -1988,9 +2034,10 @@ async function analyzeUploadedVideo() {
   }
 
 
-  const testSamples = [];
+  const results = [];
 
-  const numberOfFrames =
+
+  const frameCount =
     Math.min(
       30,
       Math.max(
@@ -2004,7 +2051,7 @@ async function analyzeUploadedVideo() {
 
   for (
     let i = 0;
-    i < numberOfFrames;
+    i < frameCount;
     i++
   ) {
 
@@ -2014,7 +2061,7 @@ async function analyzeUploadedVideo() {
         i /
         Math.max(
           1,
-          numberOfFrames - 1
+          frameCount - 1
         )
       );
 
@@ -2025,19 +2072,15 @@ async function analyzeUploadedVideo() {
     );
 
 
-    const canvas =
-      videoCanvas;
-
-
-    canvas.width =
+    videoCanvas.width =
       sourceVideo.videoWidth;
 
-    canvas.height =
+    videoCanvas.height =
       sourceVideo.videoHeight;
 
 
     const ctx =
-      canvas.getContext(
+      videoCanvas.getContext(
         "2d"
       );
 
@@ -2046,14 +2089,14 @@ async function analyzeUploadedVideo() {
       sourceVideo,
       0,
       0,
-      canvas.width,
-      canvas.height
+      videoCanvas.width,
+      videoCanvas.height
     );
 
 
     const image =
       new inferencejs.CVImage(
-        canvas
+        videoCanvas
       );
 
 
@@ -2071,9 +2114,7 @@ async function analyzeUploadedVideo() {
     } finally {
 
       try {
-
         image.dispose();
-
       } catch (_) {}
 
     }
@@ -2085,11 +2126,9 @@ async function analyzeUploadedVideo() {
       );
 
 
-    if (
-      detection
-    ) {
+    if (detection) {
 
-      testSamples.push({
+      results.push({
 
         time,
 
@@ -2097,7 +2136,7 @@ async function analyzeUploadedVideo() {
           detection.confidence,
 
         data:
-          canvas.toDataURL(
+          videoCanvas.toDataURL(
             "image/jpeg",
             0.88
           )
@@ -2109,25 +2148,18 @@ async function analyzeUploadedVideo() {
   }
 
 
-  testSamples.sort(
-    (
-      a,
-      b
-    ) =>
+  results.sort(
+    (a, b) =>
       b.confidence -
       a.confidence
   );
 
 
   const best =
-    testSamples.slice(
+    results.slice(
       0,
       5
     );
-
-
-  videoSamples.innerHTML =
-    "";
 
 
   best.forEach(
@@ -2151,12 +2183,6 @@ async function analyzeUploadedVideo() {
         "12px";
 
 
-      img.title =
-        `Confidence ${Math.round(
-          sample.confidence * 100
-        )}%`;
-
-
       videoSamples.appendChild(
         img
       );
@@ -2165,16 +2191,7 @@ async function analyzeUploadedVideo() {
   );
 
 
-  if (
-    best.length > 0
-  ) {
-
-    const confidence =
-      Math.round(
-        best[0].confidence *
-        100
-      );
-
+  if (best.length) {
 
     videoResult.innerHTML = `
 
@@ -2183,12 +2200,15 @@ async function analyzeUploadedVideo() {
       </p>
 
       <p style="margin:8px 0 0;">
-        ${best.length} suitable frames found.
+        ${best.length} vhodných záberov.
       </p>
 
-      <p style="margin:8px 0 0;opacity:.75;">
-        Best confidence:
-        ${confidence}%
+      <p style="margin:8px 0 0;">
+        Najlepší výsledok:
+        ${Math.round(
+          best[0].confidence *
+          100
+        )}%
       </p>
 
     `;
@@ -2201,10 +2221,6 @@ async function analyzeUploadedVideo() {
         NO NOSE DETECTION
       </p>
 
-      <p style="margin:8px 0 0;opacity:.75;">
-        The model did not find a sufficiently confident cat nose in the video.
-      </p>
-
     `;
 
   }
@@ -2213,7 +2229,7 @@ async function analyzeUploadedVideo() {
 
 
 /* =========================================================
-   SEEK VIDEO
+   VIDEO SEEK
 ========================================================= */
 
 function seekVideo(
@@ -2256,31 +2272,47 @@ function seekVideo(
    BUTTONS
 ========================================================= */
 
-document
-  .getElementById(
+const startCameraButton =
+  document.getElementById(
     "startCamera"
-  )
-  .addEventListener(
+  );
+
+
+if (startCameraButton) {
+
+  startCameraButton.addEventListener(
     "click",
     startCamera
   );
 
+}
 
-document
-  .getElementById(
+
+const stopCameraButton =
+  document.getElementById(
     "stopCamera"
-  )
-  .addEventListener(
+  );
+
+
+if (stopCameraButton) {
+
+  stopCameraButton.addEventListener(
     "click",
     stopCamera
   );
 
+}
 
-document
-  .getElementById(
+
+const backHomeButton =
+  document.getElementById(
     "backHome"
-  )
-  .addEventListener(
+  );
+
+
+if (backHomeButton) {
+
+  backHomeButton.addEventListener(
     "click",
     () => {
 
@@ -2291,12 +2323,18 @@ document
     }
   );
 
+}
 
-document
-  .getElementById(
+
+const profileBackButton =
+  document.getElementById(
     "profileBack"
-  )
-  .addEventListener(
+  );
+
+
+if (profileBackButton) {
+
+  profileBackButton.addEventListener(
     "click",
     () => {
 
@@ -2307,89 +2345,45 @@ document
     }
   );
 
+}
 
-document
-  .getElementById(
+
+const saveProfileButton =
+  document.getElementById(
     "saveProfile"
-  )
-  .addEventListener(
+  );
+
+
+if (saveProfileButton) {
+
+  saveProfileButton.addEventListener(
     "click",
     saveProfile
-  );
-
-
-/*
-   If an old version of the HTML still contains
-   the captureNow button, it will continue to work.
-   The new HTML intentionally does not show it.
-*/
-
-const oldCaptureButton =
-  document.getElementById(
-    "captureNow"
-  );
-
-
-if (
-  oldCaptureButton
-) {
-
-  oldCaptureButton.addEventListener(
-    "click",
-    captureNow
   );
 
 }
 
 
 /* =========================================================
-   VIDEO CLEANUP
-========================================================= */
-
-window.addEventListener(
-  "beforeunload",
-  () => {
-
-    if (
-      cameraStream
-    ) {
-
-      cameraStream
-        .getTracks()
-        .forEach(
-          track =>
-            track.stop()
-        );
-
-    }
-
-
-    if (
-      inferEngine &&
-      modelWorkerId !== null
-    ) {
-
-      inferEngine
-        .stopWorker(
-          modelWorkerId
-        )
-        .catch(
-          () => {}
-        );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
    INITIALIZATION
 ========================================================= */
+
+/*
+   IMPORTANT:
+   Do NOT load the AI model automatically when the
+   page opens.
+
+   The model will load when the user presses
+   SCAN WITH CAMERA.
+
+   This makes troubleshooting much easier.
+*/
 
 showScreen(
   "home"
 );
 
 
-initializeRoboflow();
+setStatus(
+  "Capture engine ready"
+);

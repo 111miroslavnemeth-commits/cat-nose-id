@@ -4,67 +4,79 @@
    Roboflow RF-DETR Cat Face Detection
    Local Household Cat Profiles
    Automatic Reference Frame Selection
+   ROBUST WORKFLOW RESPONSE HANDLING
 ========================================================= */
 
+
 /* =========================================================
-   ROBOFLOW
+   ROBOFLOW CONFIGURATION
 ========================================================= */
 
 const ROBOFLOW_WORKFLOW_URL =
   "https://serverless.roboflow.com/miroslav-nemeth/workflows/cat-face-data-atoiv";
 
-/*
-   Temporary prototype key.
-   IMPORTANT:
-   This must later be moved to a backend/proxy.
-*/
-const ROBOFLOW_API_KEY =
-  "w4cawsZFX6ady8eie8XB";
+const ROBOFLOW_KEY_STORAGE =
+  "catNoseIdRoboflowApiKey_v1";
+
 
 /* =========================================================
    SETTINGS
 ========================================================= */
 
 const MODEL_SCORE_THRESHOLD = 0.20;
+
 const CAPTURE_CONFIDENCE = 0.30;
 
 const MAX_SAMPLES = 9;
+
 const MAX_CANDIDATES = 36;
 
 const PROFILE_STORAGE_KEY =
-  "catNoseIdProfiles_v3";
-
-const MAX_SCAN_TIME = 10000;
-const INFERENCE_INTERVAL = 900;
-const MIN_SAMPLE_INTERVAL = 350;
+  "catNoseIdProfiles_v2";
 
 const RECOGNITION_MIN_SCORE = 0.72;
 
+const MIN_SAMPLE_INTERVAL = 260;
+
+const MAX_SCAN_TIME = 10000;
+
+const INFERENCE_INTERVAL = 850;
+
+
 /* =========================================================
-   STATE
+   GLOBAL STATE
 ========================================================= */
+
+let currentScreen = "home";
 
 let cameraStream = null;
 
 let modelReady = false;
+
 let modelLoading = false;
 
 let inferenceRunning = false;
+
 let inferenceBusy = false;
 
 let lastInferenceTime = 0;
+
 let scanStartedAt = 0;
+
 let lastAcceptedSampleTime = 0;
 
-let scanMode = "enroll";
-
 let samples = [];
+
 let recognitionCandidates = [];
 
 let bestDetection = null;
+
 let scanFinished = false;
 
+let scanMode = "enroll";
+
 let profileManagerInitialized = false;
+
 
 /* =========================================================
    DOM
@@ -81,55 +93,88 @@ const video =
   document.getElementById("video");
 
 const detectionOverlay =
-  document.getElementById("detectionOverlay");
+  document.getElementById(
+    "detectionOverlay"
+  );
 
 const frameCanvas =
-  document.getElementById("frameCanvas");
+  document.getElementById(
+    "frameCanvas"
+  );
 
 const frameCounter =
-  document.getElementById("frameCounter");
+  document.getElementById(
+    "frameCounter"
+  );
 
 const qualityText =
-  document.getElementById("qualityText");
+  document.getElementById(
+    "qualityText"
+  );
 
 const qualityBar =
-  document.getElementById("qualityBar");
+  document.getElementById(
+    "qualityBar"
+  );
 
 const instruction =
-  document.getElementById("instruction");
+  document.getElementById(
+    "instruction"
+  );
 
 const engineStatus =
-  document.getElementById("engineStatus");
+  document.getElementById(
+    "engineStatus"
+  );
 
 const scanResult =
-  document.getElementById("scanResult");
+  document.getElementById(
+    "scanResult"
+  );
 
 const detectorNote =
-  document.getElementById("detectorNote");
+  document.getElementById(
+    "detectorNote"
+  );
 
 const mediaInput =
-  document.getElementById("mediaInput");
+  document.getElementById(
+    "mediaInput"
+  );
 
 const sourceVideo =
-  document.getElementById("sourceVideo");
+  document.getElementById(
+    "sourceVideo"
+  );
 
 const videoCanvas =
-  document.getElementById("videoCanvas");
+  document.getElementById(
+    "videoCanvas"
+  );
 
 const videoQuality =
-  document.getElementById("videoQuality");
+  document.getElementById(
+    "videoQuality"
+  );
 
 const videoQualityBar =
-  document.getElementById("videoQualityBar");
+  document.getElementById(
+    "videoQualityBar"
+  );
 
 const videoResult =
-  document.getElementById("videoResult");
+  document.getElementById(
+    "videoResult"
+  );
 
 const videoSamples =
-  document.getElementById("videoSamples");
+  document.getElementById(
+    "videoSamples"
+  );
+
 
 /* =========================================================
-   SCREEN
+   SCREEN CONTROL
 ========================================================= */
 
 function showScreen(name) {
@@ -139,7 +184,9 @@ function showScreen(name) {
     const element =
       document.getElementById(id);
 
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     element.classList.toggle(
       "active",
@@ -148,7 +195,10 @@ function showScreen(name) {
 
   });
 
+  currentScreen = name;
+
 }
+
 
 /* =========================================================
    STATUS
@@ -162,6 +212,7 @@ function setStatus(text) {
 
 }
 
+
 function setInstruction(text) {
 
   if (instruction) {
@@ -169,6 +220,81 @@ function setInstruction(text) {
   }
 
 }
+
+
+/* =========================================================
+   API KEY
+========================================================= */
+
+function getRoboflowApiKey() {
+
+  try {
+
+    return (
+      localStorage.getItem(
+        ROBOFLOW_KEY_STORAGE
+      ) || ""
+    ).trim();
+
+  } catch (error) {
+
+    console.error(
+      "API KEY STORAGE ERROR:",
+      error
+    );
+
+    return "";
+
+  }
+
+}
+
+
+function askForRoboflowApiKey() {
+
+  const current =
+    getRoboflowApiKey();
+
+  const key =
+    window.prompt(
+      current
+        ? "Roboflow API kľúč:"
+        : "Zadaj Roboflow Workflow API kľúč:"
+    );
+
+  if (!key) {
+    return false;
+  }
+
+  const clean =
+    key.trim();
+
+  if (!clean) {
+    return false;
+  }
+
+  try {
+
+    localStorage.setItem(
+      ROBOFLOW_KEY_STORAGE,
+      clean
+    );
+
+  } catch (error) {
+
+    console.error(
+      "API KEY SAVE ERROR:",
+      error
+    );
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
 
 /* =========================================================
    ROBOFLOW INITIALIZATION
@@ -189,7 +315,7 @@ async function initializeRoboflow() {
   try {
 
     setStatus(
-      "Roboflow AI sa pripája..."
+      "Roboflow AI sa pripravuje..."
     );
 
     if (
@@ -198,27 +324,45 @@ async function initializeRoboflow() {
         "https://serverless.roboflow.com/"
       )
     ) {
+
       throw new Error(
         "Neplatná Roboflow Workflow URL."
       );
+
     }
 
-    if (
-      !ROBOFLOW_API_KEY ||
-      ROBOFLOW_API_KEY.length < 10
-    ) {
-      throw new Error(
-        "Roboflow API key nie je nastavený."
+    let apiKey =
+      getRoboflowApiKey();
+
+    if (!apiKey) {
+
+      setStatus(
+        "Čakám na Roboflow API kľúč..."
       );
+
+      const accepted =
+        askForRoboflowApiKey();
+
+      if (!accepted) {
+
+        throw new Error(
+          "Roboflow API kľúč nebol zadaný."
+        );
+
+      }
+
+      apiKey =
+        getRoboflowApiKey();
+
     }
 
-    /*
-      IMPORTANT:
-      We do NOT send an empty image here.
+    if (!apiKey) {
 
-      The actual connection is tested on the
-      first real camera frame.
-    */
+      throw new Error(
+        "Chýba Roboflow Workflow API kľúč."
+      );
+
+    }
 
     modelReady = true;
 
@@ -229,7 +373,7 @@ async function initializeRoboflow() {
     if (detectorNote) {
 
       detectorNote.textContent =
-        "Roboflow RF-DETR je pripravené. Aplikácia automaticky vyberá najlepšie zábery.";
+        "Roboflow RF-DETR je pripojený. Aplikácia automaticky hľadá tvár mačky a vyberá najlepšie zábery.";
 
     }
 
@@ -245,7 +389,7 @@ async function initializeRoboflow() {
     modelReady = false;
 
     setStatus(
-      "Roboflow AI sa nepodarilo pripraviť"
+      "Roboflow AI nie je pripravené"
     );
 
     if (detectorNote) {
@@ -266,16 +410,43 @@ async function initializeRoboflow() {
 
 }
 
+
 /* =========================================================
    ROBOFLOW WORKFLOW
 ========================================================= */
 
-async function runRoboflowWorkflow(dataUrl) {
+async function runRoboflowWorkflow(
+  dataUrl
+) {
 
   if (!dataUrl) {
+
     throw new Error(
       "Chýba obrazový frame."
     );
+
+  }
+
+  const ready =
+    await initializeRoboflow();
+
+  if (!ready) {
+
+    throw new Error(
+      "Roboflow AI nie je pripravené."
+    );
+
+  }
+
+  const apiKey =
+    getRoboflowApiKey();
+
+  if (!apiKey) {
+
+    throw new Error(
+      "Chýba Roboflow API kľúč."
+    );
+
   }
 
   const base64 =
@@ -283,170 +454,399 @@ async function runRoboflowWorkflow(dataUrl) {
       ? dataUrl.split(",")[1]
       : dataUrl;
 
-  const response =
-    await fetch(
-      ROBOFLOW_WORKFLOW_URL,
-      {
-        method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
+  let response;
 
-        body: JSON.stringify({
+  try {
 
-          api_key:
-            ROBOFLOW_API_KEY,
+    response =
+      await fetch(
+        ROBOFLOW_WORKFLOW_URL,
+        {
+          method: "POST",
 
-          inputs: {
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-            image: {
-              type: "base64",
-              value: base64
-            }
+          body:
+            JSON.stringify({
 
-          }
+              api_key:
+                apiKey,
 
-        })
-      }
+              inputs: {
+
+                image: {
+
+                  type:
+                    "base64",
+
+                  value:
+                    base64
+
+                }
+
+              }
+
+            })
+
+        }
+      );
+
+  } catch (error) {
+
+    throw new Error(
+      "Nepodarilo sa spojiť s Roboflow. Skontroluj internetové pripojenie."
     );
+
+  }
+
+
+  let result = null;
+
+  try {
+
+    result =
+      await response.json();
+
+  } catch (error) {
+
+    const text =
+      await response.text();
+
+    throw new Error(
+      `Roboflow neposlal platnú odpoveď. HTTP ${response.status}. ${text}`
+    );
+
+  }
+
+
+  console.log(
+    "ROBOFLOW RESPONSE:",
+    result
+  );
+
 
   if (!response.ok) {
 
-    let details = "";
+    let message =
+      `Roboflow HTTP ${response.status}`;
 
-    try {
+    if (result) {
 
-      details =
-        JSON.stringify(
-          await response.json()
-        );
-
-    } catch (_) {
-
-      details =
-        await response.text();
+      if (result.error) {
+        message +=
+          `: ${result.error}`;
+      } else if (result.message) {
+        message +=
+          `: ${result.message}`;
+      }
 
     }
 
     throw new Error(
-      "Roboflow HTTP " +
-      response.status +
-      ": " +
-      details
+      message
     );
 
   }
 
-  const result =
-    await response.json();
+
+  const predictions =
+    extractPredictions(
+      result
+    );
+
 
   console.log(
-    "ROBOFLOW RESULT:",
-    result
+    "ROBOFLOW NORMALIZED PREDICTIONS:",
+    predictions
   );
 
-  return extractPredictions(
-    result
-  );
+
+  return predictions;
 
 }
 
+
 /* =========================================================
-   RESPONSE PARSER
+   ROBUST ROBOFLOW RESPONSE PARSER
+
+   Roboflow Workflow API returns:
+
+   {
+     outputs: [
+       {
+         predictions: [...]
+       }
+     ]
+   }
+
+   This parser deliberately searches recursively
+   because workflow output names can change.
 ========================================================= */
 
-function extractPredictions(result) {
+function extractPredictions(
+  result
+) {
 
   const found = [];
 
-  function walk(value) {
+  const visited =
+    new Set();
 
-    if (!value) return;
+
+  function isPredictionObject(
+    value
+  ) {
 
     if (
-      typeof value !==
-      "object"
+      !value ||
+      typeof value !== "object" ||
+      Array.isArray(value)
+    ) {
+      return false;
+    }
+
+    const confidence =
+      Number(
+        value.confidence ??
+        value.score ??
+        value.class_confidence ??
+        NaN
+      );
+
+    const hasConfidence =
+      Number.isFinite(
+        confidence
+      );
+
+    const box =
+      value.bbox ||
+      value.bounding_box ||
+      value.boundingBox ||
+      value.box ||
+      value;
+
+    const x =
+      Number(box.x);
+
+    const y =
+      Number(box.y);
+
+    const width =
+      Number(
+        box.width ??
+        box.w
+      );
+
+    const height =
+      Number(
+        box.height ??
+        box.h
+      );
+
+    return (
+      hasConfidence &&
+      Number.isFinite(x) &&
+      Number.isFinite(y) &&
+      Number.isFinite(width) &&
+      Number.isFinite(height) &&
+      width > 0 &&
+      height > 0
+    );
+
+  }
+
+
+  function normalizePrediction(
+    value
+  ) {
+
+    const box =
+      value.bbox ||
+      value.bounding_box ||
+      value.boundingBox ||
+      value.box ||
+      value;
+
+    const confidence =
+      Number(
+        value.confidence ??
+        value.score ??
+        value.class_confidence ??
+        0
+      );
+
+    return {
+
+      confidence,
+
+      className:
+        value.class ||
+        value.label ||
+        value.name ||
+        "cat-face",
+
+      bbox: {
+
+        x:
+          Number(box.x),
+
+        y:
+          Number(box.y),
+
+        width:
+          Number(
+            box.width ??
+            box.w
+          ),
+
+        height:
+          Number(
+            box.height ??
+            box.h
+          )
+
+      }
+
+    };
+
+  }
+
+
+  function visit(
+    value
+  ) {
+
+    if (
+      !value ||
+      typeof value !== "object"
     ) {
       return;
     }
+
+    if (
+      visited.has(value)
+    ) {
+      return;
+    }
+
+    visited.add(value);
+
 
     if (Array.isArray(value)) {
 
       for (
-        const item of value
+        const item
+        of value
       ) {
-        walk(item);
+
+        if (
+          isPredictionObject(
+            item
+          )
+        ) {
+
+          found.push(
+            normalizePrediction(
+              item
+            )
+          );
+
+        } else {
+
+          visit(item);
+
+        }
+
       }
 
       return;
+
     }
 
-    /*
-      Standard Roboflow prediction.
-    */
 
     if (
-      value.x !== undefined &&
-      value.y !== undefined &&
-      value.width !== undefined &&
-      value.height !== undefined
+      isPredictionObject(
+        value
+      )
     ) {
 
-      const confidence =
-        Number(
-          value.confidence ??
-          value.score ??
-          0
-        );
+      found.push(
+        normalizePrediction(
+          value
+        )
+      );
+
+      return;
+
+    }
+
+
+    const priorityKeys = [
+
+      "outputs",
+      "predictions",
+      "detections",
+      "results",
+      "result",
+      "output",
+      "inference",
+      "data"
+
+    ];
+
+
+    for (
+      const key
+      of priorityKeys
+    ) {
 
       if (
-        confidence > 0
+        value[key] !==
+        undefined
       ) {
 
-        found.push({
-
-          x:
-            Number(value.x),
-
-          y:
-            Number(value.y),
-
-          width:
-            Number(value.width),
-
-          height:
-            Number(value.height),
-
-          confidence,
-
-          class:
-            value.class ||
-            value.class_name ||
-            "cat-face"
-
-        });
+        visit(
+          value[key]
+        );
 
       }
 
     }
 
+
     for (
-      const key of Object.keys(value)
+      const key
+      of Object.keys(value)
     ) {
 
-      walk(value[key]);
+      if (
+        priorityKeys.includes(
+          key
+        )
+      ) {
+        continue;
+      }
+
+      visit(
+        value[key]
+      );
 
     }
 
   }
 
-  walk(result);
+
+  visit(result);
+
 
   return found;
 
 }
+
 
 /* =========================================================
    CANVAS
@@ -454,7 +854,7 @@ function extractPredictions(result) {
 
 function canvasToDataUrl(
   canvas,
-  quality = 0.80
+  quality = 0.72
 ) {
 
   if (!canvas) {
@@ -468,6 +868,7 @@ function canvasToDataUrl(
 
 }
 
+
 /* =========================================================
    CAMERA
 ========================================================= */
@@ -480,98 +881,109 @@ async function startCamera() {
       "Spúšťam kameru..."
     );
 
+
     cameraStream =
-      await navigator.mediaDevices.getUserMedia({
+      await navigator.mediaDevices
+        .getUserMedia({
 
-        video: {
+          video: {
 
-          facingMode: {
-            ideal: "environment"
+            facingMode: {
+              ideal:
+                "environment"
+            },
+
+            width: {
+              ideal:
+                1280
+            },
+
+            height: {
+              ideal:
+                720
+            },
+
+            frameRate: {
+              ideal:
+                30,
+              max:
+                60
+            }
+
           },
 
-          width: {
-            ideal: 1280
-          },
+          audio:
+            false
 
-          height: {
-            ideal: 720
-          },
+        });
 
-          frameRate: {
-            ideal: 30,
-            max: 30
-          }
-
-        },
-
-        audio: false
-
-      });
 
     video.srcObject =
       cameraStream;
 
     await video.play();
 
-    showScreen("camera");
+
+    showScreen(
+      "camera"
+    );
+
 
     resetScan();
 
     setupOverlay();
 
-    if (
+
+    setInstruction(
       scanMode ===
-      "identify"
-    ) {
-
-      setInstruction(
-        "Hľadám uloženú mačku..."
-      );
-
-    } else {
-
-      setInstruction(
-        "Namier kameru na tvár mačky..."
-      );
-
-    }
-
-    setStatus(
-      "Kamera aktívna — pripájam AI"
+        "identify"
+        ? "Hľadám uloženú mačku..."
+        : "Namier kameru na mačku..."
     );
+
 
     const ready =
       await initializeRoboflow();
 
+
     if (!ready) {
 
       setInstruction(
-        "Roboflow AI sa nepodarilo pripraviť."
+        "AI sa nepodarilo pripojiť."
       );
 
       return;
 
     }
 
+
     setStatus(
       "Kamera + Roboflow AI sú pripravené"
     );
 
+
     setInstruction(
-      scanMode === "identify"
+      scanMode ===
+        "identify"
         ? "Hľadám mačku..."
         : "Hľadám tvár mačky..."
     );
 
-    inferenceRunning = true;
-    scanFinished = false;
+
+    inferenceRunning =
+      true;
+
+    scanFinished =
+      false;
 
     scanStartedAt =
       performance.now();
 
+
     requestAnimationFrame(
       inferenceLoop
     );
+
 
   } catch (error) {
 
@@ -585,12 +997,13 @@ async function startCamera() {
     );
 
     alert(
-      "Kameru sa nepodarilo spustiť.\n\nPovoľ kameru v prehliadači."
+      "Kameru sa nepodarilo spustiť.\n\nSkontroluj povolenie kamery v prehliadači."
     );
 
   }
 
 }
+
 
 /* =========================================================
    STOP CAMERA
@@ -604,32 +1017,50 @@ function stopCamera() {
   scanFinished =
     true;
 
+
   if (cameraStream) {
 
     cameraStream
       .getTracks()
-      .forEach(track => {
-        track.stop();
-      });
+      .forEach(
+        track => {
+          track.stop();
+        }
+      );
 
-    cameraStream = null;
+    cameraStream =
+      null;
 
   }
+
 
   if (video) {
 
     video.pause();
-    video.srcObject = null;
+
+    video.srcObject =
+      null;
 
   }
 
+
   clearOverlay();
 
-  showScreen("home");
+
+  showScreen(
+    "home"
+  );
+
 
   refreshProfileManager();
 
+
+  setStatus(
+    "Roboflow AI je pripravené"
+  );
+
 }
+
 
 /* =========================================================
    RESET
@@ -638,28 +1069,37 @@ function stopCamera() {
 function resetScan() {
 
   samples = [];
+
   recognitionCandidates = [];
 
   bestDetection = null;
 
   scanFinished = false;
+
   inferenceBusy = false;
 
   lastInferenceTime = 0;
+
   lastAcceptedSampleTime = 0;
 
   scanStartedAt =
     performance.now();
 
+
   updateCounter();
 
+
   if (qualityText) {
-    qualityText.textContent = "—";
+    qualityText.textContent =
+      "—";
   }
 
+
   if (qualityBar) {
-    qualityBar.style.width = "0%";
+    qualityBar.style.width =
+      "0%";
   }
+
 
   if (scanResult) {
     scanResult.classList.add(
@@ -667,9 +1107,11 @@ function resetScan() {
     );
   }
 
+
   clearOverlay();
 
 }
+
 
 /* =========================================================
    OVERLAY
@@ -680,10 +1122,12 @@ function setupOverlay() {
   if (
     !video ||
     !video.videoWidth ||
-    !video.videoHeight
+    !video.videoHeight ||
+    !detectionOverlay
   ) {
     return;
   }
+
 
   detectionOverlay.width =
     video.videoWidth;
@@ -693,16 +1137,18 @@ function setupOverlay() {
 
 }
 
+
 function clearOverlay() {
 
   if (!detectionOverlay) {
     return;
   }
 
+
   const ctx =
-    detectionOverlay.getContext(
-      "2d"
-    );
+    detectionOverlay
+      .getContext("2d");
+
 
   ctx.clearRect(
     0,
@@ -712,6 +1158,7 @@ function clearOverlay() {
   );
 
 }
+
 
 /* =========================================================
    INFERENCE LOOP
@@ -728,17 +1175,21 @@ async function inferenceLoop(
     return;
   }
 
+
   if (
     timestamp -
-    scanStartedAt >
+      scanStartedAt >
     MAX_SCAN_TIME
   ) {
 
-    await finishAutomaticScan();
+    await finishAutomaticScan(
+      "Automatické skenovanie dokončené."
+    );
 
     return;
 
   }
+
 
   if (inferenceBusy) {
 
@@ -750,9 +1201,10 @@ async function inferenceLoop(
 
   }
 
+
   if (
     timestamp -
-    lastInferenceTime <
+      lastInferenceTime <
     INFERENCE_INTERVAL
   ) {
 
@@ -764,10 +1216,13 @@ async function inferenceLoop(
 
   }
 
+
   lastInferenceTime =
     timestamp;
 
-  inferenceBusy = true;
+  inferenceBusy =
+    true;
+
 
   try {
 
@@ -780,15 +1235,38 @@ async function inferenceLoop(
       error
     );
 
+
+    inferenceRunning =
+      false;
+
+    scanFinished =
+      true;
+
+
     setStatus(
-      "Chyba komunikácie s Roboflow"
+      "Chyba Roboflow AI"
     );
+
+
+    setInstruction(
+      "AI vrátilo chybu — pozri správu nižšie."
+    );
+
+
+    showAIError(
+      error
+    );
+
+
+    return;
 
   } finally {
 
-    inferenceBusy = false;
+    inferenceBusy =
+      false;
 
   }
+
 
   if (
     inferenceRunning &&
@@ -803,6 +1281,7 @@ async function inferenceLoop(
 
 }
 
+
 /* =========================================================
    CAMERA INFERENCE
 ========================================================= */
@@ -810,16 +1289,17 @@ async function inferenceLoop(
 async function runCameraInference() {
 
   if (
-    !modelReady ||
     !video ||
     video.readyState < 2
   ) {
     return;
   }
 
+
   if (!frameCanvas) {
     return;
   }
+
 
   frameCanvas.width =
     video.videoWidth;
@@ -827,10 +1307,16 @@ async function runCameraInference() {
   frameCanvas.height =
     video.videoHeight;
 
+
   const ctx =
     frameCanvas.getContext(
-      "2d"
+      "2d",
+      {
+        willReadFrequently:
+          true
+      }
     );
+
 
   ctx.drawImage(
     video,
@@ -840,29 +1326,30 @@ async function runCameraInference() {
     frameCanvas.height
   );
 
+
   const dataUrl =
     canvasToDataUrl(
       frameCanvas,
       0.72
     );
 
-  /*
-    THIS IS THE FIRST REAL AI REQUEST.
-  */
 
   const predictions =
     await runRoboflowWorkflow(
       dataUrl
     );
 
+
   const detection =
     selectBestDetection(
       predictions
     );
 
+
   drawDetection(
     detection
   );
+
 
   if (!detection) {
 
@@ -871,54 +1358,64 @@ async function runCameraInference() {
         "Hľadám...";
     }
 
+
     if (qualityBar) {
       qualityBar.style.width =
         "5%";
     }
 
+
     setInstruction(
       "Hľadám tvár mačky..."
     );
+
 
     return;
 
   }
 
+
+  const confidence =
+    detection.confidence;
+
+
   const percentage =
     Math.round(
-      detection.confidence *
-      100
+      confidence * 100
     );
+
 
   if (qualityText) {
     qualityText.textContent =
-      percentage + "%";
+      `${percentage}%`;
   }
+
 
   if (qualityBar) {
 
     qualityBar.style.width =
-      Math.max(
+      `${Math.max(
         5,
         Math.min(
           100,
           percentage
         )
-      ) + "%";
+      )}%`;
 
   }
+
 
   bestDetection =
     detection;
 
+
   setInstruction(
-    "Tvár mačky detegovaná — " +
-    percentage +
-    "%"
+    `Tvár mačky detegovaná — ${percentage}%`
   );
 
+
   if (
-    detection.confidence >=
+    confidence >=
     CAPTURE_CONFIDENCE
   ) {
 
@@ -930,8 +1427,9 @@ async function runCameraInference() {
 
 }
 
+
 /* =========================================================
-   BEST DETECTION
+   SELECT BEST DETECTION
 ========================================================= */
 
 function selectBestDetection(
@@ -941,22 +1439,33 @@ function selectBestDetection(
   if (
     !Array.isArray(
       predictions
-    )
+    ) ||
+    !predictions.length
   ) {
     return null;
   }
 
-  let best = null;
+
+  let best =
+    null;
+
 
   for (
-    const prediction of predictions
+    const prediction
+    of predictions
   ) {
+
+    if (!prediction) {
+      continue;
+    }
+
 
     const confidence =
       Number(
         prediction.confidence ||
         0
       );
+
 
     if (
       confidence <
@@ -965,54 +1474,69 @@ function selectBestDetection(
       continue;
     }
 
-    const width =
-      Number(
-        prediction.width
-      );
 
-    const height =
-      Number(
-        prediction.height
-      );
+    const bbox =
+      prediction.bbox;
+
 
     if (
-      !width ||
-      !height
+      !bbox ||
+      !Number.isFinite(
+        bbox.x
+      ) ||
+      !Number.isFinite(
+        bbox.y
+      ) ||
+      !Number.isFinite(
+        bbox.width
+      ) ||
+      !Number.isFinite(
+        bbox.height
+      )
     ) {
       continue;
     }
+
 
     const candidate = {
 
       confidence,
 
       className:
-        prediction.class ||
+        prediction.className ||
         "cat-face",
 
       bbox: {
 
         x:
           Number(
-            prediction.x
+            bbox.x
           ),
 
         y:
           Number(
-            prediction.y
+            bbox.y
           ),
 
-        width,
-        height
+        width:
+          Number(
+            bbox.width
+          ),
+
+        height:
+          Number(
+            bbox.height
+          )
 
       }
 
     };
 
+
     if (
       !best ||
       candidate.confidence >
-      best.confidence
+        best.confidence
     ) {
 
       best =
@@ -1022,12 +1546,14 @@ function selectBestDetection(
 
   }
 
+
   return best;
 
 }
 
+
 /* =========================================================
-   DRAW
+   DRAW DETECTION
 ========================================================= */
 
 function drawDetection(
@@ -1038,10 +1564,11 @@ function drawDetection(
     return;
   }
 
+
   const ctx =
-    detectionOverlay.getContext(
-      "2d"
-    );
+    detectionOverlay
+      .getContext("2d");
+
 
   ctx.clearRect(
     0,
@@ -1050,25 +1577,33 @@ function drawDetection(
     detectionOverlay.height
   );
 
+
   if (!detection) {
     return;
   }
 
+
   const b =
     detection.bbox;
+
 
   const left =
     b.x -
     b.width / 2;
 
+
   const top =
     b.y -
     b.height / 2;
 
-  ctx.lineWidth = 4;
+
+  ctx.lineWidth =
+    4;
+
 
   ctx.strokeStyle =
     "#00ff88";
+
 
   ctx.strokeRect(
     left,
@@ -1077,19 +1612,20 @@ function drawDetection(
     b.height
   );
 
+
   ctx.font =
     "bold 20px Arial";
+
 
   ctx.fillStyle =
     "#00ff88";
 
+
   ctx.fillText(
-    "CAT FACE " +
-    Math.round(
+    `CAT FACE ${Math.round(
       detection.confidence *
-      100
-    ) +
-    "%",
+        100
+    )}%`,
     left,
     Math.max(
       25,
@@ -1099,42 +1635,43 @@ function drawDetection(
 
 }
 
+
 /* =========================================================
-   QUALITY
+   CAPTURE QUALITY
 ========================================================= */
 
 function calculateCaptureQuality(
   detection
 ) {
 
-  const b =
-    detection.bbox;
-
-  const fw =
-    video.videoWidth;
-
-  const fh =
-    video.videoHeight;
-
   if (
-    !b ||
-    !fw ||
-    !fh
+    !detection ||
+    !detection.bbox ||
+    !video.videoWidth ||
+    !video.videoHeight
   ) {
     return 0;
   }
+
+
+  const b =
+    detection.bbox;
+
 
   const area =
     b.width *
     b.height;
 
+
   const frameArea =
-    fw *
-    fh;
+    video.videoWidth *
+    video.videoHeight;
+
 
   const areaRatio =
     area /
     frameArea;
+
 
   const sizeScore =
     Math.min(
@@ -1145,149 +1682,56 @@ function calculateCaptureQuality(
       ) * 100
     );
 
+
   const confidenceScore =
     detection.confidence *
     100;
 
+
   const centerX =
-    b.x / fw;
+    b.x /
+    video.videoWidth;
+
 
   const centerY =
-    b.y / fh;
+    b.y /
+    video.videoHeight;
+
 
   const distance =
     Math.sqrt(
       Math.pow(
-        centerX - 0.5,
+        centerX -
+          0.5,
         2
       ) +
       Math.pow(
-        centerY - 0.5,
+        centerY -
+          0.5,
         2
       )
     );
+
 
   const centerScore =
     Math.max(
       0,
       100 -
-      distance * 140
+        distance * 140
     );
+
 
   return Math.round(
-    confidenceScore * 0.55 +
-    sizeScore * 0.25 +
-    centerScore * 0.20
+    confidenceScore *
+      0.55 +
+    sizeScore *
+      0.25 +
+    centerScore *
+      0.20
   );
 
 }
 
-/* =========================================================
-   DUPLICATE CHECK
-========================================================= */
-
-function isDuplicateSample(
-  detection
-) {
-
-  const list =
-    scanMode === "enroll"
-      ? samples
-      : recognitionCandidates;
-
-  if (!list.length) {
-    return false;
-  }
-
-  const previous =
-    list[list.length - 1].bbox;
-
-  const current =
-    detection.bbox;
-
-  if (
-    !previous ||
-    !current
-  ) {
-    return false;
-  }
-
-  const movement =
-    Math.sqrt(
-      Math.pow(
-        current.x -
-        previous.x,
-        2
-      ) +
-      Math.pow(
-        current.y -
-        previous.y,
-        2
-      )
-    );
-
-  const sizeChange =
-    Math.abs(
-      current.width -
-      previous.width
-    ) /
-    Math.max(
-      1,
-      previous.width
-    );
-
-  return (
-    movement < 18 &&
-    sizeChange < 0.08
-  );
-
-}
-
-/* =========================================================
-   CAPTURE CURRENT FRAME
-========================================================= */
-
-function captureCurrentFrame(
-  detection
-) {
-
-  if (
-    !video.videoWidth ||
-    !video.videoHeight
-  ) {
-    return null;
-  }
-
-  const canvas =
-    document.createElement(
-      "canvas"
-    );
-
-  canvas.width =
-    video.videoWidth;
-
-  canvas.height =
-    video.videoHeight;
-
-  const ctx =
-    canvas.getContext(
-      "2d"
-    );
-
-  ctx.drawImage(
-    video,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  return canvas.toDataURL(
-    "image/jpeg",
-    0.88
-  );
-
-}
 
 /* =========================================================
    AUTOMATIC CAPTURE
@@ -1298,243 +1742,281 @@ async function considerAutomaticCapture(
 ) {
 
   const now =
-    Date.now();
+    performance.now();
+
 
   if (
     now -
-    lastAcceptedSampleTime <
+      lastAcceptedSampleTime <
     MIN_SAMPLE_INTERVAL
   ) {
     return;
   }
 
+
+  const list =
+    scanMode ===
+      "enroll"
+      ? samples
+      : recognitionCandidates;
+
+
   if (
-    isDuplicateSample(
-      detection
-    )
+    list.length >=
+    MAX_CANDIDATES
   ) {
     return;
   }
 
-  const image =
-    captureCurrentFrame(
+
+  const quality =
+    calculateCaptureQuality(
       detection
     );
 
-  if (!image) {
+
+  if (quality < 35) {
     return;
   }
 
-  const candidate = {
+
+  frameCanvas.width =
+    video.videoWidth;
+
+  frameCanvas.height =
+    video.videoHeight;
+
+
+  const ctx =
+    frameCanvas.getContext(
+      "2d"
+    );
+
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    frameCanvas.width,
+    frameCanvas.height
+  );
+
+
+  const image =
+    frameCanvas.toDataURL(
+      "image/jpeg",
+      0.88
+    );
+
+
+  const sample = {
 
     image,
 
     confidence:
       detection.confidence,
 
-    quality:
-      calculateCaptureQuality(
-        detection
-      ),
+    quality,
 
-    bbox: {
-      ...detection.bbox
-    },
+    bbox:
+      {
+        ...detection.bbox
+      },
 
-    timestamp: now
+    timestamp:
+      Date.now()
 
   };
 
-  if (
-    scanMode === "enroll"
-  ) {
 
-    if (
-      samples.length >=
-      MAX_CANDIDATES
-    ) {
-      return;
-    }
+  list.push(
+    sample
+  );
 
-    samples.push(
-      candidate
-    );
-
-  } else {
-
-    if (
-      recognitionCandidates.length >=
-      MAX_CANDIDATES
-    ) {
-      return;
-    }
-
-    recognitionCandidates.push(
-      candidate
-    );
-
-  }
 
   lastAcceptedSampleTime =
     now;
 
+
   updateCounter();
 
-  setInstruction(
-    scanMode === "enroll"
-      ? "Záber automaticky uložený — hľadám ďalší..."
-      : "Záber získaný — porovnávam..."
+
+  if (
+    scanMode ===
+    "enroll"
+  ) {
+
+    setInstruction(
+      `${samples.length} vhodných záberov zachytených...`
+    );
+
+  } else {
+
+    setInstruction(
+      `Analyzujem mačku... ${recognitionCandidates.length} záberov`
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DUPLICATE / SAMPLE SELECTION
+========================================================= */
+
+function bboxDistance(
+  a,
+  b
+) {
+
+  if (!a || !b) {
+    return 999;
+  }
+
+
+  const ax =
+    a.x;
+
+  const ay =
+    a.y;
+
+  const bx =
+    b.x;
+
+  const by =
+    b.y;
+
+
+  const dx =
+    ax - bx;
+
+  const dy =
+    ay - by;
+
+
+  return Math.sqrt(
+    dx * dx +
+      dy * dy
   );
 
 }
 
-/* =========================================================
-   SELECT BEST REFERENCES
-========================================================= */
 
 function selectBestReferenceSamples(
-  candidates,
+  list,
   count
 ) {
 
-  if (!candidates.length) {
+  if (
+    !Array.isArray(list) ||
+    !list.length
+  ) {
     return [];
   }
 
-  const pool =
-    [...candidates].sort(
-      (a, b) => {
 
-        const scoreA =
-          a.quality +
-          a.confidence * 100;
-
-        const scoreB =
+  const sorted =
+    [...list].sort(
+      (a, b) =>
+        (
           b.quality +
-          b.confidence * 100;
-
-        return scoreB - scoreA;
-
-      }
+          b.confidence *
+            100
+        ) -
+        (
+          a.quality +
+          a.confidence *
+            100
+        )
     );
+
 
   const selected = [];
 
-  /*
-    Always start with the strongest image.
-  */
 
-  selected.push(
-    pool.shift()
-  );
-
-  while (
-    selected.length < count &&
-    pool.length
+  for (
+    const candidate
+    of sorted
   ) {
 
-    let bestIndex = 0;
-    let bestScore = -Infinity;
+    if (
+      selected.length >=
+      count
+    ) {
+      break;
+    }
+
+
+    let tooSimilar =
+      false;
+
 
     for (
-      let i = 0;
-      i < pool.length;
-      i++
+      const existing
+      of selected
     ) {
 
-      const candidate =
-        pool[i];
-
-      let minDistance =
-        Infinity;
-
-      for (
-        const existing
-        of selected
-      ) {
-
-        const dx =
-          candidate.bbox.x -
-          existing.bbox.x;
-
-        const dy =
-          candidate.bbox.y -
-          existing.bbox.y;
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-            dy * dy
-          );
-
-        minDistance =
-          Math.min(
-            minDistance,
-            distance
-          );
-
-      }
-
-      const qualityScore =
-        (
-          candidate.quality +
-          candidate.confidence *
-          100
-        ) / 2;
-
-      const diversityScore =
-        Math.min(
-          1,
-          minDistance * 6
-        ) * 100;
-
-      const score =
-        qualityScore * 0.70 +
-        diversityScore * 0.30;
-
       if (
-        score >
-        bestScore
+        bboxDistance(
+          candidate.bbox,
+          existing.bbox
+        ) < 25 &&
+        Math.abs(
+          candidate.confidence -
+            existing.confidence
+        ) < 0.04
       ) {
 
-        bestScore =
-          score;
+        tooSimilar =
+          true;
 
-        bestIndex =
-          i;
+        break;
 
       }
 
     }
 
-    selected.push(
-      pool.splice(
-        bestIndex,
-        1
-      )[0]
-    );
+
+    if (!tooSimilar) {
+
+      selected.push(
+        candidate
+      );
+
+    }
 
   }
+
 
   return selected;
 
 }
 
+
 /* =========================================================
    FINISH SCAN
 ========================================================= */
 
-async function finishAutomaticScan() {
+async function finishAutomaticScan(
+  message
+) {
 
   if (scanFinished) {
     return;
   }
 
-  scanFinished = true;
-  inferenceRunning = false;
+
+  scanFinished =
+    true;
+
+  inferenceRunning =
+    false;
+
 
   if (
-    scanMode === "enroll"
+    scanMode ===
+    "enroll"
   ) {
 
     samples =
@@ -1543,16 +2025,19 @@ async function finishAutomaticScan() {
         MAX_SAMPLES
       );
 
+
     updateCounter();
+
 
     if (samples.length) {
 
       setInstruction(
-        samples.length +
-        " najlepších záberov vybraných automaticky."
+        `${samples.length} najlepších záberov vybraných automaticky`
       );
 
+
       showScanResult();
+
 
     } else {
 
@@ -1560,30 +2045,40 @@ async function finishAutomaticScan() {
 
     }
 
+
     return;
 
   }
 
+
   if (
-    scanMode === "identify"
+    scanMode ===
+    "identify"
   ) {
 
-    samples =
+    const candidates =
       selectBestReferenceSamples(
         recognitionCandidates,
-        Math.min(
-          5,
-          recognitionCandidates.length
-        )
+        5
       );
+
+
+    samples =
+      candidates;
+
 
     updateCounter();
 
+
     await identifyCurrentCat();
+
+
+    return;
 
   }
 
 }
+
 
 /* =========================================================
    SCAN RESULT
@@ -1595,9 +2090,11 @@ function showScanResult() {
     return;
   }
 
+
   scanResult.classList.remove(
     "hidden"
   );
+
 
   scanResult.innerHTML = `
 
@@ -1611,26 +2108,43 @@ function showScanResult() {
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      Aplikácia vybrala najkvalitnejšie a dostatočne odlišné zábery.
+      Aplikácia vybrala najkvalitnejšie zábery z automatického skenovania.
     </p>
 
   `;
 
+
   if (
-    currentScreen() ===
+    currentScreen ===
     "camera"
   ) {
 
     setTimeout(
       () => {
-        showScreen("profile");
+
+        if (
+          currentScreen ===
+          "camera"
+        ) {
+
+          showScreen(
+            "profile"
+          );
+
+        }
+
       },
-      700
+      900
     );
 
   }
 
 }
+
+
+/* =========================================================
+   SCAN FAILURE
+========================================================= */
 
 function showScanFailure() {
 
@@ -1638,9 +2152,11 @@ function showScanFailure() {
     return;
   }
 
+
   scanResult.classList.remove(
     "hidden"
   );
+
 
   scanResult.innerHTML = `
 
@@ -1654,40 +2170,62 @@ function showScanFailure() {
 
   `;
 
+
+  setInstruction(
+    "Tvár mačky sa nepodarilo detegovať."
+  );
+
 }
 
+
 /* =========================================================
-   CURRENT SCREEN
+   AI ERROR
 ========================================================= */
 
-function currentScreen() {
+function showAIError(
+  error
+) {
 
-  for (
-    const id of screens
-  ) {
-
-    const el =
-      document.getElementById(
-        id
-      );
-
-    if (
-      el &&
-      el.classList.contains(
-        "active"
-      )
-    ) {
-      return id;
-    }
-
+  if (!scanResult) {
+    return;
   }
 
-  return "home";
+
+  scanResult.classList.remove(
+    "hidden"
+  );
+
+
+  const message =
+    error &&
+    error.message
+      ? error.message
+      : "Neznáma chyba AI.";
+
+
+  scanResult.innerHTML = `
+
+    <p style="margin:0;font-weight:700;">
+      ROBOFLOW AI CHYBA
+    </p>
+
+    <p style="margin:10px 0 0;word-break:break-word;">
+      ${escapeHtml(
+        message
+      )}
+    </p>
+
+    <p style="margin:10px 0 0;opacity:.65;">
+      Aplikácia tentoraz nezostane visieť na „Hľadám mačku“. Zobrazí skutočnú chybu pripojenia.
+    </p>
+
+  `;
 
 }
 
+
 /* =========================================================
-   LOCAL PROFILES
+   LOCAL CAT PROFILES
 ========================================================= */
 
 function loadCatProfiles() {
@@ -1699,12 +2237,17 @@ function loadCatProfiles() {
         PROFILE_STORAGE_KEY
       );
 
+
     if (!raw) {
       return [];
     }
 
+
     const parsed =
-      JSON.parse(raw);
+      JSON.parse(
+        raw
+      );
+
 
     return Array.isArray(
       parsed
@@ -1725,6 +2268,7 @@ function loadCatProfiles() {
 
 }
 
+
 function saveCatProfiles(
   profiles
 ) {
@@ -1738,6 +2282,33 @@ function saveCatProfiles(
 
 }
 
+
+function deleteCatProfile(
+  profileId
+) {
+
+  const profiles =
+    loadCatProfiles();
+
+
+  const filtered =
+    profiles.filter(
+      profile =>
+        profile.id !==
+        profileId
+    );
+
+
+  saveCatProfiles(
+    filtered
+  );
+
+
+  refreshProfileManager();
+
+}
+
+
 /* =========================================================
    VISUAL FINGERPRINT
 ========================================================= */
@@ -1749,104 +2320,247 @@ async function createVisualFingerprint(
   return new Promise(
     resolve => {
 
-      const image =
+      const img =
         new Image();
 
-      image.onload =
-        () => {
 
-          const canvas =
-            document.createElement(
-              "canvas"
-            );
+      img.onload = () => {
 
-          const size = 32;
+        const canvas =
+          document.createElement(
+            "canvas"
+          );
 
-          canvas.width =
-            size;
 
-          canvas.height =
-            size;
+        const size =
+          24;
 
-          const ctx =
-            canvas.getContext(
-              "2d",
-              {
-                willReadFrequently:
-                  true
-              }
-            );
 
-          ctx.drawImage(
-            image,
+        canvas.width =
+          size;
+
+        canvas.height =
+          size;
+
+
+        const ctx =
+          canvas.getContext(
+            "2d",
+            {
+              willReadFrequently:
+                true
+            }
+          );
+
+
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          size,
+          size
+        );
+
+
+        const imageData =
+          ctx.getImageData(
             0,
             0,
             size,
             size
           );
 
-          const data =
-            ctx.getImageData(
-              0,
-              0,
-              size,
-              size
-            ).data;
 
-          const gray = [];
-          const rgb = [];
+        const pixels =
+          imageData.data;
+
+
+        const gray = [];
+
+        const rgb = [];
+
+
+        for (
+          let y = 0;
+          y < size;
+          y++
+        ) {
 
           for (
-            let i = 0;
-            i < data.length;
-            i += 4
+            let x = 0;
+            x < size;
+            x++
           ) {
 
+            const i =
+              (
+                y *
+                  size +
+                x
+              ) *
+              4;
+
+
             const r =
-              data[i];
+              pixels[i];
 
             const g =
-              data[i + 1];
+              pixels[i + 1];
 
             const b =
-              data[i + 2];
+              pixels[i + 2];
 
-            const value =
-              (
-                0.299 * r +
-                0.587 * g +
-                0.114 * b
-              ) / 255;
+
+            const luminance =
+              0.299 * r +
+              0.587 * g +
+              0.114 * b;
+
 
             gray.push(
-              value
+              luminance
             );
 
+
             rgb.push(
-              r / 255,
-              g / 255,
-              b / 255
+              Math.round(
+                r / 16
+              ),
+              Math.round(
+                g / 16
+              ),
+              Math.round(
+                b / 16
+              )
             );
 
           }
 
-          resolve({
-            gray,
+        }
+
+
+        const mean =
+          gray.reduce(
+            (sum, value) =>
+              sum + value,
+            0
+          ) /
+          gray.length;
+
+
+        const variance =
+          gray.reduce(
+            (sum, value) =>
+              sum +
+              Math.pow(
+                value -
+                  mean,
+                2
+              ),
+            0
+          ) /
+          gray.length;
+
+
+        const std =
+          Math.sqrt(
+            variance
+          ) || 1;
+
+
+        const normalizedGray =
+          gray.map(
+            value =>
+              Math.max(
+                -2.5,
+                Math.min(
+                  2.5,
+                  (
+                    value -
+                      mean
+                  ) /
+                    std
+                )
+              )
+          );
+
+
+        const smallGray = [];
+
+
+        for (
+          let y = 0;
+          y < 24;
+          y += 1.5
+        ) {
+
+          const yy =
+            Math.min(
+              23,
+              Math.floor(y)
+            );
+
+
+          for (
+            let x = 0;
+            x < 24;
+            x += 1.5
+          ) {
+
+            const xx =
+              Math.min(
+                23,
+                Math.floor(x)
+              );
+
+
+            smallGray.push(
+              Math.round(
+                (
+                  normalizedGray[
+                    yy *
+                      24 +
+                    xx
+                  ] +
+                  2.5
+                ) *
+                  51
+              )
+            );
+
+          }
+
+        }
+
+
+        resolve({
+
+          gray:
+            smallGray,
+
+          rgb:
             rgb
-          });
 
-        };
+        });
 
-      image.onerror =
-        () => resolve(null);
+      };
 
-      image.src =
+
+      img.onerror =
+        () =>
+          resolve(
+            null
+          );
+
+
+      img.src =
         dataUrl;
 
     }
   );
 
 }
+
 
 /* =========================================================
    VECTOR SIMILARITY
@@ -1858,16 +2572,22 @@ function vectorSimilarity(
 ) {
 
   if (
-    !a ||
-    !b ||
-    a.length !== b.length
+    !Array.isArray(a) ||
+    !Array.isArray(b) ||
+    a.length !==
+      b.length ||
+    !a.length
   ) {
     return 0;
   }
 
-  let sum = 0;
-  let aa = 0;
-  let bb = 0;
+
+  let dot = 0;
+
+  let normA = 0;
+
+  let normB = 0;
+
 
   for (
     let i = 0;
@@ -1875,33 +2595,51 @@ function vectorSimilarity(
     i++
   ) {
 
-    sum +=
-      a[i] * b[i];
+    const av =
+      Number(
+        a[i]
+      );
 
-    aa +=
-      a[i] * a[i];
+    const bv =
+      Number(
+        b[i]
+      );
 
-    bb +=
-      b[i] * b[i];
+
+    dot +=
+      av * bv;
+
+    normA +=
+      av * av;
+
+    normB +=
+      bv * bv;
 
   }
 
+
   if (
-    aa === 0 ||
-    bb === 0
+    !normA ||
+    !normB
   ) {
     return 0;
   }
 
+
   return (
-    sum /
+    dot /
     (
-      Math.sqrt(aa) *
-      Math.sqrt(bb)
+      Math.sqrt(
+        normA
+      ) *
+      Math.sqrt(
+        normB
+      )
     )
   );
 
 }
+
 
 /* =========================================================
    COMPARE
@@ -1916,17 +2654,20 @@ function compareFingerprints(
     return 0;
   }
 
+
   const grayScore =
     vectorSimilarity(
       a.gray,
       b.gray
     );
 
+
   const rgbScore =
     vectorSimilarity(
       a.rgb,
       b.rgb
     );
+
 
   return (
     grayScore * 0.72 +
@@ -1935,8 +2676,9 @@ function compareFingerprints(
 
 }
 
+
 /* =========================================================
-   IDENTIFY CAT
+   IDENTIFY CURRENT CAT
 ========================================================= */
 
 async function identifyCurrentCat() {
@@ -1944,39 +2686,53 @@ async function identifyCurrentCat() {
   const profiles =
     loadCatProfiles();
 
+
   if (!profiles.length) {
 
     showIdentificationResult({
-      type: "empty",
+
+      type:
+        "empty",
+
       message:
         "Zatiaľ nemáš uloženú žiadnu mačku."
+
     });
 
     return;
 
   }
+
 
   if (!samples.length) {
 
     showIdentificationResult({
-      type: "empty",
+
+      type:
+        "empty",
+
       message:
         "Nepodarilo sa zachytiť vhodný záber."
+
     });
 
     return;
 
   }
+
 
   setInstruction(
     "Porovnávam mačku s uloženými profilmi..."
   );
 
+
   const candidateFingerprints =
     [];
 
+
   for (
-    const sample of samples
+    const sample
+    of samples
   ) {
 
     const fp =
@@ -1984,25 +2740,55 @@ async function identifyCurrentCat() {
         sample.image
       );
 
+
     if (fp) {
+
       candidateFingerprints.push(
         fp
       );
+
     }
 
   }
 
-  const results = [];
 
-  for (
-    const profile of profiles
+  if (
+    !candidateFingerprints.length
   ) {
 
-    const scores = [];
+    showIdentificationResult({
+
+      type:
+        "empty",
+
+      message:
+        "Nepodarilo sa vytvoriť vizuálny podpis."
+
+    });
+
+    return;
+
+  }
+
+
+  const results = [];
+
+
+  for (
+    const profile
+    of profiles
+  ) {
+
+    const profileScores =
+      [];
+
 
     for (
       const reference
-      of profile.samples || []
+      of (
+        profile.samples ||
+        []
+      )
     ) {
 
       if (
@@ -2011,12 +2797,13 @@ async function identifyCurrentCat() {
         continue;
       }
 
+
       for (
         const candidateFp
         of candidateFingerprints
       ) {
 
-        scores.push(
+        profileScores.push(
           compareFingerprints(
             candidateFp,
             reference.fingerprint
@@ -2027,23 +2814,29 @@ async function identifyCurrentCat() {
 
     }
 
-    if (!scores.length) {
+
+    if (
+      !profileScores.length
+    ) {
       continue;
     }
 
-    scores.sort(
+
+    profileScores.sort(
       (a, b) =>
         b - a
     );
 
+
     const top =
-      scores.slice(
+      profileScores.slice(
         0,
         Math.min(
           5,
-          scores.length
+          profileScores.length
         )
       );
+
 
     const score =
       top.reduce(
@@ -2053,12 +2846,17 @@ async function identifyCurrentCat() {
       ) /
       top.length;
 
+
     results.push({
+
       profile,
+
       score
+
     });
 
   }
+
 
   results.sort(
     (a, b) =>
@@ -2066,13 +2864,16 @@ async function identifyCurrentCat() {
       a.score
   );
 
+
   const winner =
     results[0] ||
     null;
 
+
   const runnerUp =
     results[1] ||
     null;
+
 
   const margin =
     winner &&
@@ -2081,39 +2882,55 @@ async function identifyCurrentCat() {
         runnerUp.score
       : 1;
 
+
   const accepted =
     !!winner &&
     winner.score >=
       RECOGNITION_MIN_SCORE &&
-    margin >= 0.035;
+    margin >=
+      0.035;
+
 
   if (!accepted) {
 
     showIdentificationResult({
-      type: "unknown",
+
+      type:
+        "unknown",
+
       score:
         winner
           ? winner.score
           : 0,
+
       winner:
         winner
           ? winner.profile
           : null
+
     });
+
 
     return;
 
   }
 
+
   showIdentificationResult({
-    type: "match",
+
+    type:
+      "match",
+
     score:
       winner.score,
+
     winner:
       winner.profile
+
   });
 
 }
+
 
 /* =========================================================
    IDENTIFICATION RESULT
@@ -2127,88 +2944,127 @@ function showIdentificationResult(
     return;
   }
 
+
   scanResult.classList.remove(
     "hidden"
   );
 
+
   if (
     result.type ===
-    "match"
+    "empty"
   ) {
-
-    const name =
-      result.winner.name;
-
-    const percent =
-      Math.round(
-        result.score * 100
-      );
 
     scanResult.innerHTML = `
 
-      <p style="margin:0;font-size:22px;font-weight:800;">
-        🐱 ${escapeHtml(name)}
-      </p>
-
-      <p style="margin:8px 0 0;">
-        MAČKA ROZPOZNANÁ
+      <p style="margin:0;font-weight:700;">
+        ŽIADNA MAČKA
       </p>
 
       <p style="margin:8px 0 0;opacity:.75;">
-        Zhoda:
-        ${percent}%
+        ${escapeHtml(
+          result.message
+        )}
       </p>
 
     `;
 
-    setInstruction(
-      "Mačka rozpoznaná: " +
-      name
-    );
-
     return;
 
   }
+
 
   if (
     result.type ===
     "unknown"
   ) {
 
+    const score =
+      Math.round(
+        result.score *
+          100
+      );
+
+
     scanResult.innerHTML = `
 
       <p style="margin:0;font-weight:700;">
-        MAČKU SA NEPODARILO SPOĽAHLIVO ROZPOZNAŤ
+        MAČKU SA NEPODARILO SPOĽAHLIVO IDENTIFIKOVAŤ
       </p>
 
-      <p style="margin:8px 0 0;opacity:.75;">
-        Najlepší výsledok:
-        ${Math.round(
-          result.score * 100
-        )}%
+      <p style="margin:8px 0 0;">
+        Najlepšia zhoda:
+        ${score}%
+      </p>
+
+      ${
+        result.winner
+          ? `
+            <p style="margin:8px 0 0;opacity:.75;">
+              Najbližší profil:
+              ${escapeHtml(
+                result.winner.name
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      <p style="margin:8px 0 0;opacity:.65;">
+        Porovnanie prebehlo iba s mačkami uloženými v tomto zariadení.
       </p>
 
     `;
-
-    setInstruction(
-      "Mačka nie je dostatočne podobná uloženým profilom."
-    );
 
     return;
 
   }
 
+
+  const score =
+    Math.round(
+      result.score *
+        100
+    );
+
+
   scanResult.innerHTML = `
 
     <p style="margin:0;font-weight:700;">
+      🐱 MAČKA ROZPOZNANÁ
+    </p>
+
+    <p style="margin:10px 0 0;font-size:1.25em;font-weight:700;">
       ${escapeHtml(
-        result.message
+        result.winner.name
       )}
+    </p>
+
+    ${
+      result.winner.nickname
+        ? `
+          <p style="margin:4px 0 0;opacity:.75;">
+            ${escapeHtml(
+              result.winner.nickname
+            )}
+          </p>
+        `
+        : ""
+    }
+
+    <p style="margin:10px 0 0;">
+      Vizuálna zhoda:
+      ${score}%
+    </p>
+
+    <p style="margin:8px 0 0;opacity:.65;">
+      Porovnanie prebehlo iba s mačkami uloženými v tomto zariadení.
     </p>
 
   `;
 
 }
+
 
 /* =========================================================
    SAVE PROFILE
@@ -2221,25 +3077,30 @@ async function saveProfile() {
       "catName"
     );
 
+
   const nicknameElement =
     document.getElementById(
       "catNickname"
     );
+
 
   const savedInfo =
     document.getElementById(
       "savedInfo"
     );
 
+
   const name =
     nameElement
       ? nameElement.value.trim()
       : "";
 
+
   const nickname =
     nicknameElement
       ? nicknameElement.value.trim()
       : "";
+
 
   if (!samples.length) {
 
@@ -2249,10 +3110,13 @@ async function saveProfile() {
         "hidden"
       );
 
+
       savedInfo.innerHTML = `
+
         <p style="margin:0;font-weight:700;">
-          NIE SÚ K DISPOZÍCII ZÁBERY
+          ŽIADNY ZÁBER
         </p>
+
       `;
 
     }
@@ -2261,40 +3125,50 @@ async function saveProfile() {
 
   }
 
-  const profiles =
-    loadCatProfiles();
 
-  const profile = {
+  const catName =
+    name ||
+    "Unnamed cat";
 
-    id:
-      "cat_" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .slice(2, 8),
-
-    name:
-      name ||
-      "Moja mačka",
-
-    nickname,
-
-    createdAt:
-      Date.now(),
-
-    samples: []
-
-  };
 
   try {
 
-    setStatus(
-      "Vytváram profil mačky..."
-    );
+    const profiles =
+      loadCatProfiles();
+
+
+    const now =
+      Date.now();
+
+
+    const profile = {
+
+      id:
+        "cat_" +
+        now +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2, 8),
+
+      name:
+        catName,
+
+      nickname:
+        nickname,
+
+      createdAt:
+        now,
+
+      samples:
+        []
+
+    };
+
 
     for (
-      const sample of samples
+      const sample
+      of samples
     ) {
 
       const fingerprint =
@@ -2302,9 +3176,11 @@ async function saveProfile() {
           sample.image
         );
 
+
       if (!fingerprint) {
         continue;
       }
+
 
       profile.samples.push({
 
@@ -2326,27 +3202,34 @@ async function saveProfile() {
 
     }
 
+
     if (
       !profile.samples.length
     ) {
+
       throw new Error(
         "Nepodarilo sa vytvoriť referenčné vzorky."
       );
+
     }
+
 
     profiles.push(
       profile
     );
 
+
     saveCatProfiles(
       profiles
     );
+
 
     if (savedInfo) {
 
       savedInfo.classList.remove(
         "hidden"
       );
+
 
       savedInfo.innerHTML = `
 
@@ -2356,7 +3239,7 @@ async function saveProfile() {
 
         <p style="margin:8px 0 0;">
           ${escapeHtml(
-            profile.name
+            catName
           )}
         </p>
 
@@ -2378,18 +3261,16 @@ async function saveProfile() {
         </p>
 
         <p style="margin:8px 0 0;opacity:.65;">
-          Profil je uložený v tomto zariadení.
+          Profil je uložený lokálne v tomto zariadení.
         </p>
 
       `;
 
     }
 
+
     refreshProfileManager();
 
-    setStatus(
-      "Mačka je uložená"
-    );
 
   } catch (error) {
 
@@ -2398,11 +3279,13 @@ async function saveProfile() {
       error
     );
 
+
     if (savedInfo) {
 
       savedInfo.classList.remove(
         "hidden"
       );
+
 
       savedInfo.innerHTML = `
 
@@ -2410,9 +3293,10 @@ async function saveProfile() {
           PROFIL SA NEPODARILO ULOŽIŤ
         </p>
 
-        <p style="margin:8px 0 0;">
+        <p style="margin:8px 0 0;opacity:.75;">
           ${escapeHtml(
-            error.message
+            error.message ||
+            "Neznáma chyba"
           )}
         </p>
 
@@ -2424,31 +3308,9 @@ async function saveProfile() {
 
 }
 
-/* =========================================================
-   DELETE PROFILE
-========================================================= */
-
-function deleteCatProfile(
-  id
-) {
-
-  const profiles =
-    loadCatProfiles()
-      .filter(
-        profile =>
-          profile.id !== id
-      );
-
-  saveCatProfiles(
-    profiles
-  );
-
-  refreshProfileManager();
-
-}
 
 /* =========================================================
-   PROFILE UI
+   PROFILE MANAGER
 ========================================================= */
 
 function createProfileManagerUI() {
@@ -2459,94 +3321,152 @@ function createProfileManagerUI() {
     return;
   }
 
+
   profileManagerInitialized =
     true;
+
 
   const style =
     document.createElement(
       "style"
     );
 
+
   style.textContent = `
 
     #catProfilePanel {
+
       margin:18px auto;
+
       max-width:720px;
+
       padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
+
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
+      border-radius:16px;
+
+      background:
+        rgba(0,0,0,.08);
+
     }
+
 
     #catProfilePanel h3 {
-      margin:0 0 12px;
+      margin:
+        0 0 12px;
     }
 
+
     .cat-profile-row {
+
       display:flex;
+
       align-items:center;
+
       justify-content:space-between;
+
       gap:12px;
-      padding:12px 0;
-      border-bottom:1px solid rgba(255,255,255,.08);
+
+      padding:10px 0;
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
     }
+
+
+    .cat-profile-row:last-child {
+      border-bottom:0;
+    }
+
 
     .cat-profile-meta {
       min-width:0;
     }
 
+
     .cat-profile-meta strong {
       display:block;
     }
+
 
     .cat-profile-meta small {
       opacity:.65;
     }
 
+
     .cat-profile-action {
+
       border:0;
+
       border-radius:10px;
+
       padding:7px 10px;
+
       cursor:pointer;
+
     }
+
 
     #catIdentityControls {
+
       display:flex;
+
       gap:10px;
+
       flex-wrap:wrap;
+
       margin-top:14px;
+
     }
 
+
     #catIdentityControls button {
+
       cursor:pointer;
+
       border:0;
+
       border-radius:12px;
+
       padding:10px 14px;
+
       font-weight:700;
+
     }
 
   `;
 
+
   document.head.appendChild(
     style
   );
+
 
   const home =
     document.getElementById(
       "home"
     );
 
+
   if (!home) {
     return;
   }
+
 
   const panel =
     document.createElement(
       "section"
     );
 
+
   panel.id =
     "catProfilePanel";
+
 
   panel.innerHTML = `
 
@@ -2561,12 +3481,14 @@ function createProfileManagerUI() {
     <div id="catIdentityControls">
 
       <button
-        id="addCatProfileButton">
+        id="addCatProfileButton"
+      >
         + Pridať mačku
       </button>
 
       <button
-        id="identifyCatButton">
+        id="identifyCatButton"
+      >
         🔎 Identifikovať mačku
       </button>
 
@@ -2574,19 +3496,23 @@ function createProfileManagerUI() {
 
   `;
 
+
   home.appendChild(
     panel
   );
+
 
   const addButton =
     document.getElementById(
       "addCatProfileButton"
     );
 
+
   const identifyButton =
     document.getElementById(
       "identifyCatButton"
     );
+
 
   if (addButton) {
 
@@ -2603,6 +3529,7 @@ function createProfileManagerUI() {
     );
 
   }
+
 
   if (identifyButton) {
 
@@ -2623,8 +3550,10 @@ function createProfileManagerUI() {
 
         }
 
+
         scanMode =
           "identify";
+
 
         startCamera();
 
@@ -2633,12 +3562,14 @@ function createProfileManagerUI() {
 
   }
 
+
   refreshProfileManager();
 
 }
 
+
 /* =========================================================
-   REFRESH PROFILES
+   REFRESH PROFILE LIST
 ========================================================= */
 
 function refreshProfileManager() {
@@ -2648,12 +3579,15 @@ function refreshProfileManager() {
       "catProfileList"
     );
 
+
   if (!list) {
     return;
   }
 
+
   const profiles =
     loadCatProfiles();
+
 
   if (!profiles.length) {
 
@@ -2668,6 +3602,7 @@ function refreshProfileManager() {
     return;
 
   }
+
 
   list.innerHTML =
     profiles
@@ -2690,7 +3625,8 @@ function refreshProfileManager() {
                   profile.nickname
                     ? escapeHtml(
                         profile.nickname
-                      ) + " · "
+                      ) +
+                      " · "
                     : ""
                 }
 
@@ -2707,11 +3643,13 @@ function refreshProfileManager() {
 
             </div>
 
+
             <button
               class="cat-profile-action"
               data-delete-profile="${escapeHtml(
                 profile.id
-              )}">
+              )}"
+            >
               Zmazať
             </button>
 
@@ -2720,6 +3658,7 @@ function refreshProfileManager() {
         `
       )
       .join("");
+
 
   list
     .querySelectorAll(
@@ -2737,9 +3676,10 @@ function refreshProfileManager() {
                 "data-delete-profile"
               );
 
+
             if (
               confirm(
-                "Naozaj chceš zmazať tento profil?"
+                "Naozaj chceš zmazať tento profil mačky?"
               )
             ) {
 
@@ -2757,31 +3697,6 @@ function refreshProfileManager() {
 
 }
 
-/* =========================================================
-   COUNTER
-========================================================= */
-
-function updateCounter() {
-
-  if (!frameCounter) {
-    return;
-  }
-
-  const count =
-    scanMode === "enroll"
-      ? samples.length
-      : recognitionCandidates.length;
-
-  frameCounter.textContent =
-    count +
-    " / " +
-    (
-      scanMode === "enroll"
-        ? MAX_SAMPLES
-        : 5
-    );
-
-}
 
 /* =========================================================
    ESCAPE HTML
@@ -2794,81 +3709,53 @@ function escapeHtml(
   return String(
     value ?? ""
   )
-    .replaceAll(
-      "&",
+    .replace(
+      /&/g,
       "&amp;"
     )
-    .replaceAll(
-      "<",
+    .replace(
+      /</g,
       "&lt;"
     )
-    .replaceAll(
-      ">",
+    .replace(
+      />/g,
       "&gt;"
     )
-    .replaceAll(
-      '"',
+    .replace(
+      /"/g,
       "&quot;"
     )
-    .replaceAll(
-      "'",
+    .replace(
+      /'/g,
       "&#039;"
     );
 
 }
 
+
 /* =========================================================
-   IMAGE / VIDEO TEST
+   COUNTER
 ========================================================= */
 
-if (mediaInput) {
+function updateCounter() {
 
-  mediaInput.addEventListener(
-    "change",
-    async event => {
+  if (!frameCounter) {
+    return;
+  }
 
-      const file =
-        event.target.files[0];
 
-      if (!file) {
-        return;
-      }
+  const count =
+    scanMode ===
+      "enroll"
+      ? samples.length
+      : recognitionCandidates.length;
 
-      if (
-        file.type.startsWith(
-          "image/"
-        )
-      ) {
 
-        await analyzeImageFile(
-          file
-        );
-
-        return;
-
-      }
-
-      if (
-        file.type.startsWith(
-          "video/"
-        )
-      ) {
-
-        sourceVideo.src =
-          URL.createObjectURL(
-            file
-          );
-
-        showScreen(
-          "videoTest"
-        );
-
-      }
-
-    }
-  );
+  frameCounter.textContent =
+    `${count} / ${MAX_SAMPLES}`;
 
 }
+
 
 /* =========================================================
    IMAGE ANALYSIS
@@ -2881,17 +3768,21 @@ async function analyzeImageFile(
   const ready =
     await initializeRoboflow();
 
+
   if (!ready) {
     return;
   }
+
 
   const url =
     URL.createObjectURL(
       file
     );
 
+
   const image =
     new Image();
+
 
   image.onload =
     async () => {
@@ -2902,10 +3793,12 @@ async function analyzeImageFile(
       videoCanvas.height =
         image.naturalHeight;
 
+
       const ctx =
         videoCanvas.getContext(
           "2d"
         );
+
 
       ctx.drawImage(
         image,
@@ -2913,11 +3806,13 @@ async function analyzeImageFile(
         0
       );
 
+
       const dataUrl =
         canvasToDataUrl(
           videoCanvas,
-          0.80
+          0.72
         );
+
 
       try {
 
@@ -2926,28 +3821,31 @@ async function analyzeImageFile(
             dataUrl
           );
 
+
         const detection =
           selectBestDetection(
             predictions
           );
 
+
         videoResult.classList.remove(
           "hidden"
         );
+
 
         if (detection) {
 
           videoResult.innerHTML = `
 
             <p style="margin:0;font-weight:700;">
-              CAT FACE DETECTED
+              🐱 CAT FACE DETECTED
             </p>
 
             <p style="margin:8px 0 0;">
               Confidence:
               ${Math.round(
                 detection.confidence *
-                100
+                  100
               )}%
             </p>
 
@@ -2965,11 +3863,13 @@ async function analyzeImageFile(
 
         }
 
+
       } catch (error) {
 
         videoResult.classList.remove(
           "hidden"
         );
+
 
         videoResult.innerHTML = `
 
@@ -2987,34 +3887,38 @@ async function analyzeImageFile(
 
       }
 
+
+      URL.revokeObjectURL(
+        url
+      );
+
+
       showScreen(
         "videoTest"
       );
 
     };
 
+
+  image.onerror =
+    () => {
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    };
+
+
   image.src =
     url;
 
 }
 
+
 /* =========================================================
    VIDEO ANALYSIS
 ========================================================= */
-
-const analyzeVideoButton =
-  document.getElementById(
-    "analyzeVideo"
-  );
-
-if (analyzeVideoButton) {
-
-  analyzeVideoButton.addEventListener(
-    "click",
-    analyzeUploadedVideo
-  );
-
-}
 
 async function analyzeUploadedVideo() {
 
@@ -3025,28 +3929,37 @@ async function analyzeUploadedVideo() {
     return;
   }
 
+
   const ready =
     await initializeRoboflow();
+
 
   if (!ready) {
     return;
   }
 
+
   videoSamples.innerHTML =
     "";
+
 
   videoResult.classList.remove(
     "hidden"
   );
 
+
   videoResult.innerHTML = `
+
     <p style="margin:0;font-weight:700;">
-      ANALYZING VIDEO...
+      ANALYZUJEM VIDEO...
     </p>
+
   `;
+
 
   const duration =
     sourceVideo.duration;
+
 
   if (
     !Number.isFinite(
@@ -3056,27 +3969,32 @@ async function analyzeUploadedVideo() {
   ) {
 
     videoResult.innerHTML = `
+
       <p style="margin:0;font-weight:700;">
-        VIDEO NOT READY
+        VIDEO NIE JE PRIPRAVENÉ
       </p>
+
     `;
 
     return;
 
   }
 
+
   const results = [];
+
 
   const frameCount =
     Math.min(
-      24,
+      30,
       Math.max(
-        8,
+        10,
         Math.floor(
-          duration * 6
+          duration * 8
         )
       )
     );
+
 
   for (
     let i = 0;
@@ -3094,10 +4012,12 @@ async function analyzeUploadedVideo() {
         )
       );
 
+
     await seekVideo(
       sourceVideo,
       time
     );
+
 
     videoCanvas.width =
       sourceVideo.videoWidth;
@@ -3105,10 +4025,12 @@ async function analyzeUploadedVideo() {
     videoCanvas.height =
       sourceVideo.videoHeight;
 
+
     const ctx =
       videoCanvas.getContext(
         "2d"
       );
+
 
     ctx.drawImage(
       sourceVideo,
@@ -3118,11 +4040,13 @@ async function analyzeUploadedVideo() {
       videoCanvas.height
     );
 
+
     const dataUrl =
       canvasToDataUrl(
         videoCanvas,
-        0.80
+        0.72
       );
+
 
     try {
 
@@ -3131,10 +4055,12 @@ async function analyzeUploadedVideo() {
           dataUrl
         );
 
+
       const detection =
         selectBestDetection(
           predictions
         );
+
 
       if (detection) {
 
@@ -3161,6 +4087,7 @@ async function analyzeUploadedVideo() {
 
       }
 
+
     } catch (error) {
 
       console.warn(
@@ -3172,23 +4099,28 @@ async function analyzeUploadedVideo() {
 
   }
 
+
   results.sort(
     (a, b) =>
       (
         b.quality +
-        b.confidence * 100
+        b.confidence *
+          100
       ) -
       (
         a.quality +
-        a.confidence * 100
+        a.confidence *
+          100
       )
   );
+
 
   const best =
     results.slice(
       0,
       9
     );
+
 
   best.forEach(
     sample => {
@@ -3198,14 +4130,18 @@ async function analyzeUploadedVideo() {
           "img"
         );
 
+
       img.src =
         sample.data;
+
 
       img.style.width =
         "100%";
 
+
       img.style.borderRadius =
         "12px";
+
 
       videoSamples.appendChild(
         img
@@ -3214,19 +4150,22 @@ async function analyzeUploadedVideo() {
     }
   );
 
+
   if (best.length) {
 
     videoQuality.textContent =
-      Math.round(
+      `${Math.round(
         best[0].confidence *
-        100
-      ) + "%";
+          100
+      )}%`;
+
 
     videoQualityBar.style.width =
-      Math.round(
+      `${Math.round(
         best[0].confidence *
-        100
-      ) + "%";
+          100
+      )}%`;
+
 
     videoResult.innerHTML = `
 
@@ -3237,6 +4176,14 @@ async function analyzeUploadedVideo() {
       <p style="margin:8px 0 0;">
         Vybraných záberov:
         ${best.length}
+      </p>
+
+      <p style="margin:8px 0 0;">
+        Najlepší AI výsledok:
+        ${Math.round(
+          best[0].confidence *
+            100
+        )}%
       </p>
 
     `;
@@ -3255,6 +4202,7 @@ async function analyzeUploadedVideo() {
 
 }
 
+
 /* =========================================================
    STATIC IMAGE QUALITY
 ========================================================= */
@@ -3266,20 +4214,35 @@ function calculateStaticImageQuality(
 
   if (
     !canvas ||
-    !detection
+    !detection ||
+    !detection.bbox
   ) {
     return 0;
   }
 
+
+  const width =
+    canvas.width;
+
+
+  const height =
+    canvas.height;
+
+
+  const b =
+    detection.bbox;
+
+
   const areaRatio =
     (
-      detection.bbox.width *
-      detection.bbox.height
+      b.width *
+      b.height
     ) /
     (
-      canvas.width *
-      canvas.height
+      width *
+      height
     );
+
 
   const sizeScore =
     Math.min(
@@ -3290,18 +4253,23 @@ function calculateStaticImageQuality(
       ) * 100
     );
 
+
   return Math.round(
+
     detection.confidence *
-    100 *
-    0.7 +
+      100 *
+      0.7 +
+
     sizeScore *
-    0.3
+      0.3
+
   );
 
 }
 
+
 /* =========================================================
-   SEEK VIDEO
+   VIDEO SEEK
 ========================================================= */
 
 function seekVideo(
@@ -3315,19 +4283,22 @@ function seekVideo(
       const handler =
         () => {
 
-          videoElement.removeEventListener(
-            "seeked",
-            handler
-          );
+          videoElement
+            .removeEventListener(
+              "seeked",
+              handler
+            );
 
           resolve();
 
         };
 
+
       videoElement.addEventListener(
         "seeked",
         handler
       );
+
 
       videoElement.currentTime =
         time;
@@ -3337,6 +4308,65 @@ function seekVideo(
 
 }
 
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+if (mediaInput) {
+
+  mediaInput.addEventListener(
+    "change",
+    event => {
+
+      const file =
+        event.target.files &&
+        event.target.files[0];
+
+
+      if (!file) {
+        return;
+      }
+
+
+      if (
+        file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        analyzeImageFile(
+          file
+        );
+
+      } else if (
+        file.type.startsWith(
+          "video/"
+        )
+      ) {
+
+        const url =
+          URL.createObjectURL(
+            file
+          );
+
+
+        sourceVideo.src =
+          url;
+
+
+        showScreen(
+          "videoTest"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
 /* =========================================================
    BUTTONS
 ========================================================= */
@@ -3345,6 +4375,7 @@ const startCameraButton =
   document.getElementById(
     "startCamera"
   );
+
 
 if (startCameraButton) {
 
@@ -3362,10 +4393,12 @@ if (startCameraButton) {
 
 }
 
+
 const stopCameraButton =
   document.getElementById(
     "stopCamera"
   );
+
 
 if (stopCameraButton) {
 
@@ -3376,10 +4409,12 @@ if (stopCameraButton) {
 
 }
 
+
 const backHomeButton =
   document.getElementById(
     "backHome"
   );
+
 
 if (backHomeButton) {
 
@@ -3396,10 +4431,12 @@ if (backHomeButton) {
 
 }
 
+
 const profileBackButton =
   document.getElementById(
     "profileBack"
   );
+
 
 if (profileBackButton) {
 
@@ -3408,18 +4445,22 @@ if (profileBackButton) {
     () => {
 
       showScreen(
-        "camera"
+        "home"
       );
+
+      refreshProfileManager();
 
     }
   );
 
 }
 
+
 const saveProfileButton =
   document.getElementById(
     "saveProfile"
   );
+
 
 if (saveProfileButton) {
 
@@ -3430,29 +4471,48 @@ if (saveProfileButton) {
 
 }
 
+
+const analyzeVideoButton =
+  document.getElementById(
+    "analyzeVideo"
+  );
+
+
+if (analyzeVideoButton) {
+
+  analyzeVideoButton.addEventListener(
+    "click",
+    analyzeUploadedVideo
+  );
+
+}
+
+
 /* =========================================================
    INITIALIZATION
 ========================================================= */
 
-showScreen(
-  "home"
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    createProfileManagerUI();
+
+    setStatus(
+      "CAT NOSE ID pripravené"
+    );
+
+  }
 );
 
-setStatus(
-  "Roboflow AI pripravené"
-);
+
+/*
+   Also initialize immediately because this script
+   is normally loaded at the end of <body>.
+*/
 
 createProfileManagerUI();
 
-refreshProfileManager();
-
-updateCounter();
-
-console.log(
-  "CAT NOSE ID v0.9.0 loaded."
-);
-
-console.log(
-  "Roboflow Workflow:",
-  ROBOFLOW_WORKFLOW_URL
+setStatus(
+  "CAT NOSE ID pripravené"
 );

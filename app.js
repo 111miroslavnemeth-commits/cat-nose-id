@@ -1,10 +1,10 @@
 /* =========================================================
    CAT NOSE ID
-   v0.9.0
+   v0.9.1
    Roboflow RF-DETR Cat Face Detection
    Local Household Cat Profiles
    Automatic Reference Frame Selection
-   ROBUST WORKFLOW RESPONSE HANDLING
+   TEST VERSION - ROBOFLOW KEY DIRECTLY EMBEDDED
 ========================================================= */
 
 
@@ -15,8 +15,18 @@
 const ROBOFLOW_WORKFLOW_URL =
   "https://serverless.roboflow.com/miroslav-nemeth/workflows/cat-face-data-atoiv";
 
-const ROBOFLOW_KEY_STORAGE =
-  "catNoseIdRoboflowApiKey_v1";
+/*
+   TEST ONLY
+
+   API key is intentionally embedded directly in this
+   development version so we can verify that the
+   Roboflow Workflow connection itself works.
+
+   After successful testing this must be moved to a
+   server-side environment.
+*/
+const ROBOFLOW_API_KEY =
+  "w4cawsZFX6ady8eie8XB";
 
 
 /* =========================================================
@@ -226,72 +236,17 @@ function setInstruction(text) {
    API KEY
 ========================================================= */
 
+/*
+   TEST VERSION:
+
+   We deliberately DO NOT ask the user for an API key.
+
+   The key is supplied directly by ROBOFLOW_API_KEY above.
+*/
+
 function getRoboflowApiKey() {
 
-  try {
-
-    return (
-      localStorage.getItem(
-        ROBOFLOW_KEY_STORAGE
-      ) || ""
-    ).trim();
-
-  } catch (error) {
-
-    console.error(
-      "API KEY STORAGE ERROR:",
-      error
-    );
-
-    return "";
-
-  }
-
-}
-
-
-function askForRoboflowApiKey() {
-
-  const current =
-    getRoboflowApiKey();
-
-  const key =
-    window.prompt(
-      current
-        ? "Roboflow API kľúč:"
-        : "Zadaj Roboflow Workflow API kľúč:"
-    );
-
-  if (!key) {
-    return false;
-  }
-
-  const clean =
-    key.trim();
-
-  if (!clean) {
-    return false;
-  }
-
-  try {
-
-    localStorage.setItem(
-      ROBOFLOW_KEY_STORAGE,
-      clean
-    );
-
-  } catch (error) {
-
-    console.error(
-      "API KEY SAVE ERROR:",
-      error
-    );
-
-    return false;
-
-  }
-
-  return true;
+  return ROBOFLOW_API_KEY.trim();
 
 }
 
@@ -331,38 +286,27 @@ async function initializeRoboflow() {
 
     }
 
-    let apiKey =
+    const apiKey =
       getRoboflowApiKey();
 
     if (!apiKey) {
 
-      setStatus(
-        "Čakám na Roboflow API kľúč..."
-      );
-
-      const accepted =
-        askForRoboflowApiKey();
-
-      if (!accepted) {
-
-        throw new Error(
-          "Roboflow API kľúč nebol zadaný."
-        );
-
-      }
-
-      apiKey =
-        getRoboflowApiKey();
-
-    }
-
-    if (!apiKey) {
-
       throw new Error(
-        "Chýba Roboflow Workflow API kľúč."
+        "Roboflow API kľúč nie je nastavený."
       );
 
     }
+
+    /*
+       We don't call Roboflow here yet.
+
+       This initialization only confirms that the
+       application has a valid configured endpoint
+       and API key.
+
+       The real connection test happens when the
+       first image is sent through runRoboflowWorkflow().
+    */
 
     modelReady = true;
 
@@ -497,8 +441,13 @@ async function runRoboflowWorkflow(
 
   } catch (error) {
 
+    console.error(
+      "ROBOFLOW FETCH ERROR:",
+      error
+    );
+
     throw new Error(
-      "Nepodarilo sa spojiť s Roboflow. Skontroluj internetové pripojenie."
+      "Nepodarilo sa spojiť s Roboflow. Skontroluj internetové pripojenie alebo Roboflow Workflow."
     );
 
   }
@@ -513,8 +462,14 @@ async function runRoboflowWorkflow(
 
   } catch (error) {
 
-    const text =
-      await response.text();
+    let text = "";
+
+    try {
+      text =
+        await response.text();
+    } catch (_) {
+      text = "";
+    }
 
     throw new Error(
       `Roboflow neposlal platnú odpoveď. HTTP ${response.status}. ${text}`
@@ -522,6 +477,11 @@ async function runRoboflowWorkflow(
 
   }
 
+
+  console.log(
+    "ROBOFLOW HTTP STATUS:",
+    response.status
+  );
 
   console.log(
     "ROBOFLOW RESPONSE:",
@@ -572,19 +532,6 @@ async function runRoboflowWorkflow(
 
 /* =========================================================
    ROBUST ROBOFLOW RESPONSE PARSER
-
-   Roboflow Workflow API returns:
-
-   {
-     outputs: [
-       {
-         predictions: [...]
-       }
-     ]
-   }
-
-   This parser deliberately searches recursively
-   because workflow output names can change.
 ========================================================= */
 
 function extractPredictions(

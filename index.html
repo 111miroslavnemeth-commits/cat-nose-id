@@ -1,76 +1,164 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d12">
-<title>CAT NOSE ID — Prototype v0.5.0</title>
-<link rel="stylesheet" href="styles.css">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta
+name="theme-color"
+content="#0b0d12">
+
+<title>
+CAT NOSE ID — Prototype v0.5.0
+</title>
+
+<link
+rel="stylesheet"
+href="styles.css">
+
 </head>
+
+
 <body>
+
 <main class="app">
 
+
 <header class="brand">
-<div class="logo">🐱</div>
-<div>
-<div class="eyebrow">TECHNICAL PROTOTYPE v0.5.0</div>
-<h1>CAT NOSE ID</h1>
-<p>The world's most unnecessary biometric system.</p>
+
+<div class="logo">
+🐱
 </div>
-</header>
 
-<section id="home" class="screen active">
+<div>
 
-<div class="hero-card">
-<div class="nose">🐽</div>
+<div class="eyebrow">
+TECHNICAL PROTOTYPE v0.5.0
+</div>
 
-<h2>Let's scan a suspect.</h2>
+<h1>
+CAT NOSE ID
+</h1>
 
 <p>
-This prototype tests the camera workflow and automatically selects sharp frames.
-It does <b>not</b> yet claim to identify a cat.
+The world's most unnecessary biometric system.
 </p>
 
-<button class="primary" id="startCamera">
+</div>
+
+</header>
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section
+id="home"
+class="screen active">
+
+<div class="hero-card">
+
+<div class="nose">
+🐽
+</div>
+
+<h2>
+Let's scan a suspect.
+</h2>
+
+<p>
+This prototype automatically scans the cat and selects suitable image candidates. It does <b>not</b> yet claim to identify a cat.
+</p>
+
+<button
+class="primary"
+id="startCamera">
+
 SCAN WITH CAMERA
+
 </button>
 
+
 <label class="secondary file-btn">
+
 TEST WITH VIDEO / PHOTO
-<input id="mediaInput" type="file" accept="video/*,image/*" hidden>
+
+<input
+id="mediaInput"
+type="file"
+accept="video/*,image/*"
+hidden>
+
 </label>
 
 </div>
 
+
 <div class="status-box">
+
 <span class="dot"></span>
-<span id="engineStatus">Capture engine ready</span>
+
+<span id="engineStatus">
+Capture engine ready
+</span>
+
 </div>
 
 </section>
 
 
-<section id="camera" class="screen">
+<!-- =====================================================
+     CAMERA
+===================================================== -->
+
+<section
+id="camera"
+class="screen">
+
 
 <div class="topbar">
 
-<button class="icon-btn" id="stopCamera">
+<button
+class="icon-btn"
+id="stopCamera">
+
 ✕
+
 </button>
 
+
 <div>
-<div class="eyebrow">LIVE SCANNER</div>
-<strong>SCANNING</strong>
+
+<div class="eyebrow">
+LIVE SCANNER
 </div>
 
-<div class="pill" id="frameCounter">
-0 samples
+<strong>
+SCANNING
+</strong>
+
+</div>
+
+
+<div
+class="pill"
+id="frameCounter">
+
+0 / 5
+
 </div>
 
 </div>
 
 
 <div class="camera-wrap">
+
 
 <video
 id="video"
@@ -79,25 +167,43 @@ muted
 autoplay>
 </video>
 
-<canvas id="detectionOverlay"></canvas>
+
+<canvas
+id="detectionOverlay">
+</canvas>
+
 
 <div class="scan-overlay">
+
 
 <div class="target">
 
 <div class="target-label">
+
 🐽 NOSE ZONE
-</div>
 
 </div>
 
-<div class="instruction" id="instruction">
+</div>
+
+
+<div
+class="instruction"
+id="instruction">
+
 Move the nose into the circle.
-</div>
 
 </div>
 
-<canvas id="frameCanvas" hidden></canvas>
+
+</div>
+
+
+<canvas
+id="frameCanvas"
+hidden>
+</canvas>
+
 
 </div>
 
@@ -105,53 +211,93 @@ Move the nose into the circle.
 <div class="meter">
 
 <div class="meter-label">
-<span>IMAGE QUALITY</span>
-<b id="qualityText">—</b>
+
+<span>
+IMAGE QUALITY
+</span>
+
+<b id="qualityText">
+—
+</b>
+
 </div>
+
 
 <div class="bar">
-<div id="qualityBar"></div>
+
+<div
+id="qualityBar">
 </div>
 
 </div>
 
-
-<div class="controls">
-
-<button
-class="secondary"
-id="captureNow">
-CAPTURE BEST FRAME
-</button>
-
-<button
-class="primary"
-id="finishScan">
-FINISH SCAN
-</button>
-
 </div>
 
 
-<p class="tiny" id="detectorNote">
-v0.5.0 finds a nose candidate inside the detected cat face region.
-This is still an experimental vision heuristic, not biometric identification.
+<div
+class="result-card"
+style="margin-top:14px;text-align:center;">
+
+<p
+style="margin:0;font-weight:700;">
+
+AUTOMATIC SCAN
+
 </p>
+
+<p
+style="margin:6px 0 0;opacity:.75;">
+
+The app automatically selects up to five suitable candidate frames. You do not need to press anything.
+
+</p>
+
+</div>
+
+
+<p
+class="tiny"
+id="detectorNote">
+
+The prototype detects the cat and automatically selects image candidates. A trained biometric nose detector is not yet implemented.
+
+</p>
+
 
 </section>
 
 
-<section id="videoTest" class="screen">
+<!-- =====================================================
+     VIDEO TEST
+===================================================== -->
+
+<section
+id="videoTest"
+class="screen">
+
 
 <div class="topbar">
 
-<button class="icon-btn" id="backHome">
+
+<button
+class="icon-btn"
+id="backHome">
+
 ✕
+
 </button>
 
+
 <div>
-<div class="eyebrow">VIDEO TEST</div>
-<strong>FRAME SAMPLER</strong>
+
+<div class="eyebrow">
+VIDEO TEST
+</div>
+
+<strong>
+FRAME SAMPLER
+</strong>
+
 </div>
 
 </div>
@@ -163,6 +309,7 @@ playsinline
 controls>
 </video>
 
+
 <canvas
 id="videoCanvas"
 hidden>
@@ -172,12 +319,24 @@ hidden>
 <div class="meter">
 
 <div class="meter-label">
-<span>BEST FRAME QUALITY</span>
-<b id="videoQuality">—</b>
+
+<span>
+BEST FRAME QUALITY
+</span>
+
+<b id="videoQuality">
+—
+</b>
+
 </div>
 
+
 <div class="bar">
-<div id="videoQualityBar"></div>
+
+<div
+id="videoQualityBar">
+</div>
+
 </div>
 
 </div>
@@ -186,7 +345,9 @@ hidden>
 <button
 class="primary"
 id="analyzeVideo">
+
 ANALYZE VIDEO
+
 </button>
 
 
@@ -195,27 +356,47 @@ id="videoResult"
 class="result-card hidden">
 </div>
 
+
 <div
 id="videoSamples"
 class="sample-grid">
 </div>
 
+
 </section>
 
 
-<section id="profile" class="screen">
+<!-- =====================================================
+     PROFILE / RESULT
+===================================================== -->
+
+<section
+id="profile"
+class="screen">
+
 
 <div class="topbar">
+
 
 <button
 class="icon-btn"
 id="profileBack">
+
 ←
+
 </button>
 
+
 <div>
-<div class="eyebrow">CAT PROFILE</div>
-<strong>NEW CAT</strong>
+
+<div class="eyebrow">
+CAT PROFILE
+</div>
+
+<strong>
+NEW CAT
+</strong>
+
 </div>
 
 </div>
@@ -223,32 +404,42 @@ id="profileBack">
 
 <div class="profile-card">
 
+
 <div class="avatar">
 🐱
 </div>
 
 
 <label>
+
 Cat name
+
 <input
 id="catName"
 placeholder="Mica">
+
 </label>
 
 
 <label>
+
 Nickname (optional)
+
 <input
 id="catNickname"
 placeholder="Micinka">
+
 </label>
 
 
 <button
 class="primary"
 id="saveProfile">
+
 SAVE NOSE SAMPLE
+
 </button>
+
 
 </div>
 
@@ -258,16 +449,28 @@ id="savedInfo"
 class="result-card hidden">
 </div>
 
+
 </section>
+
 
 </main>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js">
+</script>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-<script src="app.js"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd">
+</script>
+
+
+<script
+src="app.js">
+</script>
+
 
 </body>
+
 </html>

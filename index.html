@@ -73,7 +73,7 @@ Let's scan a suspect.
 </h2>
 
 <p>
-This prototype automatically scans the cat and selects suitable image candidates. It does <b>not</b> yet claim to identify a cat.
+This prototype automatically detects the cat nose and selects suitable frames. It does <b>not</b> yet claim to identify a cat.
 </p>
 
 <button
@@ -159,7 +159,6 @@ id="frameCounter">
 
 <div class="camera-wrap">
 
-
 <video
 id="video"
 playsinline
@@ -175,13 +174,10 @@ id="detectionOverlay">
 
 <div class="scan-overlay">
 
-
 <div class="target">
 
 <div class="target-label">
-
 🐽 NOSE ZONE
-
 </div>
 
 </div>
@@ -191,10 +187,9 @@ id="detectionOverlay">
 class="instruction"
 id="instruction">
 
-Move the nose into the circle.
+Looking for the nose...
 
 </div>
-
 
 </div>
 
@@ -204,7 +199,6 @@ id="frameCanvas"
 hidden>
 </canvas>
 
-
 </div>
 
 
@@ -213,11 +207,12 @@ hidden>
 <div class="meter-label">
 
 <span>
-IMAGE QUALITY
+NOSE DETECTION
 </span>
 
 <b id="qualityText">
 —
+
 </b>
 
 </div>
@@ -248,10 +243,17 @@ AUTOMATIC SCAN
 <p
 style="margin:6px 0 0;opacity:.75;">
 
-The app automatically selects up to five suitable candidate frames. You do not need to press anything.
+The app automatically detects the nose and selects up to five suitable frames. No button is required.
 
 </p>
 
+</div>
+
+
+<div
+id="scanResult"
+class="result-card hidden"
+style="margin-top:14px;text-align:center;">
 </div>
 
 
@@ -259,7 +261,7 @@ The app automatically selects up to five suitable candidate frames. You do not n
 class="tiny"
 id="detectorNote">
 
-The prototype detects the cat and automatically selects image candidates. A trained biometric nose detector is not yet implemented.
+Roboflow cat-nose detection model is running. Detection is experimental and is not biometric identification.
 
 </p>
 
@@ -277,7 +279,6 @@ class="screen">
 
 
 <div class="topbar">
-
 
 <button
 class="icon-btn"
@@ -321,11 +322,12 @@ hidden>
 <div class="meter-label">
 
 <span>
-BEST FRAME QUALITY
+BEST NOSE DETECTION
 </span>
 
 <b id="videoQuality">
 —
+
 </b>
 
 </div>
@@ -376,7 +378,6 @@ class="screen">
 
 
 <div class="topbar">
-
 
 <button
 class="icon-btn"
@@ -456,21 +457,11 @@ class="result-card hidden">
 
 
 <!-- =====================================================
-     AI / VISION LIBRARIES
+     ROBOFLOW INFERENCE.JS
 ===================================================== -->
 
 <script
-src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/ort.min.js">
-</script>
-
-
-<script
-src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js">
-</script>
-
-
-<script
-src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd">
+src="https://cdn.jsdelivr.net/npm/inferencejs">
 </script>
 
 

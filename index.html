@@ -2,679 +2,1189 @@
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#080b19">
+
 <title>CAT NOSE ID</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
-
-*{box-sizing:border-box}
-
-:root{
-  --bg:#080b16;
-  --panel:#11182a;
-  --panel2:#151d31;
-  --line:#34405d;
-  --pink:#ff329b;
-  --pink2:#ff5bb4;
-  --blue:#42bfff;
-  --cyan:#55e4ff;
-  --white:#f7f8ff;
-  --muted:#aeb7cc;
-  --green:#55ee91;
-  --yellow:#ffd34d;
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 15% 5%,#182b58 0,transparent 30%),
-    radial-gradient(circle at 90% 35%,#32153c 0,transparent 28%),
-    linear-gradient(180deg,#080c18,#050712);
-  color:var(--white);
-  font-family:"Baloo 2",system-ui,sans-serif;
+    margin:0;
+    min-height:100%;
+    background:#080b19;
 }
 
 body{
-  min-height:100vh;
+    color:#fff;
+    font-family:"Nunito",sans-serif;
+    background:
+        radial-gradient(circle at 10% 0%,rgba(42,116,255,.18),transparent 32%),
+        radial-gradient(circle at 92% 18%,rgba(255,40,150,.14),transparent 30%),
+        #080b19;
+}
+
+button,input,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
 }
 
 .app{
-  width:min(720px,100%);
-  margin:auto;
-  padding:18px 16px 70px;
+    width:min(980px,100%);
+    margin:auto;
+    padding:20px 16px 55px;
 }
-
-/* ---------- HEADER ---------- */
-
-.header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:18px;
-}
-
-.logo{
-  width:62px;
-  height:62px;
-  flex:none;
-  border-radius:20px;
-  border:2px solid #3b8fc3;
-  background:#11192a;
-  display:grid;
-  place-items:center;
-  box-shadow:0 0 25px rgba(53,193,255,.18);
-}
-
-.logo svg{
-  width:44px;
-  height:44px;
-}
-
-.eyebrow{
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.18em;
-  color:#8793ad;
-}
-
-h1{
-  margin:1px 0 0;
-  font-size:28px;
-  line-height:1;
-  letter-spacing:.01em;
-}
-
-.subtitle{
-  margin:5px 0 0;
-  color:#9da8c0;
-  font-size:14px;
-}
-
-/* ---------- SCREENS ---------- */
 
 .screen{
-  display:none;
+    display:none;
+    animation:appear .22s ease;
 }
 
 .screen.active{
-  display:block;
+    display:block;
 }
 
-/* ---------- CARDS ---------- */
+@keyframes appear{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.brand-logo{
+    width:58px;
+    height:58px;
+    border-radius:20px;
+    background:#11162c;
+    border:1px solid #31446f;
+    display:grid;
+    place-items:center;
+}
+
+.brand-logo svg{
+    width:45px;
+    height:45px;
+}
+
+.brand-logo path,
+.brand-logo circle{
+    fill:none;
+    stroke:#fff;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.brand-logo .pink{
+    stroke:#ff49aa;
+}
+
+.brand-kicker{
+    color:#7d8baa;
+    font-size:10px;
+    letter-spacing:.18em;
+    font-weight:900;
+}
+
+.brand-title{
+    margin-top:1px;
+    font-family:"Baloo 2",sans-serif;
+    font-size:27px;
+    font-weight:800;
+    line-height:.9;
+}
+
+.brand-subtitle{
+    margin-top:4px;
+    color:#98a4c0;
+    font-size:11px;
+    font-weight:700;
+}
+
+
+/* =========================
+   CARDS
+========================= */
 
 .card{
-  background:
-    linear-gradient(145deg,rgba(24,31,52,.96),rgba(12,17,30,.97));
-  border:1px solid #303b58;
-  border-radius:27px;
-  padding:22px;
-  box-shadow:
-    0 25px 60px rgba(0,0,0,.3),
-    inset 0 1px 0 rgba(255,255,255,.025);
-  position:relative;
-  overflow:hidden;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(145deg,#181f3b,#0b1023);
+    border:1px solid #2d416d;
+    border-radius:29px;
+    box-shadow:0 22px 65px rgba(0,0,0,.30);
 }
 
-.card:before{
-  content:"";
-  position:absolute;
-  width:170px;
-  height:170px;
-  right:-100px;
-  top:-100px;
-  border-radius:50%;
-  background:rgba(255,45,154,.08);
+.section{
+    padding:22px;
+    margin-top:15px;
 }
 
-h2{
-  font-size:25px;
-  margin:0 0 8px;
-  line-height:1.05;
+.muted{
+    color:#9da9c3;
 }
 
-h3{
-  font-size:20px;
-  margin:0 0 7px;
+h1,h2,h3{
+    font-family:"Baloo 2",sans-serif;
 }
 
-p{
-  color:var(--muted);
-  line-height:1.55;
-  font-size:15px;
-  margin:8px 0;
-}
-
-/* ---------- CAT LINE ART ---------- */
-
-.cat-line{
-  width:150px;
-  height:150px;
-  margin:0 auto 10px;
-}
-
-.cat-line svg{
-  width:100%;
-  height:100%;
-  overflow:visible;
-}
-
-.cat-line path,
-.cat-line circle,
-.cat-line ellipse{
-  fill:none;
-  stroke:#fff;
-  stroke-width:4;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-
-.cat-line .pink{
-  stroke:#ff4aa9;
-}
-
-/* ---------- PAW BUTTON ---------- */
-
-.paw-button{
-  width:100%;
-  min-height:112px;
-  border:0;
-  background:transparent;
-  position:relative;
-  cursor:pointer;
-  color:white;
-  font-family:inherit;
-  font-weight:800;
-  font-size:20px;
-  margin-top:10px;
-  filter:drop-shadow(0 9px 18px rgba(0,0,0,.3));
-}
-
-.paw-button svg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-}
-
-.paw-button .paw-shape{
-  fill:url(#pawGradient);
-  stroke:#ff8dcc;
-  stroke-width:2;
-}
-
-.paw-button .paw-text{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:20px 23%;
-  line-height:1.05;
-}
-
-.paw-button.secondary .paw-shape{
-  fill:url(#pawBlue);
-  stroke:#54cfff;
-}
-
-.paw-button:active{
-  transform:scale(.985);
-}
-
-/* ---------- HOME ---------- */
-
-.home-card{
-  text-align:center;
-  padding:30px 20px 25px;
-}
-
-.hero-cat{
-  margin-bottom:5px;
-}
-
-.hero-title{
-  font-size:31px;
-  margin:4px 0 7px;
-}
-
-.hero-copy{
-  max-width:570px;
-  margin:0 auto;
-}
-
-.free-box{
-  margin:18px 0 4px;
-  padding:14px 17px;
-  border:1px solid #313b54;
-  background:rgba(10,14,25,.6);
-  border-radius:19px;
-  text-align:left;
-}
-
-.free-box strong{
-  color:white;
-}
-
-.status{
-  margin-top:13px;
-  border:1px solid #2e3b55;
-  background:rgba(15,21,35,.88);
-  border-radius:20px;
-  padding:15px 17px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:#adb7cb;
-}
-
-.status-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 12px var(--green);
-}
-
-/* ---------- PROFILE LIST ---------- */
-
-.section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:18px 2px 10px;
-}
-
-.cat-empty{
-  text-align:center;
-  padding:18px 5px 5px;
-}
-
-.cat-card{
-  border:1px solid #303b57;
-  background:#10182a;
-  border-radius:21px;
-  padding:13px;
-  display:flex;
-  gap:13px;
-  align-items:center;
-  cursor:pointer;
-}
-
-.cat-avatar{
-  width:70px;
-  height:70px;
-  border-radius:18px;
-  object-fit:cover;
-  background:#252d42;
-}
-
-.cat-name{
-  font-size:20px;
-  font-weight:800;
-}
-
-.badge{
-  display:inline-block;
-  margin-top:4px;
-  padding:4px 9px;
-  border-radius:99px;
-  background:#18263a;
-  color:#75d7ff;
-  font-size:11px;
-}
 
-/* ---------- FORMS ---------- */
+/* =========================
+   ONE-LINE CAT
+   PÔVODNÁ GRAFIKA
+========================= */
 
-.form-card{
-  margin-top:10px;
+.line-cat{
+    display:block;
+    width:100%;
+    height:auto;
 }
 
-label{
-  display:block;
-  color:#aeb8cc;
-  font-size:13px;
-  font-weight:700;
-  margin:15px 0 6px;
+.line-cat path,
+.line-cat circle,
+.line-cat line{
+    fill:none;
+    stroke:#fff;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
-input,textarea,select{
-  width:100%;
-  border:1px solid #34405b;
-  border-radius:15px;
-  padding:14px;
-  background:#0b1120;
-  color:#fff;
-  font-family:inherit;
-  font-size:16px;
-  outline:none;
+.line-cat .pink{
+    stroke:#ff4baa;
 }
 
-textarea{
-  min-height:110px;
-  resize:vertical;
+.line-cat .blue{
+    stroke:#39baff;
 }
 
-input:focus,textarea:focus{
-  border-color:#54cfff;
-  box-shadow:0 0 0 3px rgba(84,207,255,.08);
-}
-
-/* ---------- TOPBAR ---------- */
-
-.topbar{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin:0 0 13px;
-}
-
-.back{
-  width:44px;
-  height:44px;
-  border-radius:15px;
-  border:1px solid #35405a;
-  background:#121a2b;
-  color:white;
-  font-size:23px;
-  cursor:pointer;
-}
-
-.topbar-title{
-  flex:1;
-}
-
-.topbar-title small{
-  color:#8e99b0;
-  font-size:11px;
-}
-
-.topbar-title strong{
-  display:block;
-  font-size:20px;
-}
-
-/* ---------- SCANNER ---------- */
-
-.camera{
-  position:relative;
-  background:#02030a;
-  border-radius:25px;
-  overflow:hidden;
-  border:1px solid #38435f;
-  aspect-ratio:3/4;
-}
-
-#video,
-#sourceVideo{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.scan-target{
-  position:absolute;
-  width:58%;
-  aspect-ratio:1;
-  border:3px solid #57ef9c;
-  border-radius:50%;
-  left:21%;
-  top:24%;
-  box-shadow:0 0 25px rgba(87,239,156,.3);
-}
-
-.scan-label{
-  position:absolute;
-  top:-15px;
-  left:50%;
-  transform:translateX(-50%);
-  white-space:nowrap;
-  padding:7px 12px;
-  background:#101727;
-  border:1px solid #3d4962;
-  border-radius:99px;
-  font-size:11px;
-  font-weight:800;
-}
-
-.instruction{
-  position:absolute;
-  bottom:17px;
-  left:50%;
-  transform:translateX(-50%);
-  white-space:nowrap;
-  background:#0b1120e8;
-  border:1px solid #3b4762;
-  border-radius:99px;
-  padding:9px 14px;
-  font-size:12px;
-}
-
-.meter{
-  margin:13px 2px;
-}
-
-.meter-head{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  color:#8995ac;
-}
 
-.bar{
-  height:8px;
-  background:#1b2335;
-  border-radius:99px;
-  margin-top:6px;
-  overflow:hidden;
-}
-
-.bar div{
-  width:0%;
-  height:100%;
-  background:linear-gradient(90deg,#38d9ff,#ff3aa4);
-  transition:.2s;
-}
-
-/* ---------- INCIDENTS ---------- */
-
-.incident-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-top:14px;
-}
-
-.incident{
-  border:1px solid #35405c;
-  border-radius:21px;
-  padding:12px;
-  background:#10182a;
-  cursor:pointer;
-  transition:.15s;
-  min-height:165px;
-}
-
-.incident:hover{
-  border-color:#ff4ca8;
-  transform:translateY(-2px);
-}
-
-.incident.selected{
-  border:2px solid #ff3ca4;
-  box-shadow:0 0 20px rgba(255,60,164,.14);
-}
-
-.incident-art{
-  height:92px;
-  display:grid;
-  place-items:center;
-}
-
-.incident-art svg{
-  width:100%;
-  height:100%;
-}
-
-.incident-name{
-  text-align:center;
-  font-weight:800;
-  font-size:14px;
-  line-height:1.15;
-  margin-top:7px;
-}
-
-/* ---------- PROFILE ---------- */
-
-.profile-hero{
-  text-align:center;
-}
-
-.profile-cat{
-  width:150px;
-  height:150px;
-  margin:0 auto 8px;
-  border-radius:30px;
-  overflow:hidden;
-  border:2px solid #3c4966;
-  background:#1b2337;
-}
+/* =========================
+   HOME
+========================= */
 
-.profile-cat svg{
-  width:100%;
-  height:100%;
+.home{
+    padding:32px 22px 28px;
+    text-align:center;
 }
 
-.confidence{
-  display:inline-block;
-  padding:7px 12px;
-  border-radius:99px;
-  background:#112d27;
-  color:#63efa0;
-  font-size:12px;
-  font-weight:800;
+.home-cat{
+    position:relative;
+    width:min(370px,88%);
+    margin:0 auto 4px;
 }
 
-.incident-summary{
-  margin-top:14px;
-  display:grid;
-  gap:8px;
+.home-title{
+    margin:4px 0 8px;
+    font-size:39px;
+    line-height:.95;
+    letter-spacing:-.03em;
 }
 
-.summary-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 12px;
-  background:#10182a;
-  border:1px solid #303b56;
-  border-radius:15px;
+.home-title span{
+    color:#ff4baa;
 }
 
-.summary-art{
-  width:45px;
-  height:45px;
-  flex:none;
+.home-description{
+    max-width:650px;
+    margin:0 auto;
+    color:#aeb9d1;
+    font-size:14px;
+    line-height:1.6;
 }
 
-.summary-art svg{
-  width:100%;
-  height:100%;
+.home-description strong{
+    color:#ff68b9;
 }
 
-.summary-row span{
-  flex:1;
-  color:#ccd2df;
+.home-joke{
+    max-width:650px;
+    margin:15px auto 20px;
+    padding:12px 15px;
+    border:1px dashed #3b4f7d;
+    border-radius:18px;
+    color:#aab5ce;
+    font-size:12px;
 }
 
-.count{
-  font-size:19px;
-  font-weight:800;
-  color:#ff69b8;
+.home-joke strong{
+    color:#fff;
 }
 
-/* ---------- ERROR ---------- */
-
-.error-box{
-  text-align:center;
-  padding:25px 12px;
-}
-
-.error-icon{
-  font-size:45px;
-  margin-bottom:8px;
-}
 
-/* ---------- DECORATIVE CATS ---------- */
+/* =========================
+   DECORATIVE FULL CATS
+   PÔVODNÉ MAČKY
+========================= */
 
 .peek-cat{
-  position:absolute;
-  width:95px;
-  height:95px;
-  pointer-events:none;
-  opacity:.9;
-}
-
-.peek-cat.left{
-  left:-25px;
-  bottom:-15px;
-}
-
-.peek-cat.right{
-  right:-22px;
-  top:-22px;
-  transform:rotate(8deg);
+    position:absolute;
+    pointer-events:none;
+    z-index:5;
 }
 
 .peek-cat svg{
-  width:100%;
-  height:100%;
+    width:100%;
+    height:100%;
 }
 
-/* ---------- DESKTOP ---------- */
+.peek-cat path,
+.peek-cat circle,
+.peek-cat line{
+    fill:none;
+    stroke:#fff;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.peek-cat .pink{
+    stroke:#ff49aa;
+}
+
+.peek-left{
+    width:170px;
+    height:170px;
+    left:-75px;
+    bottom:-52px;
+    transform:rotate(-8deg);
+}
+
+.peek-right{
+    width:165px;
+    height:165px;
+    right:-72px;
+    top:-53px;
+    transform:rotate(8deg);
+}
+
+
+/* =========================
+   PAW BUTTON
+   JEDNA SÚVISLÁ LABKA
+========================= */
+
+.paw-button{
+    position:relative;
+    display:block;
+    width:100%;
+    min-height:174px;
+    margin:12px auto;
+    padding:0;
+    border:0;
+    background:none;
+    color:#fff;
+    transition:transform .12s ease,filter .12s ease;
+}
+
+.paw-button:hover{
+    filter:brightness(1.06);
+}
+
+.paw-button:active{
+    transform:scale(.985);
+}
+
+.paw-shape{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:visible;
+    filter:drop-shadow(0 12px 20px rgba(0,0,0,.35));
+}
+
+/*
+   Jedna súvislá silueta mačacej labky.
+   Štyri prsty + veľký centrálny vankúš.
+*/
+
+.paw-shape path{
+    fill:url(#pawGradientPink);
+    stroke:#ff75c5;
+    stroke-width:2.5;
+    stroke-linejoin:round;
+}
+
+.paw-button.blue .paw-shape path{
+    fill:url(#pawGradientBlue);
+    stroke:#4bc7ff;
+}
+
+.paw-text{
+    position:absolute;
+    z-index:2;
+    left:23%;
+    right:23%;
+    top:54%;
+    transform:translateY(-50%);
+    text-align:center;
+    font-family:"Baloo 2",sans-serif;
+    font-size:25px;
+    line-height:.92;
+    font-weight:800;
+    letter-spacing:-.02em;
+    text-shadow:0 2px 3px rgba(0,0,0,.16);
+}
+
+.paw-text small{
+    display:block;
+    margin-top:8px;
+    font-family:"Nunito",sans-serif;
+    font-size:10px;
+    line-height:1.25;
+    font-weight:800;
+    color:rgba(255,255,255,.82);
+    text-shadow:none;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.info{
+    margin-top:17px;
+    padding:18px;
+    border-radius:22px;
+    background:#10162e;
+    border:1px solid #2c406c;
+    text-align:left;
+}
+
+.info h3{
+    margin:0 0 6px;
+}
+
+.info p{
+    margin:0;
+    color:#9eaac3;
+    font-size:13px;
+    line-height:1.55;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:13px;
+    padding:13px 15px;
+    border-radius:18px;
+    background:#10162e;
+    border:1px solid #2d416d;
+    color:#aab6cf;
+    font-size:11px;
+    font-weight:800;
+}
+
+.status-dot{
+    width:9px;
+    height:9px;
+    flex:none;
+    border-radius:50%;
+    background:#4bf092;
+    box-shadow:0 0 12px rgba(75,240,146,.7);
+}
+
+
+/* =========================
+   NAV
+========================= */
+
+.back-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.back{
+    width:47px;
+    height:47px;
+    padding:0;
+    border-radius:17px;
+    background:#11172e;
+    border:1px solid #30446e;
+    color:#fff;
+    font-size:28px;
+}
+
+.back-title h2{
+    margin:0;
+    font-size:26px;
+    line-height:1;
+}
+
+.back-title small{
+    color:#7584a4;
+    font-size:10px;
+}
+
+
+/* =========================
+   FORMS
+========================= */
+
+.form{
+    padding:22px;
+}
+
+.field{
+    margin-bottom:16px;
+}
+
+.field label{
+    display:block;
+    margin-bottom:7px;
+    color:#aeb9d0;
+    font-size:11px;
+    font-weight:900;
+}
+
+.field input,
+.field textarea{
+    width:100%;
+    padding:14px;
+    border-radius:15px;
+    border:1px solid #344a77;
+    background:#0b1126;
+    color:#fff;
+    outline:none;
+}
+
+.field textarea{
+    min-height:105px;
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus{
+    border-color:#35baff;
+}
+
+
+/* =========================
+   CAT LIST
+========================= */
+
+.cat-list{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
+.cat-empty,
+.no-incidents{
+    padding:24px 15px;
+    text-align:center;
+    color:#7785a4;
+    border:1px dashed #344a77;
+    border-radius:20px;
+}
+
+.cat-item{
+    display:flex;
+    align-items:center;
+    width:100%;
+    gap:12px;
+    padding:11px;
+    text-align:left;
+    color:#fff;
+    background:#0b1228;
+    border:1px solid #293d68;
+    border-radius:21px;
+}
+
+.cat-photo{
+    width:64px;
+    height:64px;
+    flex:none;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border-radius:19px;
+    background:#17203c;
+    border:1px solid #40547e;
+    font-size:30px;
+}
+
+.cat-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cat-info{
+    flex:1;
+    min-width:0;
+}
+
+.cat-info strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:19px;
+    line-height:1;
+}
+
+.cat-info span{
+    display:block;
+    margin-top:4px;
+    color:#7584a4;
+    font-size:10px;
+}
+
+.cat-arrow{
+    color:#7081a7;
+    font-size:27px;
+}
+
+
+/* =========================
+   PHOTO
+========================= */
+
+.photo-box{
+    padding:17px;
+    border:1px dashed #3d5486;
+    border-radius:22px;
+    background:#0b1127;
+    text-align:center;
+}
+
+.photo-preview{
+    width:120px;
+    height:120px;
+    margin:0 auto 13px;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border-radius:50%;
+    background:#17203d;
+    border:2px solid #35baff;
+    font-size:45px;
+}
+
+.photo-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.file-input{
+    display:none;
+}
+
+
+/* =========================
+   SCAN
+========================= */
+
+.scan-card{
+    padding:12px;
+}
+
+.camera{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    overflow:hidden;
+    border-radius:26px;
+    background:#04060c;
+    border:1px solid #354a76;
+}
+
+.camera-placeholder{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    text-align:center;
+    padding:25px;
+    color:#8795b5;
+}
+
+.camera-placeholder-content{
+    width:min(320px,85%);
+}
+
+.camera-placeholder strong{
+    display:block;
+    margin-top:8px;
+    color:#dfe5f4;
+    font-family:"Baloo 2",sans-serif;
+    font-size:22px;
+}
+
+.camera-placeholder span{
+    display:block;
+    margin-top:4px;
+    font-size:11px;
+    line-height:1.5;
+}
+
+.scan-frame{
+    position:absolute;
+    left:50%;
+    top:48%;
+    width:min(58%,380px);
+    aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    border:3px solid #35baff;
+    border-radius:50%;
+    box-shadow:
+        0 0 0 999px rgba(0,0,0,.22),
+        0 0 32px rgba(53,186,255,.45);
+}
+
+.scan-label,
+.scan-message{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:max-content;
+    max-width:90%;
+    padding:9px 13px;
+    border-radius:99px;
+    background:#080d20ee;
+    border:1px solid #40547f;
+    text-align:center;
+    font-size:10px;
+    font-weight:900;
+}
+
+.scan-label{
+    top:14%;
+}
+
+.scan-message{
+    bottom:17px;
+}
+
+.scan-meter{
+    margin:14px 5px 5px;
+}
+
+.meter-top{
+    display:flex;
+    justify-content:space-between;
+    color:#8190ad;
+    font-size:10px;
+    font-weight:900;
+}
+
+.meter-track{
+    height:8px;
+    margin-top:7px;
+    overflow:hidden;
+    border-radius:99px;
+    background:#171e36;
+}
+
+.meter-fill{
+    width:0;
+    height:100%;
+    border-radius:99px;
+    background:linear-gradient(90deg,#26aaff,#ff2b99);
+    transition:width .2s;
+}
+
+
+/* =========================
+   INCIDENTS
+========================= */
+
+.incident-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:11px;
+    margin-top:15px;
+}
+
+.incident-option{
+    min-height:154px;
+    padding:13px;
+    border-radius:22px;
+    border:1px solid #30456f;
+    background:#0b1228;
+    color:#fff;
+    text-align:center;
+    transition:.12s ease;
+}
+
+.incident-option:hover{
+    transform:translateY(-2px);
+    border-color:#536b9c;
+}
+
+.incident-option.selected{
+    border-color:#ff42a5;
+    background:linear-gradient(145deg,rgba(255,49,155,.14),#0b1228);
+    box-shadow:0 0 22px rgba(255,49,155,.10);
+}
+
+.incident-art{
+    width:74px;
+    height:64px;
+    margin:0 auto 8px;
+    display:grid;
+    place-items:center;
+}
+
+.incident-art svg{
+    width:100%;
+    height:100%;
+    display:block;
+    overflow:visible;
+}
+
+.incident-art path,
+.incident-art circle,
+.incident-art line,
+.incident-art rect,
+.incident-art ellipse,
+.incident-art polygon{
+    fill:none;
+    stroke:#fff;
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.incident-art .pink{
+    stroke:#ff4baa;
+}
+
+.incident-art .blue{
+    stroke:#39baff;
+}
+
+.incident-art .yellow{
+    stroke:#ffd34d;
+}
+
+.incident-option strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:16px;
+    line-height:1;
+}
+
+.incident-option span{
+    display:block;
+    margin-top:5px;
+    color:#7786a5;
+    font-size:9px;
+    line-height:1.35;
+}
+
+
+/* =========================
+   CAT FILE
+========================= */
+
+.profile{
+    padding:25px 20px;
+    text-align:center;
+}
+
+.profile-photo{
+    width:135px;
+    height:135px;
+    margin:0 auto 11px;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border-radius:50%;
+    background:#17203e;
+    border:3px solid #ff2d99;
+    box-shadow:0 0 30px rgba(255,45,153,.18);
+    font-size:52px;
+}
+
+.profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile h2{
+    margin:0;
+    font-size:33px;
+}
+
+.badge{
+    display:inline-block;
+    margin-top:5px;
+    padding:6px 11px;
+    border-radius:99px;
+    background:#192449;
+    border:1px solid #40527f;
+    color:#bbc8e8;
+    font-size:9px;
+    font-weight:900;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+}
+
+.stat{
+    padding:14px;
+    border-radius:19px;
+    background:#0b1228;
+    border:1px solid #293d68;
+}
+
+.stat strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:29px;
+    line-height:1;
+}
+
+.stat span{
+    display:block;
+    margin-top:5px;
+    color:#7786a4;
+    font-size:9px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.register-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.register-title h3{
+    margin:0;
+}
+
+.incident-list{
+    display:grid;
+    gap:9px;
+    margin-top:14px;
+}
+
+.incident-card{
+    display:grid;
+    grid-template-columns:64px 1fr auto;
+    align-items:center;
+    gap:10px;
+    min-height:80px;
+    padding:9px;
+    border-radius:21px;
+    background:#0b1228;
+    border:1px solid #293d68;
+}
+
+.incident-icon{
+    width:60px;
+    height:60px;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    background:#17203c;
+    border:1px solid #3d517d;
+}
+
+.incident-icon svg{
+    width:45px;
+    height:45px;
+    display:block;
+}
+
+.incident-icon path,
+.incident-icon circle,
+.incident-icon line,
+.incident-icon rect,
+.incident-icon ellipse,
+.incident-icon polygon{
+    fill:none;
+    stroke:#fff;
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.incident-icon .pink{
+    stroke:#ff4baa;
+}
+
+.incident-icon .blue{
+    stroke:#39baff;
+}
+
+.incident-icon .yellow{
+    stroke:#ffd34d;
+}
+
+.incident-text strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:17px;
+    line-height:1;
+}
+
+.incident-text span{
+    display:block;
+    margin-top:4px;
+    color:#7180a0;
+    font-size:9px;
+}
+
+.incident-count{
+    min-width:42px;
+    color:#ff61b5;
+    font-family:"Baloo 2",sans-serif;
+    font-size:23px;
+    text-align:center;
+}
+
+
+/* =========================
+   RESULT / ERROR
+========================= */
+
+.result,
+.error{
+    padding:28px 20px;
+    text-align:center;
+}
+
+.result-cat{
+    width:280px;
+    max-width:85%;
+    margin:0 auto 5px;
+}
+
+.result h2{
+    margin:0;
+    font-size:33px;
+}
+
+.confidence{
+    width:108px;
+    height:108px;
+    margin:17px auto;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    border:7px solid #ff2d99;
+    font-family:"Baloo 2",sans-serif;
+    font-size:28px;
+}
+
+.error-icon{
+    font-size:50px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    padding:25px 10px 0;
+    text-align:center;
+    color:#596680;
+    font-size:10px;
+}
+
+.footer strong{
+    color:#8290ad;
+}
+
+
+/* =========================
+   DESKTOP
+========================= */
 
 @media(min-width:760px){
-  .app{
-    padding-top:32px;
-  }
 
-  .home-card{
-    padding:42px 55px 35px;
-  }
+    .app{
+        padding-top:30px;
+    }
 
-  .incident-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
+    .home{
+        padding:42px 65px 38px;
+    }
 
-  .paw-button{
-    min-height:125px;
-    font-size:22px;
-  }
+    .home-cat{
+        width:390px;
+    }
+
+    .home-title{
+        font-size:48px;
+    }
+
+    .home-description{
+        font-size:16px;
+    }
+
+    .paw-button{
+        max-width:760px;
+        min-height:185px;
+    }
+
+    .paw-text{
+        font-size:27px;
+        left:22%;
+        right:22%;
+    }
+
+    .peek-left{
+        width:220px;
+        height:220px;
+        left:-105px;
+        bottom:-70px;
+    }
+
+    .peek-right{
+        width:215px;
+        height:215px;
+        right:-100px;
+        top:-72px;
+    }
+
+    .incident-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .incident-option{
+        min-height:170px;
+    }
 }
 
-@media(max-width:430px){
-  .app{
-    padding:13px 12px 50px;
-  }
 
-  h1{
-    font-size:24px;
-  }
+/* =========================
+   MOBILE
+========================= */
 
-  .hero-title{
-    font-size:27px;
-  }
+@media(max-width:600px){
 
-  .incident-grid{
-    gap:9px;
-  }
+    .app{
+        padding:13px 10px 40px;
+    }
 
-  .incident{
-    min-height:155px;
-  }
+    .brand-logo{
+        width:53px;
+        height:53px;
+    }
+
+    .brand-title{
+        font-size:24px;
+    }
+
+    .home{
+        padding:24px 13px 22px;
+    }
+
+    .home-cat{
+        width:300px;
+        max-width:92%;
+    }
+
+    .home-title{
+        font-size:31px;
+    }
+
+    .paw-button{
+        min-height:145px;
+    }
+
+    .paw-text{
+        top:55%;
+        left:19%;
+        right:19%;
+        font-size:18px;
+    }
+
+    .paw-text small{
+        font-size:8px;
+    }
+
+    .peek-left{
+        width:115px;
+        height:115px;
+        left:-52px;
+        bottom:-35px;
+    }
+
+    .peek-right{
+        width:110px;
+        height:110px;
+        right:-50px;
+        top:-34px;
+    }
+
+    .incident-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .incident-option{
+        min-height:145px;
+    }
+
+    .incident-art{
+        width:60px;
+        height:56px;
+    }
+
+    .incident-card{
+        grid-template-columns:56px 1fr auto;
+    }
+
+    .incident-icon{
+        width:53px;
+        height:53px;
+    }
 }
+
+
+@media(max-width:370px){
+
+    .paw-button{
+        min-height:135px;
+    }
+
+    .paw-text{
+        font-size:16px;
+        left:17%;
+        right:17%;
+    }
+
+    .incident-grid{
+        grid-template-columns:1fr;
+    }
+}
+
 </style>
 </head>
 
@@ -682,1202 +1192,3012 @@ input:focus,textarea:focus{
 
 <div class="app">
 
-<header class="header">
-  <div class="logo">
-    <!-- jednoduchá jednolíniová mačka -->
-    <svg viewBox="0 0 100 100">
-      <path d="M22 42 L25 20 L42 31 Q50 27 58 31 L75 20 L78 43
-               Q85 52 79 67 Q72 84 50 85 Q28 84 21 67 Q15 52 22 42Z"/>
-      <path d="M37 52 Q41 47 45 52"/>
-      <path d="M55 52 Q59 47 63 52"/>
-      <path d="M47 61 Q50 64 53 61"/>
-      <path d="M50 64 L50 70 Q45 75 40 71"/>
-      <path d="M50 70 Q55 75 60 71"/>
-      <path class="pink" d="M45 58 Q50 54 55 58 Q50 63 45 58Z"/>
-    </svg>
-  </div>
 
-  <div>
-    <div class="eyebrow">TECHNICKÝ PROTOTYP</div>
-    <h1>CAT NOSE ID</h1>
-    <div class="subtitle">Najzbytočnejší biometrický systém na planéte.</div>
-  </div>
+<!-- SVG DEFINITIONS -->
+
+<svg width="0" height="0" style="position:absolute">
+
+<defs>
+
+<linearGradient id="pawGradientPink" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ff62bb"/>
+    <stop offset="100%" stop-color="#df167f"/>
+</linearGradient>
+
+<linearGradient id="pawGradientBlue" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#319eff"/>
+    <stop offset="100%" stop-color="#1647b8"/>
+</linearGradient>
+
+</defs>
+</svg>
+
+
+<!-- BRAND -->
+
+<header class="brand">
+
+<div class="brand-logo">
+
+<svg viewBox="0 0 100 100">
+
+<path d="
+M22 47
+L18 20
+L40 34
+Q50 28 60 34
+L82 20
+L78 47
+Q82 72 50 82
+Q18 72 22 47Z
+"/>
+
+<circle cx="38" cy="53" r="3"/>
+<circle cx="62" cy="53" r="3"/>
+
+<path class="pink"
+d="M43 63 Q50 70 57 63"/>
+
+</svg>
+
+</div>
+
+<div>
+
+<div class="brand-kicker">
+CAT NOSE ID
+</div>
+
+<div class="brand-title">
+CAT NOSE ID
+</div>
+
+<div class="brand-subtitle">
+Najzbytočnejší biometrický skener na planéte.
+</div>
+
+</div>
+
 </header>
 
 
-<!-- =========================================================
-     HOME
-========================================================= -->
+<!-- =====================================================
+HOME
+===================================================== -->
 
 <section id="home" class="screen active">
 
-  <div class="card home-card">
+<div class="card home">
 
-    <div class="peek-cat right">
-      <svg viewBox="0 0 100 100">
-        <path d="M23 62 Q13 42 24 28 L20 8 L40 20
-                 Q50 17 60 20 L80 8 L76 29
-                 Q88 44 77 63 Q68 78 50 80 Q32 78 23 62Z"
-              fill="none" stroke="#fff" stroke-width="4"
-              stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="38" cy="44" r="2" fill="#fff"/>
-        <circle cx="62" cy="44" r="2" fill="#fff"/>
-        <path d="M46 53 Q50 57 54 53" fill="none"
-              stroke="#fff" stroke-width="3"/>
-      </svg>
-    </div>
 
-    <div class="cat-line hero-cat">
-      <svg viewBox="0 0 150 150">
-        <path d="M34 70 Q20 55 28 37 L25 15 L48 28
-                 Q60 23 72 28 L96 15 L93 38
-                 Q103 56 91 74 Q81 91 62 94
-                 Q42 91 34 70Z"/>
-        <path d="M43 51 Q48 45 53 51"/>
-        <path d="M70 51 Q75 45 80 51"/>
-        <path d="M57 61 Q62 66 67 61"/>
-        <path d="M62 66 Q56 75 48 70"/>
-        <path d="M62 66 Q68 75 76 70"/>
-        <path class="pink" d="M56 59 Q62 55 68 59 Q62 66 56 59Z"/>
-        <path d="M34 70 Q17 80 10 73"/>
-        <path d="M91 74 Q112 86 120 73"/>
-      </svg>
-    </div>
+<!-- FULL CAT LEFT -->
 
-    <h2 class="hero-title">Naskenujeme podozrivého.</h2>
+<div class="peek-cat peek-left">
 
-    <p class="hero-copy">
-      Aplikácia automaticky nájde tvár mačky, vyberie najlepšie
-      zábery a pokúsi sa zistiť, či ide o jedného z registrovaných
-      mačacích páchateľov.
-    </p>
+<svg class="line-cat" viewBox="0 0 260 300">
 
-    <p class="hero-copy">
-      Áno. Je to úplne zadarmo. A práve preto sme to vytvorili.
-    </p>
+<path d="
+M91 241
+Q62 225 63 189
+L67 137
+L54 94
+L89 111
+Q109 91 132 91
+Q156 91 176 111
+L211 94
+L198 137
+L202 187
+Q204 226 175 241
+Q143 259 110 250
+Q98 247 91 241
+"/>
 
-    <button class="paw-button" onclick="openScreen('scan')">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="pawGradient" x1="0" x2="1">
-            <stop offset="0" stop-color="#ff238e"/>
-            <stop offset="1" stop-color="#ff55b0"/>
-          </linearGradient>
-        </defs>
-        <path class="paw-shape"
-          d="M85 118
-             C50 115 39 88 56 67
-             C66 54 78 48 91 45
-             C76 26 83 9 99 8
-             C114 7 124 20 126 38
-             C142 21 158 17 169 27
-             C179 36 177 50 168 62
-             C188 54 207 57 215 70
-             C226 88 208 110 185 115
-             C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118
-             C357 118 339 101 343 83
-             C347 66 364 57 383 57
-             C378 38 388 23 403 24
-             C417 25 424 38 421 54
-             C437 38 454 39 463 50
-             C471 61 466 75 453 83
-             C471 78 486 84 490 98
-             C495 113 475 124 450 124
-             C429 124 409 122 390 118Z"/>
-        <path class="paw-shape"
-          d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 SKENOVAŤ PODAZRIVÉHO</span>
-    </button>
+<path d="
+M95 241
+Q79 270 62 280
+M174 241
+Q194 267 217 276
+"/>
 
-    <button class="paw-button secondary" onclick="openScreen('test')">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="pawBlue" x1="0" x2="1">
-            <stop offset="0" stop-color="#16385d"/>
-            <stop offset="1" stop-color="#153b61"/>
-          </linearGradient>
-        </defs>
-        <path class="paw-shape"
-          d="M85 118
-             C50 115 39 88 56 67
-             C66 54 78 48 91 45
-             C76 26 83 9 99 8
-             C114 7 124 20 126 38
-             C142 21 158 17 169 27
-             C179 36 177 50 168 62
-             C188 54 207 57 215 70
-             C226 88 208 110 185 115
-             C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118
-             C357 118 339 101 343 83
-             C347 66 364 57 383 57
-             C378 38 388 23 403 24
-             C417 25 424 38 421 54
-             C437 38 454 39 463 50
-             C471 61 466 75 453 83
-             C471 78 486 84 490 98
-             C495 113 475 124 450 124
-             C429 124 409 122 390 118Z"/>
-        <path class="paw-shape"
-          d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 TEST S VIDEOM / FOTOGRAFIOU</span>
-    </button>
+<path d="
+M110 250
+Q107 274 102 286
+M151 253
+Q153 273 160 286
+"/>
 
-    <div class="free-box">
-      <strong>Prečo táto aplikácia existuje?</strong>
-      <p>
-        Pre zábavu. Bez reklamných bannerov. Bez platieb.
-        Bez predplatného. A nikdy nebude obsahovať platobnú funkciu.
-        Jednoducho najzbytočnejší biometrický skener, aký bol kedy vytvorený.
-      </p>
-    </div>
+<circle cx="108" cy="148" r="3"/>
+<circle cx="168" cy="148" r="3"/>
 
-  </div>
+<path class="pink"
+d="M133 163 Q138 170 144 163"/>
 
-  <div class="status">
-    <span class="status-dot"></span>
-    MAČACÍ NOS ID pripravené
-  </div>
+<path d="
+M113 178
+Q138 192 164 178
+"/>
 
-  <div class="section-title">
-    <h3>🐱 Moje mačky</h3>
-  </div>
+<path class="pink"
+d="
+M93 167 L51 158
+M94 178 L50 179
+M181 167 L221 158
+M181 178 L224 179
+"/>
 
-  <div class="card">
-    <div id="catList" class="cat-empty">
-      <p>Zatiaľ nemáš uloženú žiadnu mačku.</p>
-      <button class="paw-button" onclick="openScreen('addCat')">
-        <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-          <path class="paw-shape"
-            d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-            C76 26 83 9 99 8 C114 7 124 20 126 38
-            C142 21 158 17 169 27 C179 36 177 50 168 62
-            C188 54 207 57 215 70 C226 88 208 110 185 115
-            C156 122 118 124 85 118Z"/>
-          <path class="paw-shape"
-            d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-            C378 38 388 23 403 24 C417 25 424 38 421 54
-            C437 38 454 39 463 50 C471 61 466 75 453 83
-            C471 78 486 84 490 98 C495 113 475 124 450 124
-            C429 124 409 122 390 118Z"/>
-          <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-        </svg>
-        <span class="paw-text">+ PRIDAŤ MAČKU</span>
-      </button>
+</svg>
 
-      <button class="paw-button secondary" onclick="openScreen('scan')">
-        <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-          <path class="paw-shape"
-            d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-            C76 26 83 9 99 8 C114 7 124 20 126 38
-            C142 21 158 17 169 27 C179 36 177 50 168 62
-            C188 54 207 57 215 70 C226 88 208 110 185 115
-            C156 122 118 124 85 118Z"/>
-          <path class="paw-shape"
-            d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-            C378 38 388 23 403 24 C417 25 424 38 421 54
-            C437 38 454 39 463 50 C471 61 466 75 453 83
-            C471 78 486 84 490 98 C495 113 475 124 450 124
-            C429 124 409 122 390 118Z"/>
-          <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-        </svg>
-        <span class="paw-text">🔎 IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA</span>
-      </button>
-    </div>
-  </div>
+</div>
+
+
+<!-- FULL CAT RIGHT -->
+
+<div class="peek-cat peek-right">
+
+<svg class="line-cat" viewBox="0 0 260 300">
+
+<path d="
+M91 241
+Q62 225 63 189
+L67 137
+L54 94
+L89 111
+Q109 91 132 91
+Q156 91 176 111
+L211 94
+L198 137
+L202 187
+Q204 226 175 241
+Q143 259 110 250
+Q98 247 91 241
+"/>
+
+<path d="
+M95 241
+Q79 270 62 280
+M174 241
+Q194 267 217 276
+"/>
+
+<path d="
+M110 250
+Q107 274 102 286
+M151 253
+Q153 273 160 286
+"/>
+
+<circle cx="108" cy="148" r="3"/>
+<circle cx="168" cy="148" r="3"/>
+
+<path class="pink"
+d="M133 163 Q138 170 144 163"/>
+
+<path d="
+M113 178
+Q138 192 164 178
+"/>
+
+</svg>
+
+</div>
+
+
+<!-- MAIN FULL CAT -->
+
+<div class="home-cat">
+
+<svg class="line-cat" viewBox="0 0 360 300">
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<path d="
+M119 248
+Q117 270 109 286
+M184 254
+Q185 271 192 286
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path class="pink"
+d="
+M160 159
+Q166 151 172 159
+Q166 168 160 159
+"/>
+
+<path d="
+M166 166
+Q166 181 150 184
+M166 166
+Q166 181 182 184
+"/>
+
+<path d="
+M125 169 L76 157
+M126 181 L73 181
+M207 169 L258 157
+M206 181 L260 181
+"/>
+
+<path class="pink"
+d="
+M225 219
+Q241 205 255 217
+Q263 227 253 235
+Q240 245 227 235
+Q219 229 225 219
+"/>
+
+</svg>
+
+</div>
+
+
+<h1 class="home-title">
+KTO JE TEN <span>PÁCHATEĽ?</span>
+</h1>
+
+<p class="home-description">
+
+Nasmeruj kameru na
+<strong>mačku / páchateľa</strong>
+a nechaj náš úplne zbytočný biometrický systém
+pokúsiť sa zistiť, kto to je.
+
+</p>
+
+<div class="home-joke">
+
+<strong>Upozornenie:</strong>
+Táto aplikácia nemá reklamy, nemá platby,
+nemá predplatné a nemá prakticky žiadny rozumný účel.
+
+</div>
+
+
+<!-- PAW BUTTON -->
+
+<button class="paw-button" onclick="openScreen('scan')">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<!-- JEDNA SÚVISLÁ MAČACIA LABKA -->
+
+<path d="
+M158 76
+
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+
+C400 141 382 144 367 156
+
+C350 170 329 180 300 180
+
+C271 180 250 170 233 156
+
+C218 144 200 141 180 146
+
+C161 151 141 158 123 149
+
+C104 140 93 119 103 99
+
+C111 83 129 75 145 78
+
+C150 79 154 78 158 76
+
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+
+IDENTIFIKOVAŤ
+MAČKU / PÁCHATEĽA
+
+<small>
+Nasmeruj kameru a začni vyšetrovanie.
+</small>
+
+</div>
+
+</button>
+
+
+<button class="paw-button blue" onclick="openScreen('photoTest')">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+
+TESTOVAŤ FOTOGRAFIU
+
+<small>
+Nemáš živého páchateľa? Použi fotografiu.
+</small>
+
+</div>
+
+</button>
+
+
+<div class="info">
+
+<h3>
+Prečo táto aplikácia existuje?
+</h3>
+
+<p>
+Je vytvorená výhradne pre zábavu.
+Neobsahuje reklamné bannery a nikdy ich obsahovať nebude.
+Nemá žiadnu platobnú možnosť a nikdy ju mať nebude.
+Je to najzbytočnejší biometrický skener mačiek na planéte.
+</p>
+
+</div>
+
+
+<div class="status">
+<span class="status-dot"></span>
+CAT NOSE ID je pripravené na vyšetrovanie.
+</div>
+
+</div>
+
+
+<!-- MOJE MAČKY -->
+
+<div class="card section">
+
+<h2 style="margin:0">
+Moje mačky
+</h2>
+
+<p class="muted">
+Registrovaní mačací páchatelia a ich CAT FILE.
+</p>
+
+<div id="catList" class="cat-list"></div>
+
+
+<button class="paw-button" onclick="openScreen('newCat')">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+PRIDAŤ MAČKU / PÁCHATEĽA
+</div>
+
+</button>
+
+</div>
 
 </section>
 
 
-<!-- =========================================================
-     ADD CAT
-========================================================= -->
+<!-- =====================================================
+NEW CAT
+===================================================== -->
 
-<section id="addCat" class="screen">
+<section id="newCat" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>NOVÝ PÁCHATEĽ</small>
-      <strong>Pridať mačku / páchateľa</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card form-card">
+<button class="back" onclick="openScreen('home')">‹</button>
 
-    <div class="cat-line">
-      <svg viewBox="0 0 150 150">
-        <path d="M34 70 Q20 55 28 37 L25 15 L48 28 Q60 23 72 28
-        L96 15 L93 38 Q103 56 91 74 Q81 91 62 94
-        Q42 91 34 70Z"/>
-        <path d="M43 51 Q48 45 53 51"/>
-        <path d="M70 51 Q75 45 80 51"/>
-        <path d="M57 61 Q62 66 67 61"/>
-      </svg>
-    </div>
+<div class="back-title">
 
-    <label>Meno mačky / páchateľa</label>
-    <input id="catName" placeholder="Napríklad Muro">
+<h2>Nový páchateľ</h2>
 
-    <label>Profilová fotografia</label>
-    <input id="catPhoto" type="file" accept="image/*">
+<small>
+Zaregistruj mačku do databázy.
+</small>
 
-    <button class="paw-button" onclick="saveCat()">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 ULOŽIŤ MAČKU / PÁCHATEĽA</span>
-    </button>
+</div>
 
-  </div>
+</div>
+
+
+<div class="card form">
+
+<div style="max-width:260px;margin:auto">
+
+<svg class="line-cat" viewBox="0 0 360 300">
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path class="pink"
+d="M160 159 Q166 151 172 159 Q166 168 160 159Z"/>
+
+<path d="
+M166 166 Q166 181 150 184
+M166 166 Q166 181 182 184
+"/>
+
+</svg>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Meno mačky / páchateľa
+</label>
+
+<input
+id="catName"
+type="text"
+placeholder="Napríklad Muro"
+/>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Profilová fotografia
+</label>
+
+<div class="photo-box">
+
+<div id="photoPreview" class="photo-preview">
+🐱
+</div>
+
+<input
+id="catPhoto"
+class="file-input"
+type="file"
+accept="image/*"
+onchange="previewCatPhoto(event)"
+>
+
+<button
+class="paw-button blue"
+onclick="document.getElementById('catPhoto').click()"
+>
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+PRIDAŤ FOTOGRAFIU
+</div>
+
+</button>
+
+</div>
+
+</div>
+
+
+<button class="paw-button" onclick="saveCat()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+ULOŽIŤ MAČKU / PÁCHATEĽA
+</div>
+
+</button>
+
+</div>
+
 </section>
 
 
-<!-- =========================================================
-     SCAN
-========================================================= -->
+<!-- =====================================================
+SCAN
+===================================================== -->
 
 <section id="scan" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>ŽIVÝ SKENER</small>
-      <strong>Identifikácia mačky / páchateľa</strong>
-    </div>
-    <div class="badge">0 / 9</div>
-  </div>
+<div class="back-row">
 
-  <div class="camera">
-    <video id="video" autoplay playsinline muted></video>
+<button class="back" onclick="openScreen('home')">‹</button>
 
-    <div class="scan-target">
-      <div class="scan-label">🐾 ZÓNA NOSA</div>
-    </div>
+<div class="back-title">
 
-    <div id="instruction" class="instruction">
-      Drž kameru stabilne. Hľadám mačku / páchateľa...
-    </div>
-  </div>
+<h2>Skenovanie</h2>
 
-  <div class="meter">
-    <div class="meter-head">
-      <span>DETEKCIA NOSA</span>
-      <span id="progressText">0%</span>
-    </div>
-    <div class="bar">
-      <div id="progress"></div>
-    </div>
-  </div>
+<small>
+Mačka / páchateľ
+</small>
 
-  <div class="card">
-    <h3>🐱 Automatické skenovanie</h3>
-    <p>
-      Aplikácia automaticky hľadá tvár mačky a vyberá najlepšie zábery.
-      Buď pripravený. Páchateľ môže byť bližšie, než si myslíš.
-    </p>
+</div>
 
-    <button class="paw-button" onclick="simulateScan()">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 SPUSTIŤ SKENOVANIE</span>
-    </button>
-  </div>
+</div>
+
+
+<div class="card scan-card">
+
+<div class="camera">
+
+<div class="camera-placeholder">
+
+<div class="camera-placeholder-content">
+
+<svg class="line-cat" viewBox="0 0 360 300">
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path class="pink"
+d="M160 159 Q166 151 172 159 Q166 168 160 159Z"/>
+
+<path d="
+M166 166 Q166 181 150 184
+M166 166 Q166 181 182 184
+"/>
+
+</svg>
+
+<strong>
+HĽADÁM MAČKU / PÁCHATEĽA...
+</strong>
+
+<span>
+Drž kameru stabilne.
+Páchateľ sa vraj snaží utiecť.
+</span>
+
+</div>
+
+</div>
+
+<div class="scan-frame"></div>
+
+<div class="scan-label">
+ZÓNA MAČKA / PÁCHATEĽ
+</div>
+
+<div id="scanMessage" class="scan-message">
+Drž kameru stabilne.
+</div>
+
+</div>
+
+
+<div class="scan-meter">
+
+<div class="meter-top">
+
+<span>DETEKCIA</span>
+
+<span id="scanPercent">0 %</span>
+
+</div>
+
+<div class="meter-track">
+
+<div id="scanMeter" class="meter-fill"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card section">
+
+<h3 style="margin-top:0">
+Ako na to?
+</h3>
+
+<p class="muted">
+
+Nasmeruj mačku / páchateľa do kruhu.
+Systém sa pokúsi nájsť nos,
+vybrať najlepší záber a porovnať ho
+s registrovanými profilmi.
+
+</p>
+
+
+<button class="paw-button" onclick="startDemoScan()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+SPUSTIŤ SKENOVANIE
+</div>
+
+</button>
+
+</div>
 
 </section>
 
 
-<!-- =========================================================
-     TEST
-========================================================= -->
+<!-- =====================================================
+PHOTO TEST
+===================================================== -->
 
-<section id="test" class="screen">
+<section id="photoTest" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>TESTOVACÍ REŽIM</small>
-      <strong>Video / fotografia</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card">
-    <h2>🧪 Laboratórium páchateľov</h2>
-    <p>
-      Vyber fotografiu alebo video mačky a otestuj identifikáciu.
-    </p>
+<button class="back" onclick="openScreen('home')">‹</button>
 
-    <input id="testFile" type="file" accept="image/*,video/*">
+<div class="back-title">
 
-    <div id="testPreview" style="margin-top:14px"></div>
+<h2>Test s fotografiou</h2>
 
-    <button class="paw-button" onclick="runTest()">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 ANALYZOVAŤ</span>
-    </button>
-  </div>
+<small>
+Testovací režim
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card form">
+
+<div class="photo-box">
+
+<svg class="line-cat"
+viewBox="0 0 360 300"
+style="max-width:260px;margin:auto">
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path class="pink"
+d="M160 159 Q166 151 172 159 Q166 168 160 159Z"/>
+
+</svg>
+
+<h3>
+Vyber fotografiu mačky
+</h3>
+
+<p class="muted">
+Ak nemáš živého páchateľa,
+môžeme skúsiť fotografiu.
+</p>
+
+
+<input
+id="testImage"
+class="file-input"
+type="file"
+accept="image/*"
+onchange="loadTestImage(event)"
+>
+
+
+<button class="paw-button blue"
+onclick="document.getElementById('testImage').click()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+VYBRAŤ FOTOGRAFIU
+</div>
+
+</button>
+
+
+<div id="testPreview"></div>
+
+</div>
+
+
+<button class="paw-button" onclick="runPhotoTest()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+ROZPOZNAŤ MAČKU / PÁCHATEĽA
+</div>
+
+</button>
+
+</div>
 
 </section>
 
 
-<!-- =========================================================
-     PROFILE
-========================================================= -->
+<!-- =====================================================
+CAT FILE
+===================================================== -->
 
-<section id="profile" class="screen">
+<section id="catFile" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>CAT FILE</small>
-      <strong id="profileTitle">Páchateľ identifikovaný</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card profile-hero">
+<button class="back" onclick="openScreen('home')">‹</button>
 
-    <div class="profile-cat">
-      <svg viewBox="0 0 150 150">
-        <rect width="150" height="150" rx="25" fill="#252d43"/>
-        <path d="M36 74 Q20 56 29 38 L26 17 L49 29
-        Q62 24 75 29 L98 17 L95 39
-        Q105 56 94 75 Q83 93 64 95
-        Q43 92 36 74Z"
-        fill="none" stroke="#fff" stroke-width="4"
-        stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="50" cy="55" r="3" fill="#ff55ae"/>
-        <circle cx="78" cy="55" r="3" fill="#ff55ae"/>
-        <path d="M58 65 Q64 70 70 65" fill="none"
-        stroke="#fff" stroke-width="4"
-        stroke-linecap="round"/>
-      </svg>
-    </div>
+<div class="back-title">
 
-    <h2 id="profileName">Muro</h2>
-    <span class="confidence">Registrovaný páchateľ</span>
+<h2>CAT FILE</h2>
 
-    <p>
-      Tento subjekt bol úspešne identifikovaný.
-      Jeho kriminálna minulosť je uvedená nižšie.
-    </p>
+<small>
+Profil mačky / páchateľa
+</small>
 
-    <div class="incident-summary" id="summary"></div>
+</div>
 
-    <button class="paw-button" onclick="openScreen('incident')">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 PRIDAŤ NOVÝ INCIDENT</span>
-    </button>
+</div>
 
-  </div>
+
+<div id="profileCard" class="card profile">
+
+<div class="peek-cat peek-right">
+
+<svg viewBox="0 0 260 300">
+
+<path d="
+M91 241
+Q62 225 63 189
+L67 137
+L54 94
+L89 111
+Q109 91 132 91
+Q156 91 176 111
+L211 94
+L198 137
+L202 187
+Q204 226 175 241
+Q143 259 110 250
+Q98 247 91 241
+"/>
+
+<path d="
+M95 241
+Q79 270 62 280
+M174 241
+Q194 267 217 276
+"/>
+
+<circle cx="108" cy="148" r="3"/>
+<circle cx="168" cy="148" r="3"/>
+
+<path class="pink"
+d="M133 163 Q138 170 144 163"/>
+
+</svg>
+
+</div>
+
+
+<div id="profilePhoto" class="profile-photo">
+🐱
+</div>
+
+<h2 id="profileName">
+Muro
+</h2>
+
+<div class="badge">
+AKTÍVNY PÁCHATEĽ
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<strong id="totalIncidents">0</strong>
+
+<span>
+incidentov
+</span>
+
+</div>
+
+<div class="stat">
+
+<strong id="confidenceValue">—</strong>
+
+<span>
+posledná zhoda
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card section">
+
+<div class="register-title">
+
+<h3>
+Trestný register
+</h3>
+
+<span class="muted small">
+CAT FILE
+</span>
+
+</div>
+
+
+<div id="incidentList" class="incident-list"></div>
+
+
+<button
+id="addIncidentButton"
+class="paw-button"
+type="button"
+>
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+PRIDAŤ NOVÝ INCIDENT
+</div>
+
+</button>
+
+
+<button class="paw-button blue" onclick="deleteCurrentCat()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+ODSTRÁNIŤ PÁCHATEĽA
+</div>
+
+</button>
+
+</div>
+
 </section>
 
 
-<!-- =========================================================
-     INCIDENT
-========================================================= -->
+<!-- =====================================================
+INCIDENT
+===================================================== -->
 
 <section id="incident" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('profile')">‹</button>
-    <div class="topbar-title">
-      <small>CAT FILE</small>
-      <strong>Pridať incident</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card">
+<button class="back" onclick="openScreen('catFile')">‹</button>
 
-    <h2>🐾 Čo dnes páchateľ spáchal?</h2>
+<div class="back-title">
 
-    <p>
-      Vyber jeden alebo viac incidentov. Dátum a čas sa zaznamenajú automaticky.
-    </p>
+<h2>
+Nový mačací zločin
+</h2>
 
-    <div class="incident-grid">
+<small id="incidentCatName">
+Čo dnes páchateľ spáchal?
+</small>
 
-      <div class="incident" data-id="food" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <circle cx="60" cy="38" r="24" fill="#ffb64c"/>
-            <path d="M42 27 L45 13 L57 22 L65 22 L76 13 L78 28"
-            fill="#ffb64c" stroke="#222" stroke-width="3"/>
-            <circle cx="51" cy="37" r="3"/>
-            <circle cx="68" cy="37" r="3"/>
-            <path d="M55 46 Q60 51 65 46" fill="none"
-            stroke="#222" stroke-width="3"/>
-            <path d="M23 60 Q42 47 58 60 Q76 71 96 59"
-            fill="none" stroke="#f15b3a" stroke-width="7"
-            stroke-linecap="round"/>
-            <path d="M78 55 L103 69" stroke="#f15b3a" stroke-width="6"/>
-          </svg>
-        </div>
-        <div class="incident-name">🍗 Ukradla jedlo</div>
-      </div>
+</div>
 
-      <div class="incident" data-id="bite" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <path d="M28 57 Q51 37 92 50 Q105 56 91 67
-            Q59 72 31 68Z" fill="#f0b27b"
-            stroke="#222" stroke-width="3"/>
-            <path d="M40 53 Q32 32 49 21 L43 10 L58 18
-            L72 10 L68 28 Q84 37 73 56"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <circle cx="51" cy="34" r="2.5"/>
-            <circle cx="65" cy="34" r="2.5"/>
-            <path d="M56 43 Q61 47 66 43"
-            fill="none" stroke="#222" stroke-width="3"/>
-            <path d="M72 47 L81 57" stroke="#222" stroke-width="4"/>
-          </svg>
-        </div>
-        <div class="incident-name">🦷 Ohryzla ma</div>
-      </div>
+</div>
 
-      <div class="incident" data-id="scratch" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <path d="M37 64 Q23 45 32 29 L29 15 L44 24
-            Q57 20 68 25 L84 14 L81 31
-            Q93 48 80 65 Q61 82 37 64Z"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <circle cx="48" cy="43" r="3"/>
-            <circle cx="67" cy="43" r="3"/>
-            <path d="M54 51 Q59 56 64 51" fill="none"
-            stroke="#222" stroke-width="3"/>
-            <path d="M91 30 L99 20 M92 42 L104 37 M91 53 L103 55"
-            stroke="#ff4c75" stroke-width="4"
-            stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="incident-name">🐾 Poškrabala ma</div>
-      </div>
 
-      <div class="incident" data-id="damage" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <path d="M36 67 Q22 48 32 30 L29 15 L45 25
-            Q59 20 71 25 L88 14 L84 32
-            Q95 50 81 67 Q61 82 36 67Z"
-            fill="#f5a33b" stroke="#222" stroke-width="3"/>
-            <path d="M67 65 L85 49 L99 68 L80 78Z"
-            fill="#7bc9ff" stroke="#222" stroke-width="3"/>
-            <path d="M89 50 L94 44 M99 57 L108 54 M93 70 L102 76"
-            stroke="#ff4e64" stroke-width="3"/>
-            <circle cx="48" cy="44" r="3"/>
-            <circle cx="69" cy="44" r="3"/>
-          </svg>
-        </div>
-        <div class="incident-name">💥 Poškodila zariadenie</div>
-      </div>
+<div class="card form">
 
-      <div class="incident" data-id="bed" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <rect x="16" y="48" width="88" height="24" rx="5"
-            fill="#62b7ff" stroke="#222" stroke-width="3"/>
-            <path d="M25 48 Q27 29 43 25 Q57 20 68 31
-            Q77 39 74 51"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <path d="M28 32 L31 18 L43 25 L57 25 L69 18 L72 34"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <circle cx="43" cy="39" r="2.5"/>
-            <circle cx="59" cy="39" r="2.5"/>
-            <path d="M48 45 Q51 48 54 45"
-            fill="none" stroke="#222" stroke-width="3"/>
-            <text x="81" y="26" font-size="15">Zz</text>
-          </svg>
-        </div>
-        <div class="incident-name">🛏️ Obsadzila cudziu posteľ</div>
-      </div>
+<div style="max-width:250px;margin:auto">
 
-      <div class="incident" data-id="toilet" onclick="selectIncident(this)">
-        <div class="incident-art">
-          <svg viewBox="0 0 120 90">
-            <path d="M28 65 Q24 46 39 36 Q54 26 70 36
-            Q84 46 80 65 Q65 77 46 73 Q34 72 28 65Z"
-            fill="#aab5c9" stroke="#222" stroke-width="3"/>
-            <path d="M80 61 L98 61 L98 78 L84 78"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <path d="M42 28 L45 16 L57 24 L70 16 L72 30"
-            fill="#fff" stroke="#222" stroke-width="3"/>
-            <circle cx="48" cy="43" r="2.5"/>
-            <circle cx="65" cy="43" r="2.5"/>
-            <path d="M54 51 Q59 55 64 51"
-            fill="none" stroke="#222" stroke-width="3"/>
-            <path d="M88 24 Q95 17 102 24"
-            fill="none" stroke="#55a8ff" stroke-width="3"/>
-          </svg>
-        </div>
-        <div class="incident-name">🚽 Netrafila sa do záchoda</div>
-      </div>
+<svg class="line-cat" viewBox="0 0 360 300">
 
-    </div>
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
 
-    <label>Čo sa stalo? (voliteľné)</label>
-    <textarea id="incidentNote"
-      placeholder="Krátky opis ďalšieho mačacieho zločinu..."></textarea>
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
 
-    <button class="paw-button" onclick="addIncident()">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 ZAREGISTROVAŤ ZLOČIN</span>
-    </button>
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
 
-  </div>
+<path class="pink"
+d="M160 159 Q166 151 172 159 Q166 168 160 159Z"/>
+
+<path d="
+M166 166 Q166 181 150 184
+M166 166 Q166 181 182 184
+"/>
+
+</svg>
+
+</div>
+
+
+<h2 style="text-align:center;margin:0">
+ČO DNES SPÁCHAL/A?
+</h2>
+
+<p class="muted" style="text-align:center">
+Vyber jeden mačací priestupok.
+Dátum a čas sa pridajú automaticky.
+</p>
+
+
+<div id="incidentOptions" class="incident-grid"></div>
+
+
+<div class="field" style="margin-top:18px">
+
+<label>
+Dátum a čas
+</label>
+
+<input id="incidentDate" type="text" readonly>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Dodatočná poznámka
+</label>
+
+<textarea
+id="incidentNote"
+placeholder="Čokoľvek, čo by mal vyšetrovateľ vedieť..."
+></textarea>
+
+</div>
+
+
+<button class="paw-button" onclick="registerIncident()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+ZAREGISTROVAŤ ZLOČIN
+</div>
+
+</button>
+
+</div>
+
 </section>
 
 
-<!-- =========================================================
-     UNKNOWN
-========================================================= -->
+<!-- =====================================================
+IDENTIFIED
+===================================================== -->
 
-<section id="unknown" class="screen">
+<section id="identified" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>VÝSLEDOK</small>
-      <strong>Neznámy páchateľ</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card error-box">
+<button class="back" onclick="openScreen('home')">‹</button>
 
-    <div class="cat-line">
-      <svg viewBox="0 0 150 150">
-        <path d="M34 70 Q20 55 28 37 L25 15 L48 28
-        Q60 23 72 28 L96 15 L93 38
-        Q103 56 91 74 Q81 91 62 94
-        Q42 91 34 70Z"/>
-        <path d="M43 51 L53 51"/>
-        <path d="M70 51 L80 51"/>
-        <path d="M57 62 Q62 57 67 62"/>
-      </svg>
-    </div>
+<div class="back-title">
 
-    <h2>🐱 Páchateľ nie je v databáze.</h2>
+<h2>
+Páchateľ identifikovaný
+</h2>
 
-    <p>
-      Našli sme mačku / páchateľa, ale zatiaľ nemá trestný register.
-      To je podozrivé.
-    </p>
+<small>
+Máme ho v databáze.
+</small>
 
-    <button class="paw-button" onclick="openScreen('addCat')">
-      <svg viewBox="0 0 600 150" preserveAspectRatio="none">
-        <path class="paw-shape"
-          d="M85 118 C50 115 39 88 56 67 C66 54 78 48 91 45
-          C76 26 83 9 99 8 C114 7 124 20 126 38
-          C142 21 158 17 169 27 C179 36 177 50 168 62
-          C188 54 207 57 215 70 C226 88 208 110 185 115
-          C156 122 118 124 85 118Z"/>
-        <path class="paw-shape"
-          d="M390 118 C357 118 339 101 343 83 C347 66 364 57 383 57
-          C378 38 388 23 403 24 C417 25 424 38 421 54
-          C437 38 454 39 463 50 C471 61 466 75 453 83
-          C471 78 486 84 490 98 C495 113 475 124 450 124
-          C429 124 409 122 390 118Z"/>
-        <path class="paw-shape" d="M215 125 Q300 105 385 125 L368 149 L232 149Z"/>
-      </svg>
-      <span class="paw-text">🐾 PRIDAŤ DO REGISTRA</span>
-    </button>
+</div>
 
-  </div>
+</div>
+
+
+<div class="card result">
+
+<div class="result-cat">
+
+<svg class="line-cat" viewBox="0 0 360 300">
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<path class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path class="pink"
+d="M160 159 Q166 151 172 159 Q166 168 160 159Z"/>
+
+<path d="
+M166 166 Q166 181 150 184
+M166 166 Q166 181 182 184
+"/>
+
+</svg>
+
+</div>
+
+
+<h2>
+MÁME HO!
+</h2>
+
+<div class="confidence">
+98%
+</div>
+
+<h2 id="identifiedName">
+Muro
+</h2>
+
+<p class="muted">
+Mačka / páchateľ bola úspešne
+identifikovaná medzi registrovanými profilmi.
+</p>
+
+
+<button class="paw-button" onclick="openCurrentCatFile()">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+OTVORIŤ CAT FILE
+</div>
+
+</button>
+
+</div>
+
 </section>
 
 
-<!-- =========================================================
-     ERROR
-========================================================= -->
+<!-- ERROR -->
 
 <section id="error" class="screen">
 
-  <div class="topbar">
-    <button class="back" onclick="openScreen('home')">‹</button>
-    <div class="topbar-title">
-      <small>CHYBA</small>
-      <strong>Mačací systém hlási problém</strong>
-    </div>
-  </div>
+<div class="back-row">
 
-  <div class="card error-box">
-    <div class="error-icon">😼</div>
-    <h2 id="errorTitle">Niečo sa pokazilo.</h2>
-    <p id="errorMessage">
-      Ani mačka nevie, čo sa práve stalo.
-    </p>
-  </div>
+<button class="back" onclick="openScreen('home')">‹</button>
+
+<div class="back-title">
+
+<h2>
+Mačací problém
+</h2>
+
+<small>
+Niečo sa pokazilo.
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card error">
+
+<div class="error-icon">
+🐾
+</div>
+
+<h2 id="errorTitle">
+Niečo sa pokazilo.
+</h2>
+
+<p id="errorText" class="muted">
+Skús to ešte raz.
+</p>
+
+<button class="paw-button" onclick="openScreen('home')">
+
+<svg class="paw-shape"
+viewBox="0 0 600 220"
+preserveAspectRatio="none">
+
+<path d="
+M158 76
+C143 73 132 61 132 46
+C132 31 142 20 155 20
+C169 20 178 31 180 46
+C181 54 185 59 191 59
+C197 59 201 53 202 45
+C204 29 214 18 228 18
+C243 18 252 30 251 45
+C250 55 254 61 261 62
+C268 63 273 58 274 48
+C275 32 286 21 300 21
+C315 21 324 33 323 48
+C322 58 326 64 333 65
+C340 66 346 61 347 51
+C348 36 359 27 373 29
+C388 31 395 43 392 57
+C390 67 394 74 403 78
+C416 84 432 80 448 77
+C470 73 489 82 497 99
+C507 119 496 140 477 149
+C459 158 439 151 420 146
+C400 141 382 144 367 156
+C350 170 329 180 300 180
+C271 180 250 170 233 156
+C218 144 200 141 180 146
+C161 151 141 158 123 149
+C104 140 93 119 103 99
+C111 83 129 75 145 78
+C150 79 154 78 158 76
+Z
+"/>
+
+</svg>
+
+<div class="paw-text">
+SPÄŤ NA HLAVNÚ
+</div>
+
+</button>
+
+</div>
 
 </section>
+
+
+<div class="footer">
+<strong>CAT NOSE ID</strong>
+<br>
+Vytvorené pre zábavu. Žiadne reklamy. Žiadne platby.
+</div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   DATA
-========================================================= */
+/* =====================================================
+DATABASE
+===================================================== */
 
-let cats = [];
-let currentCat = null;
+const STORAGE_KEY="catNoseDatabaseV4";
 
-const incidents = {
-  food: {
-    name:"Ukradla jedlo",
-    count:0
-  },
-  bite:{
-    name:"Ohryzla ma",
-    count:0
-  },
-  scratch:{
-    name:"Poškrabala ma",
-    count:0
-  },
-  damage:{
-    name:"Poškodila zariadenie",
-    count:0
-  },
-  bed:{
-    name:"Obsadila cudziu posteľ",
-    count:0
-  },
-  toilet:{
-    name:"Netrafila sa do záchoda",
-    count:0
-  }
-};
+let cats=[];
+let currentCatId=null;
+let catPhotoData="";
+let testImageData="";
+let scanRunning=false;
+let selectedIncidentType="ukradla jedlo";
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+/* =====================================================
+INCIDENTS — KRESLENÉ ILUSTRÁCIE
+===================================================== */
+
+const incidents=[
+
+{
+id:"ukradla jedlo",
+title:"Ukradla jedlo",
+description:"Neoprávnené získanie cudzej potravy",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- tanier -->
+<ellipse
+cx="40"
+cy="49"
+rx="27"
+ry="7"
+class="blue"
+/>
+
+<!-- jedlo -->
+<path
+class="yellow"
+d="
+M19 43
+Q40 27 61 43
+Q40 53 19 43Z
+"
+/>
+
+<!-- labka smerujúca k jedlu -->
+<path
+class="pink"
+d="
+M31 30
+Q31 21 37 18
+Q42 16 45 21
+L47 27
+Q49 19 54 20
+Q60 21 58 28
+L56 34
+"
+/>
+
+<path
+d="
+M27 37
+Q40 31 53 37
+"
+/>
+
+</svg>`
+},
+
+{
+id:"poškodila zariadenie",
+title:"Poškodila zariadenie",
+description:"Útok na majetok domácnosti",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- zariadenie -->
+<rect
+x="13"
+y="9"
+width="54"
+height="40"
+rx="5"
+/>
+
+<!-- prasklina -->
+<path
+class="pink"
+d="
+M42 10
+L34 25
+L42 27
+L31 48
+"
+/>
+
+<!-- malé iskry -->
+<path
+class="yellow"
+d="
+M20 19 L16 15
+M61 20 L65 16
+"
+/>
+
+<path
+class="blue"
+d="
+M18 55
+L62 55
+"
+/>
+
+</svg>`
+},
+
+{
+id:"poškriabala ma",
+title:"Poškrabala ma",
+description:"Neoprávnené použitie pazúrov",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- škrabance -->
+<path
+class="pink"
+d="
+M20 11
+L14 45
+
+M35 9
+L30 45
+
+M50 11
+L46 45
+"
+/>
+
+<!-- ruka / obeť -->
+<path
+d="
+M12 50
+Q26 38 40 48
+Q53 56 68 47
+"
+/>
+
+<path
+class="blue"
+d="
+M22 56
+Q40 48 58 56
+"
+/>
+
+</svg>`
+},
+
+{
+id:"uhryzla ma",
+title:"Uhryzla ma",
+description:"Neautorizovaný zubný útok",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- otvorená papuľa -->
+<path
+d="
+M12 28
+Q40 8 68 28
+Q40 53 12 28
+Z
+"
+/>
+
+<!-- zuby -->
+<path
+class="pink"
+d="
+M23 23
+L25 38
+
+M34 18
+L36 40
+
+M46 18
+L44 40
+
+M57 23
+L54 38
+"
+/>
+
+<!-- uhryznutie -->
+<path
+class="blue"
+d="
+M17 48
+Q40 56 63 48
+"
+/>
+
+</svg>`
+},
+
+{
+id:"obsadila cudziu posteľ",
+title:"Obsadila cudziu posteľ",
+description:"Neoprávnené zabratie lôžka",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- posteľ -->
+<path
+d="
+M10 39
+L70 39
+L70 51
+L10 51
+Z
+"
+/>
+
+<!-- vankúš -->
+<path
+d="
+M14 38
+L14 28
+Q23 18 34 28
+L34 38
+"
+/>
+
+<!-- mačka na posteli -->
+<path
+class="pink"
+d="
+M39 31
+Q43 21 50 25
+L56 21
+L61 29
+Q61 37 51 37
+Q42 37 39 31
+"
+/>
+
+<path
+class="blue"
+d="
+M10 55
+L70 55
+"
+/>
+
+</svg>`
+},
+
+{
+id:"netrafila sa do záchoda",
+title:"Netrafila sa do záchoda",
+description:"Incident s nejasným motívom",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- záchod -->
+<path
+d="
+M16 24
+Q40 17 64 24
+L60 46
+Q40 55 20 46
+Z
+"
+/>
+
+<ellipse
+cx="40"
+cy="28"
+rx="18"
+ry="6"
+/>
+
+<!-- nešťastná trajektória -->
+<path
+class="pink"
+d="
+M40 8
+L40 17
+
+M34 12
+L40 18
+
+M46 12
+L40 18
+"
+/>
+
+<!-- cieľ mimo -->
+<path
+class="blue"
+d="
+M65 47
+L70 52
+M70 47
+L65 52
+"
+/>
+
+</svg>`
+},
+
+{
+id:"rozbila predmet",
+title:"Rozbila predmet",
+description:"Poškodenie cudzieho majetku",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<!-- rozbitý predmet -->
+<path
+d="
+M13 12
+L33 29
+L25 38
+L44 53
+
+M67 12
+L47 29
+L55 38
+L36 53
+"
+/>
+
+<!-- výrazná prasklina -->
+<path
+class="pink"
+d="
+M40 7
+L34 23
+L43 25
+L33 43
+"
+/>
+
+<!-- kúsky -->
+<path
+class="yellow"
+d="
+M17 54 L23 59
+M63 54 L57 59
+"
+/>
+
+</svg>`
+},
+
+{
+id:"neznámy mačací zločin",
+title:"Neznámy zločin",
+description:"Vyšetrovanie stále prebieha",
+icon:`
+<svg viewBox="0 0 80 65">
+
+<circle
+class="blue"
+cx="40"
+cy="32"
+r="24"
+/>
+
+<path
+class="pink"
+d="
+M32 25
+Q40 18 48 25
+Q51 31 45 35
+Q40 38 40 43
+"
+/>
+
+<circle
+class="pink"
+cx="40"
+cy="50"
+r="1.5"
+/>
+
+</svg>`
+}
+
+];
+
+
+/* =====================================================
+DATABASE
+===================================================== */
+
+function loadDatabase(){
+
+    try{
+
+        const saved=
+            localStorage.getItem(STORAGE_KEY);
+
+        cats=saved?
+            JSON.parse(saved):
+            [];
+
+        if(!Array.isArray(cats)){
+            cats=[];
+        }
+
+    }catch(e){
+
+        cats=[];
+
+    }
+
+}
+
+function saveDatabase(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(cats)
+    );
+
+}
+
+
+/* =====================================================
+NAVIGATION
+===================================================== */
 
 function openScreen(id){
 
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
+    const target=
+        document.getElementById(id);
 
-  const target=document.getElementById(id);
+    if(!target)return;
 
-  if(target){
+    document
+        .querySelectorAll(".screen")
+        .forEach(s=>s.classList.remove("active"));
+
     target.classList.add("active");
-    window.scrollTo({top:0,behavior:"instant"});
-  }
 
-  if(id==="scan"){
-    startCamera();
-  }
+    window.scrollTo({
+        top:0,
+        behavior:"instant"
+    });
+
+    if(id==="home")
+        renderCatList();
+
+    if(id==="catFile")
+        renderCurrentCat();
+
+    if(id==="incident"){
+        updateIncidentDate();
+        renderIncidentOptions();
+    }
+
 }
 
 
-/* =========================================================
-   ADD CAT
-========================================================= */
+/* =====================================================
+CAT LIST
+===================================================== */
+
+function renderCatList(){
+
+    const container=
+        document.getElementById("catList");
+
+    if(!container)return;
+
+    if(cats.length===0){
+
+        container.innerHTML=`
+        <div class="cat-empty">
+
+        Zatiaľ nemáš registrovaného
+        žiadneho mačacieho páchateľa.
+
+        <br><br>
+
+        Pridaj prvého.
+
+        </div>`;
+
+        return;
+
+    }
+
+    container.innerHTML=
+        cats.map(cat=>{
+
+            const count=
+                Array.isArray(cat.incidents)?
+                cat.incidents.length:
+                0;
+
+            return `
+            <button
+                class="cat-item"
+                onclick="openCatFile('${cat.id}')"
+            >
+
+                <div class="cat-photo">
+
+                ${
+                    cat.photo?
+                    `<img src="${cat.photo}">`:
+                    `🐱`
+                }
+
+                </div>
+
+                <div class="cat-info">
+
+                    <strong>
+                    ${escapeHtml(cat.name)}
+                    </strong>
+
+                    <span>
+                    ${count}
+                    registrovaných incidentov
+                    </span>
+
+                </div>
+
+                <div class="cat-arrow">
+                ›
+                </div>
+
+            </button>`;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+ADD CAT
+===================================================== */
+
+function previewCatPhoto(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file)return;
+
+    const reader=
+        new FileReader();
+
+    reader.onload=e=>{
+
+        catPhotoData=e.target.result;
+
+        document.getElementById(
+            "photoPreview"
+        ).innerHTML=
+            `<img src="${e.target.result}">`;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
 
 function saveCat(){
 
-  const name=document.getElementById("catName").value.trim();
+    const name=
+        document
+        .getElementById("catName")
+        .value
+        .trim();
 
-  if(!name){
-    alert("Najprv zadaj meno mačky / páchateľa.");
-    return;
-  }
+    if(!name){
 
-  const cat={
-    id:Date.now(),
-    name,
-    incidents:{
-      food:0,
-      bite:0,
-      scratch:0,
-      damage:0,
-      bed:0,
-      toilet:0
-    }
-  };
+        showError(
+            "Chýba meno",
+            "Najprv zadaj meno mačky / páchateľa."
+        );
 
-  cats.push(cat);
-  currentCat=cat;
-
-  renderCats();
-
-  document.getElementById("catName").value="";
-
-  openProfile(cat);
-}
-
-
-function renderCats(){
-
-  const box=document.getElementById("catList");
-
-  if(!cats.length){
-    box.innerHTML=`
-      <p>Zatiaľ nemáš uloženú žiadnu mačku.</p>
-
-      <button class="paw-button" onclick="openScreen('addCat')">
-        <span class="paw-text">+ PRIDAŤ MAČKU / PÁCHATEĽA</span>
-      </button>
-
-      <button class="paw-button secondary" onclick="openScreen('scan')">
-        <span class="paw-text">🔎 IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA</span>
-      </button>
-    `;
-    return;
-  }
-
-  box.innerHTML="";
-
-  cats.forEach(cat=>{
-
-    const div=document.createElement("div");
-    div.className="cat-card";
-
-    div.innerHTML=`
-      <div class="cat-avatar">
-        <svg viewBox="0 0 100 100">
-          <path d="M24 55 Q14 42 22 29 L20 14 L36 22
-          Q50 17 64 22 L80 14 L78 30
-          Q87 44 77 57 Q67 70 50 72
-          Q33 70 24 55Z"
-          fill="none" stroke="#fff" stroke-width="3"
-          stroke-linecap="round"/>
-          <circle cx="37" cy="42" r="2.5" fill="#ff55aa"/>
-          <circle cx="63" cy="42" r="2.5" fill="#ff55aa"/>
-          <path d="M44 51 Q50 57 56 51"
-          fill="none" stroke="#fff" stroke-width="3"/>
-        </svg>
-      </div>
-
-      <div>
-        <div class="cat-name">${escapeHtml(cat.name)}</div>
-        <span class="badge">Aktívny páchateľ</span>
-      </div>
-    `;
-
-    div.onclick=()=>openProfile(cat);
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-function openProfile(cat){
-
-  currentCat=cat;
-
-  document.getElementById("profileName").textContent=cat.name;
-
-  const summary=document.getElementById("summary");
-
-  summary.innerHTML="";
-
-  Object.keys(incidents).forEach(id=>{
-
-    const value=cat.incidents[id] || 0;
-
-    if(value>0){
-
-      const row=document.createElement("div");
-      row.className="summary-row";
-
-      row.innerHTML=`
-        <div class="summary-art">
-          ${incidentSVG(id)}
-        </div>
-        <span>${incidents[id].name}</span>
-        <strong class="count">${value}×</strong>
-      `;
-
-      summary.appendChild(row);
-
+        return;
     }
 
-  });
+    if(
+        cats.some(
+            cat=>
+                cat.name.toLowerCase()===
+                name.toLowerCase()
+        )
+    ){
 
-  if(!summary.children.length){
+        showError(
+            "Páchateľ už existuje",
+            "V registri už máme mačku s týmto menom."
+        );
 
-    summary.innerHTML=`
-      <div class="summary-row">
-        <span>✨ Zatiaľ bez zaznamenaných zločinov.</span>
-      </div>
-    `;
-
-  }
-
-  openScreen("profile");
-}
-
-
-/* =========================================================
-   INCIDENT SELECT
-========================================================= */
-
-function selectIncident(el){
-
-  el.classList.toggle("selected");
-
-}
-
-
-function addIncident(){
-
-  if(!currentCat){
-
-    if(cats.length){
-      currentCat=cats[0];
-    }else{
-      alert("Najprv pridaj mačku / páchateľa.");
-      openScreen("addCat");
-      return;
-    }
-  }
-
-  const selected=[
-    ...document.querySelectorAll(".incident.selected")
-  ];
-
-  if(!selected.length){
-    alert("Vyber aspoň jeden mačací zločin.");
-    return;
-  }
-
-  selected.forEach(el=>{
-    const id=el.dataset.id;
-
-    if(currentCat.incidents[id]===undefined){
-      currentCat.incidents[id]=0;
+        return;
     }
 
-    currentCat.incidents[id]++;
-  });
+    const cat={
 
-  const note=document.getElementById("incidentNote").value.trim();
+        id:
+            "cat_"+Date.now(),
 
-  if(note){
-    console.log("Incident poznámka:",note);
-  }
+        name,
 
-  document.querySelectorAll(".incident.selected")
-    .forEach(el=>el.classList.remove("selected"));
+        photo:
+            catPhotoData,
 
-  document.getElementById("incidentNote").value="";
+        createdAt:
+            new Date().toISOString(),
 
-  openProfile(currentCat);
+        lastMatch:null,
+
+        incidents:[]
+
+    };
+
+    cats.push(cat);
+
+    saveDatabase();
+
+    currentCatId=cat.id;
+
+    document.getElementById("catName").value="";
+    document.getElementById("catPhoto").value="";
+    document.getElementById("photoPreview").innerHTML="🐱";
+
+    catPhotoData="";
+
+    renderCurrentCat();
+
+    openScreen("catFile");
+
 }
 
 
-/* =========================================================
-   INCIDENT SVG
-========================================================= */
+/* =====================================================
+CAT FILE
+===================================================== */
 
-function incidentSVG(id){
+function openCatFile(id){
 
-  const map={
-
-    food:`
-      <svg viewBox="0 0 100 70">
-        <circle cx="50" cy="28" r="18" fill="#ffb64c"/>
-        <path d="M35 22 L37 9 L48 17 L53 17 L64 9 L66 24"
-        fill="#ffb64c" stroke="#222" stroke-width="2.5"/>
-        <circle cx="43" cy="28" r="2"/>
-        <circle cx="57" cy="28" r="2"/>
-        <path d="M22 55 Q48 39 78 55"
-        fill="none" stroke="#f15b3a" stroke-width="5"/>
-      </svg>`,
-
-    bite:`
-      <svg viewBox="0 0 100 70">
-        <path d="M20 48 Q50 30 82 45 Q91 50 82 57
-        Q50 61 22 56Z" fill="#efb07d"
-        stroke="#222" stroke-width="2.5"/>
-        <path d="M38 42 Q31 25 44 16 L41 7 L52 14
-        L62 7 L60 22 Q73 30 65 45"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-      </svg>`,
-
-    scratch:`
-      <svg viewBox="0 0 100 70">
-        <path d="M30 52 Q19 36 27 24 L25 10 L38 19
-        Q50 15 61 19 L75 9 L72 25
-        Q82 39 70 53 Q50 67 30 52Z"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-        <path d="M80 21 L89 14 M81 32 L94 29 M80 43 L92 46"
-        stroke="#ff4b72" stroke-width="3"
-        stroke-linecap="round"/>
-      </svg>`,
-
-    damage:`
-      <svg viewBox="0 0 100 70">
-        <path d="M25 51 Q16 36 25 24 L23 10 L37 19
-        Q50 15 61 19 L76 9 L73 25
-        Q83 40 71 53 Q50 65 25 51Z"
-        fill="#f5a33b" stroke="#222" stroke-width="2.5"/>
-        <path d="M61 50 L76 37 L88 54 L73 62Z"
-        fill="#71c8ff" stroke="#222" stroke-width="2.5"/>
-      </svg>`,
-
-    bed:`
-      <svg viewBox="0 0 100 70">
-        <rect x="12" y="39" width="76" height="20" rx="4"
-        fill="#61b8ff" stroke="#222" stroke-width="2.5"/>
-        <path d="M22 39 Q23 23 37 20 Q51 17 61 27
-        Q69 34 66 42"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-        <path d="M24 26 L27 12 L38 19 L49 19 L61 12 L64 28"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-        <text x="73" y="18" font-size="12">Zz</text>
-      </svg>`,
-
-    toilet:`
-      <svg viewBox="0 0 100 70">
-        <path d="M22 52 Q20 37 34 30 Q49 22 63 31
-        Q76 39 72 54 Q55 64 38 60 Q27 59 22 52Z"
-        fill="#aab5c9" stroke="#222" stroke-width="2.5"/>
-        <path d="M70 49 L87 49 L87 63 L74 63"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-        <path d="M33 25 L36 12 L47 19 L59 12 L61 27"
-        fill="#fff" stroke="#222" stroke-width="2.5"/>
-      </svg>`
-  };
-
-  return map[id] || "";
-}
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
-
-let cameraStream=null;
-
-async function startCamera(){
-
-  const video=document.getElementById("video");
-
-  if(!video) return;
-
-  try{
-
-    if(cameraStream){
-      video.srcObject=cameraStream;
-      return;
+    if(!cats.some(cat=>cat.id===id)){
+        showError(
+            "Profil sa nenašiel",
+            "Tento profil už neexistuje."
+        );
+        return;
     }
 
-    cameraStream=await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:"environment"
-      },
-      audio:false
-    });
+    currentCatId=id;
 
-    video.srcObject=cameraStream;
+    renderCurrentCat();
 
-  }catch(err){
+    openScreen("catFile");
 
-    document.getElementById("instruction").textContent=
-      "Kamera nie je dostupná. Skús test s fotografiou.";
-
-  }
 }
 
 
-/* =========================================================
-   SIMULATED SCAN
-========================================================= */
+function openCurrentCatFile(){
 
-function simulateScan(){
-
-  let progress=0;
-
-  const bar=document.getElementById("progress");
-  const text=document.getElementById("progressText");
-  const instruction=document.getElementById("instruction");
-
-  instruction.textContent="Hľadám mačku / páchateľa...";
-
-  const timer=setInterval(()=>{
-
-    progress+=10;
-
-    bar.style.width=progress+"%";
-    text.textContent=progress+"%";
-
-    if(progress>=100){
-
-      clearInterval(timer);
-
-      instruction.textContent=
-        "Mačka / páchateľ nájdený.";
-
-      setTimeout(()=>{
+    if(!currentCatId){
 
         if(cats.length){
-          openProfile(cats[0]);
+            currentCatId=cats[0].id;
         }else{
-          openScreen("unknown");
+            openScreen("newCat");
+            return;
         }
-
-      },700);
 
     }
 
-  },180);
+    renderCurrentCat();
+
+    openScreen("catFile");
 
 }
 
 
-/* =========================================================
-   TEST FILE
-========================================================= */
+function renderCurrentCat(){
 
-document.getElementById("testFile").addEventListener("change",function(){
+    if(!currentCatId)return;
 
-  const file=this.files[0];
-  const preview=document.getElementById("testPreview");
+    const cat=
+        cats.find(
+            c=>c.id===currentCatId
+        );
 
-  if(!file){
-    preview.innerHTML="";
-    return;
-  }
+    if(!cat){
+        openScreen("home");
+        return;
+    }
 
-  const url=URL.createObjectURL(file);
+    document.getElementById(
+        "profileName"
+    ).textContent=cat.name;
 
-  if(file.type.startsWith("image/")){
+    document.getElementById(
+        "incidentCatName"
+    ).textContent=
+        "Čo dnes spáchal/a "+cat.name+"?";
 
-    preview.innerHTML=`
-      <img src="${url}"
-      style="width:100%;border-radius:20px;border:1px solid #34405b">
-    `;
+    const photo=
+        document.getElementById(
+            "profilePhoto"
+        );
 
-  }else{
+    photo.innerHTML=
+        cat.photo?
+        `<img src="${cat.photo}">`:
+        "🐱";
 
-    preview.innerHTML=`
-      <video src="${url}" controls
-      style="width:100%;border-radius:20px"></video>
-    `;
+    document.getElementById(
+        "totalIncidents"
+    ).textContent=
+        cat.incidents.length;
 
-  }
+    document.getElementById(
+        "confidenceValue"
+    ).textContent=
+        cat.lastMatch?
+        cat.lastMatch+"%":
+        "—";
+
+    renderIncidentList(cat);
+
+}
+
+
+/* =====================================================
+INCIDENT BUTTON
+===================================================== */
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    const button=
+        document.getElementById(
+            "addIncidentButton"
+        );
+
+    if(button){
+
+        button.addEventListener(
+            "click",
+            ()=>{
+
+                if(!currentCatId){
+
+                    showError(
+                        "Nie je vybraná mačka",
+                        "Najprv otvor konkrétny CAT FILE."
+                    );
+
+                    return;
+                }
+
+                const cat=
+                    cats.find(
+                        c=>c.id===currentCatId
+                    );
+
+                if(!cat)return;
+
+                document.getElementById(
+                    "incidentCatName"
+                ).textContent=
+                    "Čo dnes spáchal/a "+
+                    cat.name+"?";
+
+                renderIncidentOptions();
+                updateIncidentDate();
+
+                openScreen("incident");
+
+            }
+        );
+
+    }
 
 });
 
 
-function runTest(){
+/* =====================================================
+INCIDENT LIST
+===================================================== */
 
-  const file=document.getElementById("testFile").files[0];
+function renderIncidentList(cat){
 
-  if(!file){
-    alert("Najprv vyber fotografiu alebo video.");
-    return;
-  }
+    const container=
+        document.getElementById(
+            "incidentList"
+        );
 
-  if(cats.length){
-    openProfile(cats[0]);
-  }else{
-    openScreen("unknown");
-  }
+    if(!cat.incidents.length){
+
+        container.innerHTML=`
+        <div class="no-incidents">
+
+        Tento páchateľ zatiaľ nemá
+        žiadne evidované zločiny.
+
+        <br><br>
+
+        To je podozrivé.
+
+        </div>`;
+
+        return;
+    }
+
+    const counts={};
+
+    cat.incidents.forEach(i=>{
+        counts[i.type]=
+            (counts[i.type]||0)+1;
+    });
+
+    container.innerHTML=
+        Object.entries(counts)
+        .map(([type,count])=>{
+
+            const item=
+                incidents.find(
+                    i=>i.id===type
+                );
+
+            return `
+            <div class="incident-card">
+
+                <div class="incident-icon">
+
+                ${
+                    item?
+                    item.icon:
+                    ""
+                }
+
+                </div>
+
+                <div class="incident-text">
+
+                    <strong>
+                    ${
+                        item?
+                        escapeHtml(item.title):
+                        escapeHtml(type)
+                    }
+                    </strong>
+
+                    <span>
+                    ${
+                        item?
+                        escapeHtml(item.description):
+                        "Mačací incident"
+                    }
+                    </span>
+
+                </div>
+
+                <div class="incident-count">
+                ${count}×
+                </div>
+
+            </div>`;
+
+        }).join("");
 
 }
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/* =====================================================
+INCIDENT OPTIONS
+===================================================== */
 
-function escapeHtml(text){
+function renderIncidentOptions(){
 
-  const div=document.createElement("div");
-  div.textContent=text;
-  return div.innerHTML;
+    const container=
+        document.getElementById(
+            "incidentOptions"
+        );
+
+    if(!container)return;
+
+    container.innerHTML=
+        incidents.map(i=>{
+
+            const selected=
+                selectedIncidentType===i.id?
+                "selected":
+                "";
+
+            return `
+            <button
+                type="button"
+                class="incident-option ${selected}"
+                onclick="selectIncident('${i.id.replace(/'/g,"\\'")}')"
+            >
+
+                <div class="incident-art">
+                ${i.icon}
+                </div>
+
+                <strong>
+                ${escapeHtml(i.title)}
+                </strong>
+
+                <span>
+                ${escapeHtml(i.description)}
+                </span>
+
+            </button>`;
+
+        }).join("");
 
 }
 
 
-/* =========================================================
-   INIT
-========================================================= */
+function selectIncident(type){
 
-renderCats();
+    selectedIncidentType=type;
+
+    renderIncidentOptions();
+
+}
+
+
+/* =====================================================
+DATE
+===================================================== */
+
+function updateIncidentDate(){
+
+    const input=
+        document.getElementById(
+            "incidentDate"
+        );
+
+    if(!input)return;
+
+    const now=new Date();
+
+    input.value=
+        now.toLocaleDateString(
+            "sk-SK"
+        )+
+        " "+
+        now.toLocaleTimeString(
+            "sk-SK",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+
+/* =====================================================
+REGISTER INCIDENT
+===================================================== */
+
+function registerIncident(){
+
+    const cat=
+        cats.find(
+            c=>c.id===currentCatId
+        );
+
+    if(!cat){
+
+        showError(
+            "Profil sa nenašiel",
+            "Nevieme, ku ktorej mačke incident priradiť."
+        );
+
+        return;
+    }
+
+    const note=
+        document
+        .getElementById("incidentNote")
+        .value
+        .trim();
+
+    cat.incidents.push({
+
+        id:"incident_"+Date.now(),
+
+        type:selectedIncidentType,
+
+        note,
+
+        date:
+            new Date().toISOString()
+
+    });
+
+    saveDatabase();
+
+    document.getElementById(
+        "incidentNote"
+    ).value="";
+
+    renderCurrentCat();
+
+    openScreen("catFile");
+
+}
+
+
+/* =====================================================
+DELETE
+===================================================== */
+
+function deleteCurrentCat(){
+
+    const cat=
+        cats.find(
+            c=>c.id===currentCatId
+        );
+
+    if(!cat)return;
+
+    if(
+        !confirm(
+            'Naozaj chceš odstrániť páchateľa "'+
+            cat.name+
+            '"?'
+        )
+    ){
+        return;
+    }
+
+    cats=
+        cats.filter(
+            c=>c.id!==currentCatId
+        );
+
+    saveDatabase();
+
+    currentCatId=null;
+
+    openScreen("home");
+
+}
+
+
+/* =====================================================
+PHOTO TEST
+===================================================== */
+
+function loadTestImage(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file)return;
+
+    const reader=
+        new FileReader();
+
+    reader.onload=e=>{
+
+        testImageData=e.target.result;
+
+        document.getElementById(
+            "testPreview"
+        ).innerHTML=`
+        <div style="
+            margin-top:15px;
+            overflow:hidden;
+            border-radius:20px;
+            border:1px solid #354a76
+        ">
+        <img
+            src="${e.target.result}"
+            style="width:100%;display:block"
+        >
+        </div>`;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
+
+function runPhotoTest(){
+
+    if(!testImageData){
+
+        showError(
+            "Chýba fotografia",
+            "Najprv vyber fotografiu mačky."
+        );
+
+        return;
+    }
+
+    if(!cats.length){
+
+        showError(
+            "Databáza je prázdna",
+            "Najprv pridaj aspoň jednu mačku."
+        );
+
+        return;
+    }
+
+    identifyDemo();
+
+}
+
+
+/* =====================================================
+SCAN
+===================================================== */
+
+function startDemoScan(){
+
+    if(scanRunning)return;
+
+    if(!cats.length){
+
+        showError(
+            "Databáza je prázdna",
+            "Najprv pridaj mačku / páchateľa."
+        );
+
+        return;
+    }
+
+    scanRunning=true;
+
+    const meter=
+        document.getElementById(
+            "scanMeter"
+        );
+
+    const percent=
+        document.getElementById(
+            "scanPercent"
+        );
+
+    const message=
+        document.getElementById(
+            "scanMessage"
+        );
+
+    let value=0;
+
+    const timer=
+        setInterval(()=>{
+
+            value+=
+                Math.floor(
+                    Math.random()*9
+                )+5;
+
+            if(value>100)value=100;
+
+            meter.style.width=
+                value+"%";
+
+            percent.textContent=
+                value+" %";
+
+            if(value<25)
+                message.textContent=
+                    "Hľadám mačací nos...";
+
+            else if(value<50)
+                message.textContent=
+                    "Porovnávam páchateľov...";
+
+            else if(value<80)
+                message.textContent=
+                    "Vyhodnocujem dôkazy...";
+
+            else if(value<100)
+                message.textContent=
+                    "Už ho skoro máme...";
+
+            if(value>=100){
+
+                clearInterval(timer);
+
+                message.textContent=
+                    "Mačka / páchateľ nájdený!";
+
+                setTimeout(()=>{
+
+                    identifyDemo();
+
+                    scanRunning=false;
+
+                },700);
+
+            }
+
+        },250);
+
+}
+
+
+function identifyDemo(){
+
+    if(!cats.length)return;
+
+    const cat=cats[0];
+
+    currentCatId=cat.id;
+
+    cat.lastMatch=98;
+
+    saveDatabase();
+
+    document.getElementById(
+        "identifiedName"
+    ).textContent=cat.name;
+
+    openScreen("identified");
+
+}
+
+
+/* =====================================================
+ERROR
+===================================================== */
+
+function showError(title,text){
+
+    document.getElementById(
+        "errorTitle"
+    ).textContent=title;
+
+    document.getElementById(
+        "errorText"
+    ).textContent=text;
+
+    openScreen("error");
+
+}
+
+
+/* =====================================================
+ESCAPE
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+INIT
+===================================================== */
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    loadDatabase();
+
+    renderCatList();
+
+    renderIncidentOptions();
+
+    updateIncidentDate();
+
+});
 
 </script>
 

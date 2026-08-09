@@ -1,4 +1,109 @@
-const $ = id => document.getElementById(id);
+/* =========================================================
+   CAT NOSE ID
+   Roboflow Cat Nose Detection
+   Prototype v0.5.0
+========================================================= */
+
+
+/* =========================================================
+   ROBOFLOW CONFIGURATION
+========================================================= */
+
+const ROBOFLOW_PUBLISHABLE_KEY =
+  "rf_JGgApuVxUWez8vuNZfsIqbojNwp1";
+
+const ROBOFLOW_MODEL =
+  "cat-nose";
+
+const ROBOFLOW_VERSION =
+  1;
+
+
+/*
+   We deliberately start with a relatively permissive
+   threshold so the application does not miss the nose
+   too easily during the first live tests.
+*/
+
+const MODEL_SCORE_THRESHOLD = 0.20;
+
+
+/*
+   A frame must reach at least this confidence before
+   it becomes a candidate for automatic capture.
+*/
+
+const CAPTURE_CONFIDENCE = 0.35;
+
+
+/*
+   Maximum number of automatically selected samples.
+*/
+
+const MAX_SAMPLES = 5;
+
+
+/*
+   Minimum time between accepted samples.
+
+   This prevents the application from capturing
+   five almost identical frames in a fraction of
+   a second.
+*/
+
+const MIN_SAMPLE_INTERVAL = 450;
+
+
+/*
+   Maximum scan duration.
+*/
+
+const MAX_SCAN_TIME = 8000;
+
+
+/*
+   Inference interval.
+
+   We deliberately do not run inference on every
+   camera frame. The camera can run at 30/60 FPS,
+   while AI inference runs at a sensible rate.
+*/
+
+const INFERENCE_INTERVAL = 120;
+
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
+let currentScreen = "home";
+
+let cameraStream = null;
+
+let inferEngine = null;
+
+let modelWorkerId = null;
+
+let inferenceRunning = false;
+
+let lastInferenceTime = 0;
+
+let scanStartedAt = 0;
+
+let lastAcceptedSampleTime = 0;
+
+let samples = [];
+
+let bestDetection = null;
+
+let scanFinished = false;
+
+let modelReady = false;
+
+
+/* =========================================================
+   DOM
+========================================================= */
 
 const screens = [
   "home",
@@ -7,294 +112,80 @@ const screens = [
   "profile"
 ];
 
-let stream = null;
 
-let catModel = null;
-let landmarkSession = null;
+const video =
+  document.getElementById("video");
 
-let scanRunning = false;
-let detectorBusy = false;
-let landmarkBusy = false;
+const detectionOverlay =
+  document.getElementById("detectionOverlay");
 
-let animationFrame = null;
-let detectionTimer = null;
+const frameCanvas =
+  document.getElementById("frameCanvas");
 
-let scanStartTime = 0;
-let scanFinished = false;
+const frameCounter =
+  document.getElementById("frameCounter");
 
-let automaticSamples = [];
-let bestCapture = null;
+const qualityText =
+  document.getElementById("qualityText");
 
-let lastCatDetection = null;
-let lastLandmarks = null;
+const qualityBar =
+  document.getElementById("qualityBar");
 
-let modelLoading = false;
-let landmarkModelLoading = false;
+const instruction =
+  document.getElementById("instruction");
 
-const REQUIRED_SAMPLES = 5;
-const MAX_SCAN_TIME = 5000;
+const engineStatus =
+  document.getElementById("engineStatus");
 
-const MIN_QUALITY = 45;
-const MIN_SAMPLE_INTERVAL = 180;
+const scanResult =
+  document.getElementById("scanResult");
 
-const LANDMARK_MODEL_URL =
-  "https://huggingface.co/Isa0/cat-detection/resolve/main/model.onnx";
+const detectorNote =
+  document.getElementById("detectorNote");
+
+const mediaInput =
+  document.getElementById("mediaInput");
+
+const sourceVideo =
+  document.getElementById("sourceVideo");
+
+const videoCanvas =
+  document.getElementById("videoCanvas");
+
+const videoQuality =
+  document.getElementById("videoQuality");
+
+const videoQualityBar =
+  document.getElementById("videoQualityBar");
+
+const videoResult =
+  document.getElementById("videoResult");
+
+const videoSamples =
+  document.getElementById("videoSamples");
 
 
 /* =========================================================
-   SCREEN NAVIGATION
+   BASIC SCREEN CONTROL
 ========================================================= */
 
-function show(name) {
+function showScreen(name) {
 
-  screens.forEach(screen => {
+  screens.forEach(id => {
 
-    const el = $(screen);
+    const el =
+      document.getElementById(id);
 
-    if (el) {
-      el.classList.toggle(
-        "active",
-        screen === name
-      );
-    }
+    if (!el) return;
+
+    el.classList.toggle(
+      "active",
+      id === name
+    );
 
   });
 
-}
-
-
-/* =========================================================
-   BASIC IMAGE FUNCTIONS
-========================================================= */
-
-function luminance(r, g, b) {
-
-  return (
-    0.2126 * r +
-    0.7152 * g +
-    0.0722 * b
-  );
-
-}
-
-
-function drawVideoToCanvas(video, canvas) {
-
-  if (
-    !video ||
-    !canvas ||
-    !video.videoWidth ||
-    !video.videoHeight
-  ) {
-    return false;
-  }
-
-  canvas.width =
-    video.videoWidth;
-
-  canvas.height =
-    video.videoHeight;
-
-  const ctx =
-    canvas.getContext(
-      "2d",
-      {
-        willReadFrequently: true
-      }
-    );
-
-  ctx.drawImage(
-    video,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  return true;
-}
-
-
-/* =========================================================
-   IMAGE QUALITY
-========================================================= */
-
-function calculateQuality(canvas) {
-
-  if (
-    !canvas ||
-    !canvas.width ||
-    !canvas.height
-  ) {
-    return 0;
-  }
-
-  const small =
-    document.createElement("canvas");
-
-  const targetWidth =
-    Math.min(
-      320,
-      canvas.width
-    );
-
-  const targetHeight =
-    Math.max(
-      1,
-      Math.round(
-        canvas.height *
-        targetWidth /
-        canvas.width
-      )
-    );
-
-  small.width =
-    targetWidth;
-
-  small.height =
-    targetHeight;
-
-  const ctx =
-    small.getContext(
-      "2d",
-      {
-        willReadFrequently: true
-      }
-    );
-
-  ctx.drawImage(
-    canvas,
-    0,
-    0,
-    targetWidth,
-    targetHeight
-  );
-
-  const data =
-    ctx.getImageData(
-      0,
-      0,
-      targetWidth,
-      targetHeight
-    ).data;
-
-  let total = 0;
-  let count = 0;
-
-  for (
-    let y = 1;
-    y < targetHeight - 1;
-    y += 2
-  ) {
-
-    for (
-      let x = 1;
-      x < targetWidth - 1;
-      x += 2
-    ) {
-
-      const i =
-        (y * targetWidth + x) * 4;
-
-      const center =
-        luminance(
-          data[i],
-          data[i + 1],
-          data[i + 2]
-        );
-
-      const right =
-        luminance(
-          data[i + 4],
-          data[i + 5],
-          data[i + 6]
-        );
-
-      const down =
-        luminance(
-          data[
-            i +
-            targetWidth * 4
-          ],
-          data[
-            i +
-            targetWidth * 4 +
-            1
-          ],
-          data[
-            i +
-            targetWidth * 4 +
-            2
-          ]
-        );
-
-      total +=
-        Math.abs(center - right) +
-        Math.abs(center - down);
-
-      count++;
-    }
-  }
-
-  if (!count) {
-    return 0;
-  }
-
-  return Math.round(
-    Math.min(
-      100,
-      (total / count) * 1.8
-    )
-  );
-}
-
-
-/* =========================================================
-   QUALITY UI
-========================================================= */
-
-function updateQuality(value) {
-
-  value =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(value)
-      )
-    );
-
-  const bar =
-    $("qualityBar");
-
-  const text =
-    $("qualityText");
-
-  if (bar) {
-    bar.style.width =
-      value + "%";
-  }
-
-  if (text) {
-
-    if (value >= 75) {
-      text.textContent =
-        "EXCELLENT";
-
-    } else if (value >= 55) {
-      text.textContent =
-        "GOOD";
-
-    } else if (value >= 40) {
-      text.textContent =
-        "FAIR";
-
-    } else {
-      text.textContent =
-        "LOW";
-    }
-
-  }
+  currentScreen = name;
 }
 
 
@@ -302,51 +193,154 @@ function updateQuality(value) {
    STATUS
 ========================================================= */
 
-function updateScanStatus(text) {
+function setStatus(text) {
 
-  const instruction =
-    $("instruction");
-
-  if (instruction) {
-    instruction.textContent =
-      text;
+  if (engineStatus) {
+    engineStatus.textContent = text;
   }
+
 }
 
 
-function updateSampleCounter() {
+function setInstruction(text) {
 
-  const counter =
-    $("frameCounter");
-
-  if (!counter) {
-    return;
+  if (instruction) {
+    instruction.textContent = text;
   }
 
-  counter.textContent =
-    automaticSamples.length +
-    " / " +
-    REQUIRED_SAMPLES;
 }
 
 
 /* =========================================================
-   CAMERA
+   ROBOFLOW INITIALIZATION
+========================================================= */
+
+async function initializeRoboflow() {
+
+  try {
+
+    if (
+      typeof inferencejs === "undefined"
+    ) {
+
+      throw new Error(
+        "Roboflow inferencejs library did not load."
+      );
+
+    }
+
+
+    setStatus(
+      "Loading cat nose AI model..."
+    );
+
+
+    inferEngine =
+      new inferencejs.InferenceEngine();
+
+
+    modelWorkerId =
+      await inferEngine.startWorker(
+        ROBOFLOW_MODEL,
+        ROBOFLOW_VERSION,
+        ROBOFLOW_PUBLISHABLE_KEY,
+        {
+          scoreThreshold:
+            MODEL_SCORE_THRESHOLD,
+
+          iouThreshold:
+            0.50,
+
+          maxNumBoxes:
+            5
+        }
+      );
+
+
+    modelReady = true;
+
+
+    setStatus(
+      "Cat nose AI ready"
+    );
+
+
+    if (detectorNote) {
+
+      detectorNote.textContent =
+        "Roboflow cat-nose detection model is active. Detection is experimental and is not biometric identification.";
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Roboflow initialization error:",
+      error
+    );
+
+
+    modelReady = false;
+
+
+    setStatus(
+      "AI model failed to load"
+    );
+
+
+    if (detectorNote) {
+
+      detectorNote.textContent =
+        "The AI model could not be loaded. Check the browser connection and console.";
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   CAMERA START
 ========================================================= */
 
 async function startCamera() {
 
-  show("camera");
-
-  resetAutomaticScan();
-
-  updateScanStatus(
-    "Starting camera…"
-  );
-
   try {
 
-    stream =
+    if (!modelReady) {
+
+      setStatus(
+        "Loading AI model..."
+      );
+
+      await initializeRoboflow();
+
+    }
+
+
+    if (!modelReady) {
+
+      alert(
+        "The AI model could not be loaded."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      cameraStream
+    ) {
+
+      stopCamera();
+
+    }
+
+
+    cameraStream =
       await navigator.mediaDevices.getUserMedia({
 
         video: {
@@ -365,7 +359,6 @@ async function startCamera() {
 
           frameRate: {
             ideal: 30,
-            min: 24,
             max: 60
           }
 
@@ -375,46 +368,47 @@ async function startCamera() {
 
       });
 
-    const video =
-      $("video");
 
     video.srcObject =
-      stream;
+      cameraStream;
+
 
     await video.play();
 
-    scanRunning = true;
-    scanFinished = false;
 
-    scanStartTime =
-      performance.now();
+    setupOverlay();
 
-    updateScanStatus(
-      "Loading cat vision models…"
+
+    resetScan();
+
+
+    showScreen(
+      "camera"
     );
 
-    await loadCatDetector();
 
-    await loadLandmarkModel();
+    setStatus(
+      "Camera active — searching for nose"
+    );
 
-    if (
-      landmarkSession
-    ) {
 
-      updateScanStatus(
-        "Models ready — looking for the cat…"
-      );
+    setInstruction(
+      "Looking for the nose..."
+    );
 
-    } else {
 
-      updateScanStatus(
-        "Cat detector ready — nose model unavailable."
-      );
+    inferenceRunning =
+      true;
 
-    }
 
-    startDetection();
-    startScanLoop();
+    scanStartedAt =
+      performance.now();
+
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
 
   } catch (error) {
 
@@ -423,1114 +417,575 @@ async function startCamera() {
       error
     );
 
-    updateScanStatus(
-      "Camera access failed."
+
+    setStatus(
+      "Camera could not be started"
+    );
+
+
+    alert(
+      "Camera access could not be started. Please allow camera access in the browser."
     );
 
   }
+
 }
 
 
 /* =========================================================
-   STOP CAMERA
+   CAMERA STOP
 ========================================================= */
 
-function stopCamera(
-  returnHome = true
-) {
+function stopCamera() {
 
-  scanRunning = false;
+  inferenceRunning =
+    false;
 
-  detectorBusy = false;
-  landmarkBusy = false;
 
-  if (animationFrame) {
+  scanFinished =
+    true;
 
-    cancelAnimationFrame(
-      animationFrame
-    );
 
-    animationFrame = null;
-  }
+  if (cameraStream) {
 
-  if (detectionTimer) {
-
-    clearTimeout(
-      detectionTimer
-    );
-
-    detectionTimer = null;
-  }
-
-  if (stream) {
-
-    stream
+    cameraStream
       .getTracks()
-      .forEach(
-        track => {
+      .forEach(track => {
 
-          try {
-            track.stop();
-          } catch (_) {}
+        track.stop();
 
-        }
-      );
+      });
 
-    stream = null;
+    cameraStream =
+      null;
+
   }
 
-  const video =
-    $("video");
 
   if (video) {
+
+    video.pause();
+
     video.srcObject =
       null;
+
   }
 
-  if (returnHome) {
-    show("home");
-  }
-}
 
+  clearOverlay();
 
-/* =========================================================
-   RESET
-========================================================= */
 
-function resetAutomaticScan() {
+  showScreen(
+    "home"
+  );
 
-  automaticSamples = [];
 
-  bestCapture = null;
-
-  lastCatDetection = null;
-
-  lastLandmarks = null;
-
-  scanFinished = false;
-
-  updateSampleCounter();
-
-  updateQuality(0);
-
-  clearDetectionOverlay();
-}
-
-
-/* =========================================================
-   LIVE LOOP
-========================================================= */
-
-function startScanLoop() {
-
-  if (animationFrame) {
-
-    cancelAnimationFrame(
-      animationFrame
-    );
-  }
-
-  function loop() {
-
-    if (!scanRunning) {
-      return;
-    }
-
-    const video =
-      $("video");
-
-    const canvas =
-      $("frameCanvas");
-
-    if (
-      video &&
-      canvas &&
-      video.readyState >= 2 &&
-      video.videoWidth
-    ) {
-
-      if (
-        drawVideoToCanvas(
-          video,
-          canvas
-        )
-      ) {
-
-        const quality =
-          calculateQuality(
-            canvas
-          );
-
-        updateQuality(
-          quality
-        );
-
-        tryAutomaticCapture(
-          video,
-          canvas,
-          quality
-        );
-      }
-    }
-
-    if (
-      performance.now() -
-      scanStartTime >=
-      MAX_SCAN_TIME
-    ) {
-
-      finishAutomaticScan();
-
-      return;
-    }
-
-    animationFrame =
-      requestAnimationFrame(
-        loop
-      );
-  }
-
-  animationFrame =
-    requestAnimationFrame(
-      loop
-    );
-}
-
-
-/* =========================================================
-   CAT DETECTOR
-========================================================= */
-
-async function loadCatDetector() {
-
-  if (catModel) {
-    return;
-  }
-
-  if (
-    typeof cocoSsd ===
-    "undefined"
-  ) {
-
-    throw new Error(
-      "COCO-SSD unavailable"
-    );
-  }
-
-  if (modelLoading) {
-    return;
-  }
-
-  modelLoading = true;
-
-  try {
-
-    catModel =
-      await cocoSsd.load({
-        base:
-          "lite_mobilenet_v2"
-      });
-
-  } finally {
-
-    modelLoading = false;
-  }
-}
-
-
-/* =========================================================
-   LANDMARK MODEL
-========================================================= */
-
-async function loadLandmarkModel() {
-
-  if (landmarkSession) {
-    return;
-  }
-
-  if (
-    typeof ort ===
-    "undefined"
-  ) {
-
-    console.error(
-      "ONNX Runtime Web is not loaded."
-    );
-
-    updateScanStatus(
-      "ONNX runtime unavailable."
-    );
-
-    return;
-  }
-
-  if (landmarkModelLoading) {
-    return;
-  }
-
-  landmarkModelLoading = true;
-
-  try {
-
-    updateScanStatus(
-      "Loading cat face landmark model…"
-    );
-
-    /*
-      WASM keeps the first implementation
-      compatible with most modern phones.
-    */
-
-    ort.env.wasm.numThreads = 1;
-
-    landmarkSession =
-      await ort.InferenceSession.create(
-        LANDMARK_MODEL_URL,
-        {
-          executionProviders: [
-            "wasm"
-          ]
-        }
-      );
-
-    console.log(
-      "Cat landmark model loaded",
-      landmarkSession.inputNames,
-      landmarkSession.outputNames
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Landmark model loading failed:",
-      error
-    );
-
-    landmarkSession =
-      null;
-
-    updateScanStatus(
-      "Cat landmark model could not be loaded."
-    );
-
-  } finally {
-
-    landmarkModelLoading =
-      false;
-  }
-}
-
-
-/* =========================================================
-   DETECTION LOOP
-========================================================= */
-
-function startDetection() {
-
-  detectionLoop();
-}
-
-
-async function detectionLoop() {
-
-  if (!scanRunning) {
-    return;
-  }
-
-  if (
-    !catModel ||
-    detectorBusy
-  ) {
-
-    detectionTimer =
-      setTimeout(
-        detectionLoop,
-        100
-      );
-
-    return;
-  }
-
-  const video =
-    $("video");
-
-  if (
-    !video ||
-    video.readyState < 2 ||
-    !video.videoWidth
-  ) {
-
-    detectionTimer =
-      setTimeout(
-        detectionLoop,
-        100
-      );
-
-    return;
-  }
-
-  detectorBusy = true;
-
-  try {
-
-    const predictions =
-      await catModel.detect(
-        video,
-        5,
-        0.30
-      );
-
-    const cats =
-      predictions
-        .filter(
-          item =>
-            item.class ===
-            "cat" &&
-            item.score >=
-            0.30
-        )
-        .sort(
-          (a, b) =>
-            b.score -
-            a.score
-        );
-
-    if (cats.length) {
-
-      lastCatDetection =
-        cats[0];
-
-      drawCatDetection(
-        cats[0]
-      );
-
-      /*
-        Now run the actual
-        cat-face landmark detector.
-      */
-
-      if (
-        landmarkSession &&
-        !landmarkBusy
-      ) {
-
-        detectCatLandmarks(
-          video
-        );
-
-      }
-
-    } else {
-
-      lastCatDetection =
-        null;
-
-      lastLandmarks =
-        null;
-
-      clearDetectionOverlay();
-
-      updateScanStatus(
-        "Looking for the cat…"
-      );
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "Cat detection error:",
-      error
-    );
-
-  } finally {
-
-    detectorBusy = false;
-
-    if (scanRunning) {
-
-      detectionTimer =
-        setTimeout(
-          detectionLoop,
-          100
-        );
-    }
-  }
-}
-
-
-/* =========================================================
-   LANDMARK INFERENCE
-========================================================= */
-
-async function detectCatLandmarks(
-  video
-) {
-
-  if (
-    !landmarkSession ||
-    landmarkBusy ||
-    !video.videoWidth
-  ) {
-    return;
-  }
-
-  landmarkBusy = true;
-
-  try {
-
-    /*
-      The landmark model works on the current
-      camera image. We prepare a square RGB tensor.
-    */
-
-    const inputSize = 256;
-
-    const canvas =
-      document.createElement(
-        "canvas"
-      );
-
-    canvas.width =
-      inputSize;
-
-    canvas.height =
-      inputSize;
-
-    const ctx =
-      canvas.getContext(
-        "2d",
-        {
-          willReadFrequently: true
-        }
-      );
-
-    /*
-      Use the detected cat region when available.
-      This gives the face model a much more useful
-      view than the entire camera frame.
-    */
-
-    let sx = 0;
-    let sy = 0;
-    let sw = video.videoWidth;
-    let sh = video.videoHeight;
-
-    if (
-      lastCatDetection &&
-      lastCatDetection.bbox
-    ) {
-
-      const [
-        x,
-        y,
-        w,
-        h
-      ] =
-        lastCatDetection.bbox;
-
-      const pad =
-        Math.max(
-          w,
-          h
-        ) * 0.10;
-
-      sx =
-        Math.max(
-          0,
-          x - pad
-        );
-
-      sy =
-        Math.max(
-          0,
-          y - pad
-        );
-
-      const ex =
-        Math.min(
-          video.videoWidth,
-          x + w + pad
-        );
-
-      const ey =
-        Math.min(
-          video.videoHeight,
-          y + h + pad
-        );
-
-      sw =
-        ex - sx;
-
-      sh =
-        ey - sy;
-    }
-
-    /*
-      Square crop.
-    */
-
-    const size =
-      Math.min(
-        sw,
-        sh
-      );
-
-    sx +=
-      (sw - size) / 2;
-
-    sy +=
-      (sh - size) / 2;
-
-    ctx.drawImage(
-      video,
-      sx,
-      sy,
-      size,
-      size,
-      0,
-      0,
-      inputSize,
-      inputSize
-    );
-
-    const pixels =
-      ctx.getImageData(
-        0,
-        0,
-        inputSize,
-        inputSize
-      ).data;
-
-    /*
-      RGB planar tensor.
-    */
-
-    const plane =
-      inputSize *
-      inputSize;
-
-    const inputData =
-      new Float32Array(
-        plane * 3
-      );
-
-    for (
-      let i = 0;
-      i < plane;
-      i++
-    ) {
-
-      const p =
-        i * 4;
-
-      inputData[i] =
-        pixels[p] / 255;
-
-      inputData[
-        plane + i
-      ] =
-        pixels[p + 1] / 255;
-
-      inputData[
-        plane * 2 + i
-      ] =
-        pixels[p + 2] / 255;
-    }
-
-    const inputName =
-      landmarkSession
-        .inputNames[0];
-
-    const tensor =
-      new ort.Tensor(
-        "float32",
-        inputData,
-        [
-          1,
-          3,
-          inputSize,
-          inputSize
-        ]
-      );
-
-    const outputs =
-      await landmarkSession.run({
-        [inputName]:
-          tensor
-      });
-
-    const output =
-      outputs[
-        landmarkSession.outputNames[0]
-      ];
-
-    if (!output) {
-      return;
-    }
-
-    const landmarks =
-      parseLandmarkOutput(
-        output,
-        sx,
-        sy,
-        size,
-        video.videoWidth,
-        video.videoHeight
-      );
-
-    if (
-      landmarks &&
-      landmarks.length >= 3
-    ) {
-
-      lastLandmarks =
-        landmarks;
-
-      drawLandmarks(
-        landmarks
-      );
-
-      updateScanStatus(
-        "Cat face detected — locating nose…"
-      );
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "Landmark inference error:",
-      error
-    );
-
-  } finally {
-
-    landmarkBusy = false;
-  }
-}
-
-
-/* =========================================================
-   LANDMARK OUTPUT PARSER
-========================================================= */
-
-function parseLandmarkOutput(
-  output,
-  cropX,
-  cropY,
-  cropSize,
-  imageWidth,
-  imageHeight
-) {
-
-  if (!output || !output.data) {
-    return null;
-  }
-
-  const data =
-    Array.from(
-      output.data
-    );
-
-  /*
-    The model is documented as returning
-    9 facial landmarks.
-
-    We support the common layouts:
-      9 x 2
-      9 x 3
-
-    and normalized coordinates.
-  */
-
-  let values = data;
-
-  /*
-    If there are more values, find the first
-    plausible 18-value landmark block.
-  */
-
-  if (
-    values.length >
-    27
-  ) {
-
-    let candidate = null;
-
-    for (
-      let offset = 0;
-      offset <= values.length - 18;
-      offset++
-    ) {
-
-      const test =
-        values.slice(
-          offset,
-          offset + 18
-        );
-
-      const valid =
-        test.every(
-          v =>
-            Number.isFinite(v) &&
-            Math.abs(v) <= 1.5
-        );
-
-      if (valid) {
-
-        candidate =
-          test;
-
-        break;
-      }
-    }
-
-    if (candidate) {
-      values =
-        candidate;
-    }
-  }
-
-  let step = 2;
-
-  if (
-    values.length >= 27
-  ) {
-    step = 3;
-  }
-
-  const result = [];
-
-  for (
-    let i = 0;
-    i < 9;
-    i++
-  ) {
-
-    const x =
-      values[i * step];
-
-    const y =
-      values[i * step + 1];
-
-    if (
-      !Number.isFinite(x) ||
-      !Number.isFinite(y)
-    ) {
-      continue;
-    }
-
-    /*
-      Most landmark models output normalized
-      coordinates. Convert them into camera
-      coordinates.
-    */
-
-    let nx = x;
-    let ny = y;
-
-    /*
-      If values look like pixels instead,
-      normalize them using the model input.
-    */
-
-    if (
-      Math.abs(nx) > 2 ||
-      Math.abs(ny) > 2
-    ) {
-
-      nx /=
-        256;
-
-      ny /=
-        256;
-    }
-
-    nx =
-      Math.max(
-        0,
-        Math.min(
-          1,
-          nx
-        )
-      );
-
-    ny =
-      Math.max(
-        0,
-        Math.min(
-          1,
-          ny
-        )
-      );
-
-    const cameraX =
-      cropX +
-      nx * cropSize;
-
-    const cameraY =
-      cropY +
-      ny * cropSize;
-
-    result.push({
-
-      x:
-        cameraX,
-
-      y:
-        cameraY,
-
-      normalizedX:
-        cameraX /
-        imageWidth,
-
-      normalizedY:
-        cameraY /
-        imageHeight
-
-    });
-  }
-
-  return result;
-}
-
-
-/* =========================================================
-   LANDMARK DRAWING
-========================================================= */
-
-function drawLandmarks(
-  landmarks
-) {
-
-  const video =
-    $("video");
-
-  const overlay =
-    $("detectionOverlay");
-
-  if (
-    !video ||
-    !overlay
-  ) {
-    return;
-  }
-
-  overlay.width =
-    video.videoWidth;
-
-  overlay.height =
-    video.videoHeight;
-
-  const ctx =
-    overlay.getContext(
-      "2d"
-    );
-
-  /*
-    Do not erase the cat box.
-  */
-
-  if (lastCatDetection) {
-
-    const [
-      x,
-      y,
-      w,
-      h
-    ] =
-      lastCatDetection.bbox;
-
-    ctx.strokeStyle =
-      "rgba(255,255,255,.45)";
-
-    ctx.lineWidth = 3;
-
-    ctx.setLineDash([
-      8,
-      7
-    ]);
-
-    ctx.strokeRect(
-      x,
-      y,
-      w,
-      h
-    );
-
-    ctx.setLineDash([]);
-  }
-
-  landmarks.forEach(
-    (point, index) => {
-
-      const isNose =
-        index === 2;
-
-      ctx.beginPath();
-
-      ctx.arc(
-        point.x,
-        point.y,
-        isNose ? 11 : 7,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        isNose
-          ? "#ffffff"
-          : "rgba(255,255,255,.75)";
-
-      ctx.fill();
-
-      ctx.strokeStyle =
-        "#0b0d12";
-
-      ctx.lineWidth = 2;
-
-      ctx.stroke();
-
-      if (isNose) {
-
-        ctx.fillStyle =
-          "#ffffff";
-
-        ctx.font =
-          "bold 18px system-ui";
-
-        ctx.fillText(
-          "NOSE",
-          point.x + 14,
-          point.y - 12
-        );
-      }
-    }
+  setStatus(
+    modelReady
+      ? "Cat nose AI ready"
+      : "Capture engine ready"
   );
 
 }
 
 
 /* =========================================================
-   CAT BOX
+   RESET SCAN
 ========================================================= */
 
-function drawCatDetection(
-  detection
-) {
+function resetScan() {
 
-  const video =
-    $("video");
+  samples = [];
 
-  const overlay =
-    $("detectionOverlay");
+  bestDetection = null;
+
+  scanFinished = false;
+
+  lastInferenceTime = 0;
+
+  lastAcceptedSampleTime = 0;
+
+  scanStartedAt =
+    performance.now();
+
+
+  updateCounter();
+
+
+  qualityText.textContent =
+    "—";
+
+
+  qualityBar.style.width =
+    "0%";
+
+
+  scanResult.classList.add(
+    "hidden"
+  );
+
+
+  clearOverlay();
+
+}
+
+
+/* =========================================================
+   OVERLAY SETUP
+========================================================= */
+
+function setupOverlay() {
 
   if (
-    !video ||
-    !overlay ||
-    !detection
+    !video.videoWidth ||
+    !video.videoHeight
   ) {
+
     return;
+
   }
 
-  overlay.width =
+
+  detectionOverlay.width =
     video.videoWidth;
 
-  overlay.height =
+  detectionOverlay.height =
     video.videoHeight;
 
+}
+
+
+/* =========================================================
+   CLEAR OVERLAY
+========================================================= */
+
+function clearOverlay() {
+
   const ctx =
-    overlay.getContext(
+    detectionOverlay.getContext(
       "2d"
     );
+
 
   ctx.clearRect(
     0,
     0,
-    overlay.width,
-    overlay.height
+    detectionOverlay.width,
+    detectionOverlay.height
   );
 
-  const [
-    x,
-    y,
-    width,
-    height
-  ] =
+}
+
+
+/* =========================================================
+   INFERENCE LOOP
+========================================================= */
+
+async function inferenceLoop(
+  timestamp
+) {
+
+  if (
+    !inferenceRunning ||
+    scanFinished
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+     Automatic timeout.
+  */
+
+  if (
+    timestamp - scanStartedAt >
+    MAX_SCAN_TIME
+  ) {
+
+    finishAutomaticScan(
+      "Scan time completed."
+    );
+
+    return;
+
+  }
+
+
+  /*
+     Avoid overlapping inference calls.
+  */
+
+  if (
+    timestamp - lastInferenceTime <
+    INFERENCE_INTERVAL
+  ) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+    return;
+
+  }
+
+
+  lastInferenceTime =
+    timestamp;
+
+
+  try {
+
+    await runCameraInference();
+
+  } catch (error) {
+
+    console.error(
+      "Inference error:",
+      error
+    );
+
+  }
+
+
+  if (
+    inferenceRunning &&
+    !scanFinished
+  ) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CAMERA INFERENCE
+========================================================= */
+
+async function runCameraInference() {
+
+  if (
+    !modelReady ||
+    !modelWorkerId ||
+    video.readyState < 2
+  ) {
+
+    return;
+
+  }
+
+
+  const image =
+    new inferencejs.CVImage(
+      video
+    );
+
+
+  let predictions;
+
+
+  try {
+
+    predictions =
+      await inferEngine.infer(
+        modelWorkerId,
+        image
+      );
+
+  } finally {
+
+    try {
+
+      image.dispose();
+
+    } catch (_) {}
+
+  }
+
+
+  /*
+     Find the strongest cat-nose detection.
+  */
+
+  const detection =
+    selectBestDetection(
+      predictions
+    );
+
+
+  drawDetection(
+    detection
+  );
+
+
+  if (!detection) {
+
+    qualityText.textContent =
+      "Searching...";
+
+    qualityBar.style.width =
+      "5%";
+
+    setInstruction(
+      "Move the cat's nose closer to the camera..."
+    );
+
+    return;
+
+  }
+
+
+  const confidence =
+    detection.confidence;
+
+
+  const score =
+    Math.round(
+      confidence * 100
+    );
+
+
+  qualityText.textContent =
+    `${score}%`;
+
+
+  qualityBar.style.width =
+    `${Math.max(
+      5,
+      Math.min(
+        100,
+        score
+      )
+    )}%`;
+
+
+  bestDetection =
+    detection;
+
+
+  setInstruction(
+    `Nose detected — ${score}%`
+  );
+
+
+  /*
+     Automatic sample selection.
+  */
+
+  if (
+    confidence >=
+    CAPTURE_CONFIDENCE
+  ) {
+
+    await considerAutomaticCapture(
+      detection
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SELECT BEST DETECTION
+========================================================= */
+
+function selectBestDetection(
+  predictions
+) {
+
+  if (
+    !Array.isArray(
+      predictions
+    ) ||
+    predictions.length === 0
+  ) {
+
+    return null;
+
+  }
+
+
+  let best =
+    null;
+
+
+  for (
+    const prediction
+    of predictions
+  ) {
+
+    if (
+      !prediction
+    ) {
+
+      continue;
+
+    }
+
+
+    const confidence =
+      Number(
+        prediction.confidence || 0
+      );
+
+
+    const bbox =
+      prediction.bbox;
+
+
+    if (
+      !bbox ||
+      confidence <= 0
+    ) {
+
+      continue;
+
+    }
+
+
+    const candidate = {
+
+      confidence,
+
+      className:
+        prediction.class || "catnose",
+
+      bbox: {
+
+        x:
+          Number(
+            bbox.x
+          ),
+
+        y:
+          Number(
+            bbox.y
+          ),
+
+        width:
+          Number(
+            bbox.width
+          ),
+
+        height:
+          Number(
+            bbox.height
+          )
+
+      }
+
+    };
+
+
+    if (
+      !best ||
+      candidate.confidence >
+      best.confidence
+    ) {
+
+      best =
+        candidate;
+
+    }
+
+  }
+
+
+  return best;
+
+}
+
+
+/* =========================================================
+   DRAW DETECTION
+========================================================= */
+
+function drawDetection(
+  detection
+) {
+
+  const ctx =
+    detectionOverlay.getContext(
+      "2d"
+    );
+
+
+  ctx.clearRect(
+    0,
+    0,
+    detectionOverlay.width,
+    detectionOverlay.height
+  );
+
+
+  if (!detection) {
+
+    return;
+
+  }
+
+
+  const b =
     detection.bbox;
 
-  ctx.strokeStyle =
-    "rgba(255,255,255,.55)";
+
+  const left =
+    b.x -
+    b.width / 2;
+
+
+  const top =
+    b.y -
+    b.height / 2;
+
 
   ctx.lineWidth =
     Math.max(
       3,
-      overlay.width / 300
+      detectionOverlay.width / 320
     );
 
-  ctx.setLineDash([
-    10,
-    8
-  ]);
+
+  ctx.strokeStyle =
+    "#00ff88";
+
 
   ctx.strokeRect(
-    x,
-    y,
-    width,
-    height
+    left,
+    top,
+    b.width,
+    b.height
   );
 
-  ctx.setLineDash([]);
-
-  ctx.fillStyle =
-    "#ffffff";
 
   ctx.font =
     `${Math.max(
-      16,
-      overlay.width / 40
-    )}px system-ui`;
+      18,
+      detectionOverlay.width / 35
+    )}px Arial`;
+
+
+  ctx.fillStyle =
+    "#00ff88";
+
 
   ctx.fillText(
-    "CAT " +
-    Math.round(
-      detection.score * 100
-    ) +
-    "%",
-    x,
+    `NOSE ${Math.round(
+      detection.confidence * 100
+    )}%`,
+    left,
     Math.max(
-      24,
-      y - 8
+      25,
+      top - 8
     )
   );
 
-}
-
-
-/* =========================================================
-   OVERLAY CLEAR
-========================================================= */
-
-function clearDetectionOverlay() {
-
-  const overlay =
-    $("detectionOverlay");
-
-  if (!overlay) {
-    return;
-  }
-
-  const ctx =
-    overlay.getContext(
-      "2d"
-    );
-
-  ctx.clearRect(
-    0,
-    0,
-    overlay.width,
-    overlay.height
-  );
 }
 
 
@@ -1538,393 +993,580 @@ function clearDetectionOverlay() {
    AUTOMATIC SAMPLE SELECTION
 ========================================================= */
 
-let lastAcceptedFrameTime = 0;
-
-function tryAutomaticCapture(
-  video,
-  canvas,
-  quality
+async function considerAutomaticCapture(
+  detection
 ) {
 
-  if (!scanRunning) {
-    return;
-  }
-
-  /*
-    The important change:
-    we now require a detected nose.
-  */
-
-  const nose =
-    getDetectedNose();
-
-  if (!nose) {
-
-    updateScanStatus(
-      "Looking for the cat's nose…"
-    );
-
-    return;
-  }
-
   if (
-    quality <
-    MIN_QUALITY
+    scanFinished
   ) {
 
-    updateScanStatus(
-      "Nose found — improving image quality…"
+    return;
+
+  }
+
+
+  if (
+    samples.length >=
+    MAX_SAMPLES
+  ) {
+
+    finishAutomaticScan(
+      "Five suitable nose samples captured."
     );
 
     return;
+
   }
+
 
   const now =
     performance.now();
 
+
   if (
     now -
-    lastAcceptedFrameTime <
+    lastAcceptedSampleTime <
     MIN_SAMPLE_INTERVAL
   ) {
+
     return;
+
   }
 
-  const image =
-    createNoseImage(
-      video,
-      nose
-    );
-
-  if (!image) {
-    return;
-  }
 
   /*
-    Avoid five nearly identical images.
+     Calculate a simple quality score.
+
+     This is NOT biometric scoring.
+     It is only a capture-quality heuristic.
+  */
+
+  const quality =
+    calculateCaptureQuality(
+      detection
+    );
+
+
+  if (
+    quality < 45
+  ) {
+
+    setInstruction(
+      "Nose detected — improving image quality..."
+    );
+
+    return;
+
+  }
+
+
+  const frame =
+    captureCurrentFrame();
+
+
+  if (!frame) {
+
+    return;
+
+  }
+
+
+  /*
+     Prevent near-duplicate samples.
   */
 
   if (
-    automaticSamples.some(
-      sample =>
-        simpleImageDifference(
-          image,
-          sample.image
-        ) < 0.025
+    isDuplicateSample(
+      frame,
+      detection
     )
   ) {
 
     return;
+
   }
 
-  const sample = {
 
-    id:
-      Date.now(),
+  samples.push({
 
     image:
-      image,
+      frame,
 
-    quality:
-      quality,
+    confidence:
+      detection.confidence,
 
-    noseX:
-      nose.x,
+    quality,
 
-    noseY:
-      nose.y,
+    bbox:
+      detection.bbox,
 
     timestamp:
-      new Date()
-        .toISOString()
+      Date.now()
 
-  };
+  });
 
-  automaticSamples.push(
-    sample
-  );
 
-  lastAcceptedFrameTime =
+  lastAcceptedSampleTime =
     now;
 
-  updateSampleCounter();
 
-  if (
-    !bestCapture ||
-    quality >
-    bestCapture.quality
-  ) {
+  updateCounter();
 
-    bestCapture =
-      sample;
-  }
 
-  updateScanStatus(
-    "Nose candidate " +
-    automaticSamples.length +
-    " / " +
-    REQUIRED_SAMPLES +
-    " captured ✓"
+  setInstruction(
+    `Good nose sample captured — ${samples.length} / ${MAX_SAMPLES}`
   );
 
+
   if (
-    automaticSamples.length >=
-    REQUIRED_SAMPLES
+    samples.length >=
+    MAX_SAMPLES
   ) {
 
-    finishAutomaticScan();
+    finishAutomaticScan(
+      "Five suitable nose samples captured."
+    );
+
   }
+
 }
 
 
 /* =========================================================
-   NOSE EXTRACTION
+   CAPTURE FRAME
 ========================================================= */
 
-function getDetectedNose() {
+function captureCurrentFrame() {
 
   if (
-    !lastLandmarks ||
-    lastLandmarks.length < 3
+    !video.videoWidth ||
+    !video.videoHeight
   ) {
+
     return null;
+
   }
 
-  /*
-    According to the 9-landmark cat model,
-    the nose is the third landmark:
-    index 2.
-  */
 
-  return lastLandmarks[2] || null;
-}
+  const width =
+    video.videoWidth;
 
 
-function createNoseImage(
-  video,
-  nose
-) {
+  const height =
+    video.videoHeight;
 
-  if (!nose) {
-    return null;
-  }
 
-  /*
-    Crop a focused nose/muzzle region.
-  */
+  frameCanvas.width =
+    width;
 
-  const size =
-    Math.min(
-      video.videoWidth,
-      video.videoHeight
-    ) * 0.22;
+  frameCanvas.height =
+    height;
 
-  const x =
-    Math.max(
-      0,
-      Math.min(
-        video.videoWidth - size,
-        nose.x - size / 2
-      )
-    );
-
-  const y =
-    Math.max(
-      0,
-      Math.min(
-        video.videoHeight - size,
-        nose.y - size * 0.35
-      )
-    );
-
-  const canvas =
-    document.createElement(
-      "canvas"
-    );
-
-  canvas.width = 640;
-  canvas.height = 640;
 
   const ctx =
-    canvas.getContext(
-      "2d"
+    frameCanvas.getContext(
+      "2d",
+      {
+        willReadFrequently: true
+      }
     );
+
 
   ctx.drawImage(
     video,
-    x,
-    y,
-    size,
-    size,
     0,
     0,
-    640,
-    640
+    width,
+    height
   );
 
-  return canvas.toDataURL(
+
+  return frameCanvas.toDataURL(
     "image/jpeg",
     0.92
   );
+
 }
 
 
 /* =========================================================
-   SIMPLE IMAGE DIFFERENCE
+   CAPTURE QUALITY
 ========================================================= */
 
-function simpleImageDifference(
-  a,
-  b
+function calculateCaptureQuality(
+  detection
 ) {
 
-  /*
-    Lightweight asynchronous comparison.
-    We deliberately use a tiny representation.
-  */
-
-  return 0.05;
-}
+  const b =
+    detection.bbox;
 
 
-/* =========================================================
-   FINISH SCAN
-========================================================= */
+  const frameWidth =
+    video.videoWidth;
 
-function finishAutomaticScan() {
 
-  if (scanFinished) {
-    return;
-  }
+  const frameHeight =
+    video.videoHeight;
 
-  scanFinished = true;
-
-  scanRunning = false;
-
-  if (animationFrame) {
-
-    cancelAnimationFrame(
-      animationFrame
-    );
-
-    animationFrame = null;
-  }
 
   if (
-    automaticSamples.length <
-    REQUIRED_SAMPLES
+    !b ||
+    !frameWidth ||
+    !frameHeight
   ) {
 
-    updateScanStatus(
-      "Not enough nose samples. Please try again."
-    );
+    return 0;
 
-    setTimeout(
-      () => {
-
-        if (!stream) {
-          return;
-        }
-
-        scanFinished = false;
-        scanRunning = true;
-
-        scanStartTime =
-          performance.now();
-
-        updateScanStatus(
-          "Looking for the cat's nose…"
-        );
-
-        startScanLoop();
-
-      },
-      1800
-    );
-
-    return;
   }
 
-  automaticSamples.sort(
-    (a, b) =>
-      b.quality -
-      a.quality
+
+  /*
+     Nose should not be extremely tiny.
+  */
+
+  const area =
+    b.width *
+    b.height;
+
+
+  const frameArea =
+    frameWidth *
+    frameHeight;
+
+
+  const areaRatio =
+    area /
+    frameArea;
+
+
+  let sizeScore;
+
+
+  if (
+    areaRatio >=
+    0.003
+  ) {
+
+    sizeScore =
+      100;
+
+  } else {
+
+    sizeScore =
+      Math.min(
+        100,
+        areaRatio /
+        0.003 *
+        100
+      );
+
+  }
+
+
+  /*
+     Confidence.
+  */
+
+  const confidenceScore =
+    detection.confidence *
+    100;
+
+
+  /*
+     Prefer detections reasonably close
+     to the centre of the camera frame.
+  */
+
+  const centerX =
+    b.x /
+    frameWidth;
+
+
+  const centerY =
+    b.y /
+    frameHeight;
+
+
+  const distance =
+    Math.sqrt(
+      Math.pow(
+        centerX - 0.5,
+        2
+      ) +
+      Math.pow(
+        centerY - 0.5,
+        2
+      )
+    );
+
+
+  const centerScore =
+    Math.max(
+      0,
+      100 -
+      distance *
+      140
+    );
+
+
+  /*
+     Weighted quality score.
+  */
+
+  return Math.round(
+
+    confidenceScore *
+    0.55
+
+    +
+
+    sizeScore *
+    0.25
+
+    +
+
+    centerScore *
+    0.20
+
   );
 
-  bestCapture =
-    automaticSamples[0];
-
-  stopCamera(
-    false
-  );
-
-  show(
-    "profile"
-  );
-
-  renderAutomaticResults();
 }
 
 
 /* =========================================================
-   RESULTS
+   DUPLICATE SAMPLE CHECK
 ========================================================= */
 
-function renderAutomaticResults() {
+function isDuplicateSample(
+  frame,
+  detection
+) {
 
-  const savedInfo =
-    $("savedInfo");
+  if (
+    samples.length === 0
+  ) {
 
-  if (!savedInfo) {
-    return;
+    return false;
+
   }
 
-  savedInfo.classList.remove(
+
+  const current =
+    detection.bbox;
+
+
+  const last =
+    samples[
+      samples.length - 1
+    ].bbox;
+
+
+  if (
+    !last ||
+    !current
+  ) {
+
+    return false;
+
+  }
+
+
+  const dx =
+    Math.abs(
+      current.x -
+      last.x
+    );
+
+
+  const dy =
+    Math.abs(
+      current.y -
+      last.y
+    );
+
+
+  const movement =
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
+
+
+  /*
+     If the nose has moved enough,
+     consider it a different sample.
+  */
+
+  return movement < 12;
+
+}
+
+
+/* =========================================================
+   UPDATE SAMPLE COUNTER
+========================================================= */
+
+function updateCounter() {
+
+  frameCounter.textContent =
+    `${samples.length} / ${MAX_SAMPLES}`;
+
+}
+
+
+/* =========================================================
+   FINISH AUTOMATIC SCAN
+========================================================= */
+
+function finishAutomaticScan(
+  message
+) {
+
+  if (
+    scanFinished
+  ) {
+
+    return;
+
+  }
+
+
+  scanFinished =
+    true;
+
+
+  inferenceRunning =
+    false;
+
+
+  setInstruction(
+    message
+  );
+
+
+  if (
+    samples.length > 0
+  ) {
+
+    showScanResult();
+
+  } else {
+
+    showScanFailure();
+
+  }
+
+}
+
+
+/* =========================================================
+   SCAN RESULT
+========================================================= */
+
+function showScanResult() {
+
+  scanResult.classList.remove(
     "hidden"
   );
 
-  let html =
-    "<h3>SCAN COMPLETE</h3>";
 
-  html +=
-    "<p>Five automatic nose candidates were collected.</p>";
+  scanResult.innerHTML = `
 
-  html +=
-    "<div style='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px'>";
+    <p style="margin:0;font-weight:700;">
+      NOSE SAMPLES CAPTURED
+    </p>
 
-  automaticSamples.forEach(
-    (sample, index) => {
+    <p style="margin:8px 0 0;">
+      ${samples.length} suitable frame${samples.length === 1 ? "" : "s"} selected automatically.
+    </p>
 
-      html +=
-        "<div style='position:relative;overflow:hidden;border-radius:10px;background:#111'>";
+    <p style="margin:8px 0 0;opacity:.75;">
+      The next stage is biometric comparison.
+    </p>
 
-      html +=
-        "<img src='" +
-        sample.image +
-        "' style='width:100%;display:block;aspect-ratio:1/1;object-fit:cover'>";
+  `;
 
-      html +=
-        "<div style='position:absolute;left:5px;bottom:5px;background:rgba(0,0,0,.75);color:#fff;padding:3px 6px;border-radius:5px;font-size:10px'>" +
-        "#" +
-        (index + 1) +
-        " • " +
-        sample.quality +
-        "%" +
-        "</div>";
 
-      html +=
-        "</div>";
-    }
+  /*
+     After successful capture,
+     move to profile after a short delay.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        currentScreen ===
+        "camera"
+      ) {
+
+        showScreen(
+          "profile"
+        );
+
+      }
+
+    },
+    1200
   );
 
-  html +=
-    "</div>";
+}
 
-  html +=
-    "<p style='margin-top:12px'>The prototype has now localized the nose before selecting the samples. It still does not perform final biometric identification.</p>";
 
-  savedInfo.innerHTML =
-    html;
+/* =========================================================
+   SCAN FAILURE
+========================================================= */
+
+function showScanFailure() {
+
+  scanResult.classList.remove(
+    "hidden"
+  );
+
+
+  scanResult.innerHTML = `
+
+    <p style="margin:0;font-weight:700;">
+      NO SUITABLE NOSE FRAME
+    </p>
+
+    <p style="margin:8px 0 0;opacity:.75;">
+      The camera did not obtain a sufficiently confident nose detection.
+    </p>
+
+    <p style="margin:8px 0 0;opacity:.75;">
+      Try moving the cat slightly closer and keeping the nose visible.
+    </p>
+
+  `;
+
+
+  setInstruction(
+    "No suitable nose frame found."
+  );
+
+}
+
+
+/* =========================================================
+   MANUAL CAPTURE BUTTON
+   Kept internally for compatibility, but the UI
+   intentionally does not expose a capture button.
+========================================================= */
+
+function captureNow() {
+
+  if (
+    bestDetection
+  ) {
+
+    considerAutomaticCapture(
+      bestDetection
+    );
+
+  }
+
 }
 
 
@@ -1935,144 +1577,333 @@ function renderAutomaticResults() {
 function saveProfile() {
 
   const name =
-    $("catName")?.value.trim() ||
-    "Unknown Cat";
+    document.getElementById(
+      "catName"
+    ).value.trim();
+
 
   const nickname =
-    $("catNickname")?.value.trim() ||
-    "";
+    document.getElementById(
+      "catNickname"
+    ).value.trim();
 
-  if (
-    !automaticSamples.length
-  ) {
-
-    alert(
-      "No scan samples available."
-    );
-
-    return;
-  }
-
-  const record = {
-
-    id:
-      "cat_" +
-      Date.now(),
-
-    name:
-      name,
-
-    nickname:
-      nickname,
-
-    createdAt:
-      new Date()
-        .toISOString(),
-
-    samples:
-      automaticSamples,
-
-    bestSample:
-      bestCapture
-
-  };
-
-  try {
-
-    localStorage.setItem(
-      "catNosePrototype_last",
-      JSON.stringify(
-        record
-      )
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Storage error:",
-      error
-    );
-  }
 
   const savedInfo =
-    $("savedInfo");
+    document.getElementById(
+      "savedInfo"
+    );
 
-  if (savedInfo) {
 
-    savedInfo.innerHTML +=
-      "<p><b>SCAN SAVED.</b></p>";
+  if (
+    samples.length === 0
+  ) {
+
+    savedInfo.classList.remove(
+      "hidden"
+    );
+
+
+    savedInfo.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        NO SAMPLE AVAILABLE
+      </p>
+
+      <p style="margin:8px 0 0;opacity:.75;">
+        The application needs at least one detected nose sample.
+      </p>
+
+    `;
+
+    return;
 
   }
+
+
+  const catName =
+    name ||
+    "Unnamed cat";
+
+
+  savedInfo.classList.remove(
+    "hidden"
+  );
+
+
+  savedInfo.innerHTML = `
+
+    <p style="margin:0;font-weight:700;">
+      NOSE SAMPLE SAVED
+    </p>
+
+    <p style="margin:8px 0 0;">
+      Cat: ${escapeHtml(catName)}
+    </p>
+
+    ${
+      nickname
+        ? `<p style="margin:4px 0 0;opacity:.75;">
+             ${escapeHtml(nickname)}
+           </p>`
+        : ""
+    }
+
+    <p style="margin:8px 0 0;opacity:.75;">
+      ${samples.length} nose samples captured.
+    </p>
+
+    <p style="margin:8px 0 0;opacity:.75;">
+      Biometric identification is not implemented yet.
+    </p>
+
+  `;
+
 }
 
 
 /* =========================================================
-   VIDEO / PHOTO
+   ESCAPE HTML
 ========================================================= */
 
-function handleMediaInput(
-  event
+function escapeHtml(
+  value
 ) {
 
-  const file =
-    event.target.files?.[0];
-
-  if (!file) {
-    return;
-  }
-
-  const url =
-    URL.createObjectURL(
-      file
+  return value
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
     );
 
-  if (
-    file.type.startsWith(
-      "video/"
-    )
-  ) {
+}
 
-    const video =
-      $("sourceVideo");
 
-    if (video) {
+/* =========================================================
+   VIDEO / PHOTO TEST
+========================================================= */
 
-      video.src =
+mediaInput.addEventListener(
+  "change",
+  async event => {
+
+    const file =
+      event.target.files[0];
+
+
+    if (!file) {
+
+      return;
+
+    }
+
+
+    if (
+      file.type.startsWith(
+        "image/"
+      )
+    ) {
+
+      await analyzeImageFile(
+        file
+      );
+
+      return;
+
+    }
+
+
+    if (
+      file.type.startsWith(
+        "video/"
+      )
+    ) {
+
+      const url =
+        URL.createObjectURL(
+          file
+        );
+
+
+      sourceVideo.src =
         url;
 
-      video.load();
+
+      showScreen(
+        "videoTest"
+      );
 
     }
 
-    show(
-      "videoTest"
-    );
-
-    return;
   }
+);
 
-  if (
-    file.type.startsWith(
-      "image/"
-    )
-  ) {
 
-    const samples =
-      $("videoSamples");
+/* =========================================================
+   IMAGE FILE ANALYSIS
+========================================================= */
 
-    if (samples) {
+async function analyzeImageFile(
+  file
+) {
 
-      samples.innerHTML =
-        "<img src='" +
-        url +
-        "' style='width:100%;border-radius:12px'>";
+  try {
+
+    if (!modelReady) {
+
+      await initializeRoboflow();
 
     }
 
-    show(
+
+    if (!modelReady) {
+
+      return;
+
+    }
+
+
+    const url =
+      URL.createObjectURL(
+        file
+      );
+
+
+    const img =
+      new Image();
+
+
+    img.src =
+      url;
+
+
+    await new Promise(
+      (resolve, reject) => {
+
+        img.onload =
+          resolve;
+
+        img.onerror =
+          reject;
+
+      }
+    );
+
+
+    const image =
+      new inferencejs.CVImage(
+        img
+      );
+
+
+    let predictions;
+
+
+    try {
+
+      predictions =
+        await inferEngine.infer(
+          modelWorkerId,
+          image
+        );
+
+    } finally {
+
+      try {
+
+        image.dispose();
+
+      } catch (_) {}
+
+    }
+
+
+    const detection =
+      selectBestDetection(
+        predictions
+      );
+
+
+    showScreen(
       "videoTest"
     );
+
+
+    if (
+      detection
+    ) {
+
+      videoResult.classList.remove(
+        "hidden"
+      );
+
+
+      videoResult.innerHTML = `
+
+        <p style="margin:0;font-weight:700;">
+          NOSE DETECTED
+        </p>
+
+        <p style="margin:8px 0 0;">
+          Confidence:
+          ${Math.round(
+            detection.confidence * 100
+          )}%
+        </p>
+
+      `;
+
+    } else {
+
+      videoResult.classList.remove(
+        "hidden"
+      );
+
+
+      videoResult.innerHTML = `
+
+        <p style="margin:0;font-weight:700;">
+          NOSE NOT DETECTED
+        </p>
+
+        <p style="margin:8px 0 0;opacity:.75;">
+          Try another photograph with the cat facing the camera.
+        </p>
+
+      `;
+
+    }
+
+
+    URL.revokeObjectURL(
+      url
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Image analysis error:",
+      error
+    );
+
   }
+
 }
 
 
@@ -2080,194 +1911,313 @@ function handleMediaInput(
    VIDEO ANALYSIS
 ========================================================= */
 
-async function analyzeVideo() {
+document
+  .getElementById(
+    "analyzeVideo"
+  )
+  .addEventListener(
+    "click",
+    analyzeUploadedVideo
+  );
 
-  const video =
-    $("sourceVideo");
 
-  const canvas =
-    $("videoCanvas");
-
-  const result =
-    $("videoResult");
+async function analyzeUploadedVideo() {
 
   if (
-    !video ||
-    !canvas ||
-    !video.duration
+    !sourceVideo.src
   ) {
-
-    if (result) {
-
-      result.classList.remove(
-        "hidden"
-      );
-
-      result.textContent =
-        "Choose a video first.";
-    }
 
     return;
+
   }
 
-  const positions = [];
 
-  for (
-    let t = 0;
-    t < video.duration;
-    t += 0.10
+  if (!modelReady) {
+
+    await initializeRoboflow();
+
+  }
+
+
+  if (!modelReady) {
+
+    return;
+
+  }
+
+
+  videoSamples.innerHTML =
+    "";
+
+
+  videoResult.classList.remove(
+    "hidden"
+  );
+
+
+  videoResult.innerHTML = `
+
+    <p style="margin:0;font-weight:700;">
+      ANALYZING VIDEO...
+    </p>
+
+  `;
+
+
+  const duration =
+    sourceVideo.duration;
+
+
+  if (
+    !Number.isFinite(
+      duration
+    ) ||
+    duration <= 0
   ) {
 
-    positions.push(
-      Math.min(
-        t,
-        video.duration - 0.01
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        VIDEO NOT READY
+      </p>
+
+    `;
+
+    return;
+
+  }
+
+
+  const testSamples = [];
+
+  const numberOfFrames =
+    Math.min(
+      30,
+      Math.max(
+        10,
+        Math.floor(
+          duration * 8
+        )
       )
     );
-  }
 
-  const frames = [];
-
-  if (result) {
-
-    result.classList.remove(
-      "hidden"
-    );
-
-    result.textContent =
-      "Analyzing video…";
-  }
 
   for (
     let i = 0;
-    i < positions.length;
+    i < numberOfFrames;
     i++
   ) {
 
+    const time =
+      duration *
+      (
+        i /
+        Math.max(
+          1,
+          numberOfFrames - 1
+        )
+      );
+
+
     await seekVideo(
-      video,
-      positions[i]
+      sourceVideo,
+      time
     );
 
-    if (
-      !drawVideoToCanvas(
-        video,
-        canvas
-      )
-    ) {
-      continue;
-    }
 
-    const quality =
-      calculateQuality(
+    const canvas =
+      videoCanvas;
+
+
+    canvas.width =
+      sourceVideo.videoWidth;
+
+    canvas.height =
+      sourceVideo.videoHeight;
+
+
+    const ctx =
+      canvas.getContext(
+        "2d"
+      );
+
+
+    ctx.drawImage(
+      sourceVideo,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+    const image =
+      new inferencejs.CVImage(
         canvas
       );
 
-    frames.push({
 
-      image:
-        canvas.toDataURL(
-          "image/jpeg",
-          0.9
-        ),
+    let predictions;
 
-      quality:
-        quality,
 
-      time:
-        positions[i]
+    try {
 
-    });
+      predictions =
+        await inferEngine.infer(
+          modelWorkerId,
+          image
+        );
 
-    if (result) {
+    } finally {
 
-      result.textContent =
-        "Analyzing " +
-        (i + 1) +
-        " / " +
-        positions.length;
+      try {
+
+        image.dispose();
+
+      } catch (_) {}
 
     }
 
-    await new Promise(
-      resolve =>
-        setTimeout(
-          resolve,
-          0
-        )
-    );
+
+    const detection =
+      selectBestDetection(
+        predictions
+      );
+
+
+    if (
+      detection
+    ) {
+
+      testSamples.push({
+
+        time,
+
+        confidence:
+          detection.confidence,
+
+        data:
+          canvas.toDataURL(
+            "image/jpeg",
+            0.88
+          )
+
+      });
+
+    }
+
   }
 
-  frames.sort(
-    (a, b) =>
-      b.quality -
-      a.quality
+
+  testSamples.sort(
+    (
+      a,
+      b
+    ) =>
+      b.confidence -
+      a.confidence
   );
 
+
   const best =
-    frames.slice(
+    testSamples.slice(
       0,
-      9
+      5
     );
 
-  if (result) {
 
-    result.innerHTML =
-      "<b>VIDEO ANALYSIS COMPLETE</b>" +
-      "<p>Sampled " +
-      frames.length +
-      " frames.</p>" +
-      "<p>Best generic image quality: " +
-      (
-        best.length
-          ? best[0].quality
-          : 0
-      ) +
-      "%.</p>";
+  videoSamples.innerHTML =
+    "";
 
-  }
 
-  const grid =
-    $("videoSamples");
+  best.forEach(
+    sample => {
 
-  if (grid) {
-
-    grid.innerHTML = "";
-
-    best.forEach(
-      (frame, index) => {
-
-        const div =
-          document.createElement(
-            "div"
-          );
-
-        div.innerHTML =
-          "<img src='" +
-          frame.image +
-          "' style='width:100%;border-radius:10px'>" +
-          "<small>#"+
-          (index + 1) +
-          " • " +
-          frame.quality +
-          "%</small>";
-
-        grid.appendChild(
-          div
+      const img =
+        document.createElement(
+          "img"
         );
 
-      }
-    );
+
+      img.src =
+        sample.data;
+
+
+      img.style.width =
+        "100%";
+
+
+      img.style.borderRadius =
+        "12px";
+
+
+      img.title =
+        `Confidence ${Math.round(
+          sample.confidence * 100
+        )}%`;
+
+
+      videoSamples.appendChild(
+        img
+      );
+
+    }
+  );
+
+
+  if (
+    best.length > 0
+  ) {
+
+    const confidence =
+      Math.round(
+        best[0].confidence *
+        100
+      );
+
+
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        NOSE DETECTIONS FOUND
+      </p>
+
+      <p style="margin:8px 0 0;">
+        ${best.length} suitable frames found.
+      </p>
+
+      <p style="margin:8px 0 0;opacity:.75;">
+        Best confidence:
+        ${confidence}%
+      </p>
+
+    `;
+
+  } else {
+
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        NO NOSE DETECTION
+      </p>
+
+      <p style="margin:8px 0 0;opacity:.75;">
+        The model did not find a sufficiently confident cat nose in the video.
+      </p>
+
+    `;
+
   }
+
 }
 
 
 /* =========================================================
-   VIDEO SEEK
+   SEEK VIDEO
 ========================================================= */
 
 function seekVideo(
-  video,
+  videoElement,
   time
 ) {
 
@@ -2277,7 +2227,7 @@ function seekVideo(
       const handler =
         () => {
 
-          video.removeEventListener(
+          videoElement.removeEventListener(
             "seeked",
             handler
           );
@@ -2286,104 +2236,160 @@ function seekVideo(
 
         };
 
-      video.addEventListener(
+
+      videoElement.addEventListener(
         "seeked",
         handler
       );
 
-      video.currentTime =
+
+      videoElement.currentTime =
         time;
 
     }
   );
+
 }
 
 
 /* =========================================================
-   EVENTS
+   BUTTONS
 ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
+document
+  .getElementById(
+    "startCamera"
+  )
+  .addEventListener(
+    "click",
+    startCamera
+  );
+
+
+document
+  .getElementById(
+    "stopCamera"
+  )
+  .addEventListener(
+    "click",
+    stopCamera
+  );
+
+
+document
+  .getElementById(
+    "backHome"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      showScreen(
+        "home"
+      );
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "profileBack"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      showScreen(
+        "camera"
+      );
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "saveProfile"
+  )
+  .addEventListener(
+    "click",
+    saveProfile
+  );
+
+
+/*
+   If an old version of the HTML still contains
+   the captureNow button, it will continue to work.
+   The new HTML intentionally does not show it.
+*/
+
+const oldCaptureButton =
+  document.getElementById(
+    "captureNow"
+  );
+
+
+if (
+  oldCaptureButton
+) {
+
+  oldCaptureButton.addEventListener(
+    "click",
+    captureNow
+  );
+
+}
+
+
+/* =========================================================
+   VIDEO CLEANUP
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
   () => {
 
-    const start =
-      $("startCamera");
+    if (
+      cameraStream
+    ) {
 
-    if (start) {
-      start.onclick =
-        startCamera;
+      cameraStream
+        .getTracks()
+        .forEach(
+          track =>
+            track.stop()
+        );
+
     }
 
-    const stop =
-      $("stopCamera");
 
-    if (stop) {
+    if (
+      inferEngine &&
+      modelWorkerId !== null
+    ) {
 
-      stop.onclick =
-        () =>
-          stopCamera(
-            true
-          );
+      inferEngine
+        .stopWorker(
+          modelWorkerId
+        )
+        .catch(
+          () => {}
+        );
+
     }
-
-    const finish =
-      $("finishScan");
-
-    if (finish) {
-
-      finish.onclick =
-        finishAutomaticScan;
-    }
-
-    const backHome =
-      $("backHome");
-
-    if (backHome) {
-
-      backHome.onclick =
-        () =>
-          show("home");
-    }
-
-    const profileBack =
-      $("profileBack");
-
-    if (profileBack) {
-
-      profileBack.onclick =
-        () =>
-          show("camera");
-    }
-
-    const save =
-      $("saveProfile");
-
-    if (save) {
-
-      save.onclick =
-        saveProfile;
-    }
-
-    const media =
-      $("mediaInput");
-
-    if (media) {
-
-      media.onchange =
-        handleMediaInput;
-    }
-
-    const analyze =
-      $("analyzeVideo");
-
-    if (analyze) {
-
-      analyze.onclick =
-        analyzeVideo;
-    }
-
-    updateSampleCounter();
 
   }
 );
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+showScreen(
+  "home"
+);
+
+
+initializeRoboflow();

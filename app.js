@@ -1,26 +1,48 @@
 const $ = id => document.getElementById(id);
 
-const screens = ["home", "camera", "videoTest", "profile"];
+const screens = [
+  "home",
+  "camera",
+  "videoTest",
+  "profile"
+];
 
 let stream = null;
 let catModel = null;
 
-let captureSamples = [];
-let bestCapture = null;
-let bestCaptureScore = 0;
-
 let scanRunning = false;
+let detectorBusy = false;
+
 let animationFrame = null;
-let detectorRunning = false;
+let detectionTimer = null;
 
-let currentQuality = 0;
-let sampleCounter = 0;
+let scanStartTime = 0;
+let scanFinished = false;
 
-let lastDetection = null;
-let modelLoading = false;
+let automaticSamples = [];
+let bestCapture = null;
 
-const CAPTURE_MAX = 12;
-const JPEG_QUALITY = 0.88;
+let lastCatDetection = null;
+let lastCatDetectionTime = 0;
+
+const REQUIRED_SAMPLES = 5;
+const MAX_SCAN_TIME = 5000;
+
+/*
+  Minimum quality required before a frame
+  can become a candidate.
+*/
+const MIN_QUALITY = 45;
+
+/*
+  Do not accept frames that are almost identical.
+*/
+const MIN_DIFFERENCE = 0.035;
+
+/*
+  Minimum time between accepted samples.
+*/
+const MIN_SAMPLE_INTERVAL = 180;
 
 
 /* =========================================================
@@ -28,135 +50,222 @@ const JPEG_QUALITY = 0.88;
 ========================================================= */
 
 function show(name) {
-    screens.forEach(screen => {
-        const el = $(screen);
-        if (el) {
-            el.classList.toggle("active", screen === name);
-        }
-    });
+
+  screens.forEach(screen => {
+
+    const el = $(screen);
+
+    if (el) {
+      el.classList.toggle(
+        "active",
+        screen === name
+      );
+    }
+
+  });
+
 }
 
 
 /* =========================================================
-   IMAGE / CANVAS HELPERS
+   BASIC IMAGE FUNCTIONS
 ========================================================= */
 
-function getVideoSize(video) {
-    if (!video) return { width: 0, height: 0 };
+function luminance(r, g, b) {
 
-    return {
-        width: video.videoWidth || video.clientWidth || 0,
-        height: video.videoHeight || video.clientHeight || 0
-    };
+  return (
+    0.2126 * r +
+    0.7152 * g +
+    0.0722 * b
+  );
+
 }
 
 
 function drawVideoToCanvas(video, canvas) {
-    const { width, height } = getVideoSize(video);
 
-    if (!width || !height) return false;
+  if (
+    !video ||
+    !canvas ||
+    !video.videoWidth ||
+    !video.videoHeight
+  ) {
+    return false;
+  }
 
-    canvas.width = width;
-    canvas.height = height;
+  canvas.width =
+    video.videoWidth;
 
-    const ctx = canvas.getContext("2d", {
-        willReadFrequently: true
-    });
+  canvas.height =
+    video.videoHeight;
 
-    ctx.drawImage(video, 0, 0, width, height);
+  const ctx =
+    canvas.getContext("2d");
 
-    return true;
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  return true;
+
 }
 
 
-function calculateImageQuality(canvas) {
-    if (!canvas || !canvas.width || !canvas.height) {
-        return 0;
+/* =========================================================
+   IMAGE QUALITY
+========================================================= */
+
+function calculateQuality(canvas) {
+
+  if (
+    !canvas ||
+    !canvas.width ||
+    !canvas.height
+  ) {
+    return 0;
+  }
+
+  const small =
+    document.createElement("canvas");
+
+  const targetWidth =
+    Math.min(
+      320,
+      canvas.width
+    );
+
+  const targetHeight =
+    Math.max(
+      1,
+      Math.round(
+        canvas.height *
+        targetWidth /
+        canvas.width
+      )
+    );
+
+  small.width =
+    targetWidth;
+
+  small.height =
+    targetHeight;
+
+  const ctx =
+    small.getContext(
+      "2d",
+      {
+        willReadFrequently: true
+      }
+    );
+
+  ctx.drawImage(
+    canvas,
+    0,
+    0,
+    targetWidth,
+    targetHeight
+  );
+
+  const data =
+    ctx.getImageData(
+      0,
+      0,
+      targetWidth,
+      targetHeight
+    ).data;
+
+  let sum = 0;
+  let sumSq = 0;
+  let count = 0;
+
+  for (
+    let y = 1;
+    y < targetHeight - 1;
+    y += 2
+  ) {
+
+    for (
+      let x = 1;
+      x < targetWidth - 1;
+      x += 2
+    ) {
+
+      const i =
+        (y * targetWidth + x) * 4;
+
+      const center =
+        luminance(
+          data[i],
+          data[i + 1],
+          data[i + 2]
+        );
+
+      const right =
+        luminance(
+          data[i + 4],
+          data[i + 5],
+          data[i + 6]
+        );
+
+      const down =
+        luminance(
+          data[
+            i +
+            targetWidth * 4
+          ],
+          data[
+            i +
+            targetWidth * 4 +
+            1
+          ],
+          data[
+            i +
+            targetWidth * 4 +
+            2
+          ]
+        );
+
+      const detail =
+        Math.abs(
+          center - right
+        ) +
+        Math.abs(
+          center - down
+        );
+
+      sum += detail;
+      sumSq += detail * detail;
+      count++;
+
     }
 
-    const ctx = canvas.getContext("2d", {
-        willReadFrequently: true
-    });
+  }
 
-    const width = canvas.width;
-    const height = canvas.height;
+  if (!count) {
+    return 0;
+  }
 
-    /*
-      Sample a smaller image for speed.
-    */
-    const targetWidth = Math.min(320, width);
-    const targetHeight = Math.max(
-        1,
-        Math.round(height * targetWidth / width)
+  const mean =
+    sum / count;
+
+  const variance =
+    Math.max(
+      0,
+      sumSq / count -
+      mean * mean
     );
 
-    const temp = document.createElement("canvas");
-    temp.width = targetWidth;
-    temp.height = targetHeight;
+  return Math.round(
+    Math.min(
+      100,
+      Math.sqrt(variance) * 8
+    )
+  );
 
-    const tctx = temp.getContext("2d", {
-        willReadFrequently: true
-    });
-
-    tctx.drawImage(
-        canvas,
-        0,
-        0,
-        targetWidth,
-        targetHeight
-    );
-
-    const image = tctx.getImageData(
-        0,
-        0,
-        targetWidth,
-        targetHeight
-    );
-
-    const data = image.data;
-
-    let sum = 0;
-    let sumSq = 0;
-    let count = 0;
-
-    /*
-      Simple contrast / detail estimate.
-      This is not biometric identification.
-    */
-    for (let y = 1; y < targetHeight - 1; y += 2) {
-        for (let x = 1; x < targetWidth - 1; x += 2) {
-
-            const i = (y * targetWidth + x) * 4;
-
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-
-            const lum =
-                0.2126 * r +
-                0.7152 * g +
-                0.0722 * b;
-
-            sum += lum;
-            sumSq += lum * lum;
-            count++;
-        }
-    }
-
-    if (!count) return 0;
-
-    const mean = sum / count;
-    const variance = Math.max(
-        0,
-        sumSq / count - mean * mean
-    );
-
-    const contrastScore = Math.min(
-        100,
-        Math.sqrt(variance) * 3
-    );
-
-    return Math.round(contrastScore);
 }
 
 
@@ -164,1402 +273,1779 @@ function calculateImageQuality(canvas) {
    QUALITY UI
 ========================================================= */
 
-function setQuality(value) {
-    value = Math.max(0, Math.min(100, Math.round(value)));
+function updateQuality(value) {
 
-    currentQuality = value;
+  const bar =
+    $("qualityBar");
 
-    const bar = $("qualityBar");
-    const text = $("qualityText");
+  const text =
+    $("qualityText");
 
-    if (bar) {
-        bar.style.width = value + "%";
-    }
-
-    if (text) {
-        if (value >= 80) {
-            text.textContent = "EXCELLENT";
-        } else if (value >= 60) {
-            text.textContent = "GOOD";
-        } else if (value >= 40) {
-            text.textContent = "FAIR";
-        } else {
-            text.textContent = "LOW";
-        }
-    }
-}
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
-
-async function startCamera() {
-    show("camera");
-
-    const video = $("video");
-
-    if (!video) return;
-
-    try {
-        if (stream) {
-            stopCamera(false);
-        }
-
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: {
-                    ideal: "environment"
-                },
-                width: {
-                    ideal: 1280
-                },
-                height: {
-                    ideal: 720
-                },
-                frameRate: {
-                    ideal: 30,
-                    min: 20
-                }
-            },
-            audio: false
-        });
-
-        video.srcObject = stream;
-
-        await video.play();
-
-        scanRunning = true;
-
-        const status = $("engineStatus");
-        if (status) {
-            status.textContent = "Camera ready";
-        }
-
-        resetScan();
-
-        startFrameLoop();
-
-        loadCatDetector();
-
-    } catch (error) {
-
-        console.error(error);
-
-        const instruction = $("instruction");
-
-        if (instruction) {
-            instruction.textContent =
-                "Camera unavailable. Check camera permission.";
-        }
-
-        const status = $("engineStatus");
-
-        if (status) {
-            status.textContent =
-                "Camera permission required";
-        }
-    }
-}
-
-
-function stopCamera(returnHome = true) {
-    scanRunning = false;
-    detectorRunning = false;
-
-    if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-        animationFrame = null;
-    }
-
-    if (stream) {
-        stream.getTracks().forEach(track => {
-            try {
-                track.stop();
-            } catch (_) {}
-        });
-
-        stream = null;
-    }
-
-    const video = $("video");
-
-    if (video) {
-        video.srcObject = null;
-    }
-
-    if (returnHome) {
-        show("home");
-    }
-}
-
-
-/* =========================================================
-   LIVE FRAME LOOP
-========================================================= */
-
-function startFrameLoop() {
-
-    if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-    }
-
-    const loop = () => {
-
-        if (!scanRunning) {
-            return;
-        }
-
-        const video = $("video");
-        const canvas = $("frameCanvas");
-
-        if (
-            video &&
-            canvas &&
-            video.readyState >= 2 &&
-            video.videoWidth > 0
-        ) {
-
-            if (drawVideoToCanvas(video, canvas)) {
-
-                /*
-                  We calculate quality continuously,
-                  but do not save a frame automatically.
-                */
-                const quality = calculateImageQuality(canvas);
-
-                setQuality(quality);
-
-                /*
-                  Remember the best frame seen during the scan.
-                */
-                if (quality > bestCaptureScore) {
-
-                    bestCaptureScore = quality;
-
-                    bestCapture = canvas.toDataURL(
-                        "image/jpeg",
-                        JPEG_QUALITY
-                    );
-                }
-            }
-        }
-
-        animationFrame = requestAnimationFrame(loop);
-    };
-
-    animationFrame = requestAnimationFrame(loop);
-}
-
-
-/* =========================================================
-   CAPTURE SYSTEM
-========================================================= */
-
-function captureBestFrame() {
-
-    const video = $("video");
-    const canvas = $("frameCanvas");
-
-    if (
-        !video ||
-        !canvas ||
-        video.readyState < 2 ||
-        !video.videoWidth
-    ) {
-        showCaptureMessage(
-            "Kamera ešte nie je pripravená."
-        );
-
-        return;
-    }
-
-    /*
-      Always capture a fresh frame at the exact moment
-      the user presses the button.
-    */
-    const drawn = drawVideoToCanvas(
-        video,
-        canvas
+  value =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(value)
+      )
     );
 
-    if (!drawn) {
-        showCaptureMessage(
-            "Nepodarilo sa zachytiť aktuálny obraz."
-        );
+  if (bar) {
 
-        return;
-    }
+    bar.style.width =
+      value + "%";
 
-    const quality = calculateImageQuality(
-        canvas
-    );
+  }
 
-    const imageData = canvas.toDataURL(
-        "image/jpeg",
-        JPEG_QUALITY
-    );
+  if (text) {
 
-    const sample = {
-        id: Date.now(),
-        index: captureSamples.length + 1,
-        timestamp: new Date().toISOString(),
-        quality: quality,
-        image: imageData
-    };
+    if (value >= 75) {
 
-    /*
-      Limit the number of stored samples.
-      If full, remove the oldest one.
-    */
-    if (captureSamples.length >= CAPTURE_MAX) {
-        captureSamples.shift();
-    }
+      text.textContent =
+        "EXCELLENT";
 
-    captureSamples.push(sample);
+    } else if (value >= 55) {
 
-    sampleCounter = captureSamples.length;
+      text.textContent =
+        "GOOD";
 
-    /*
-      Keep the highest-quality captured sample.
-    */
-    if (
-        !bestCapture ||
-        quality > bestCaptureScore
-    ) {
-        bestCapture = imageData;
-        bestCaptureScore = quality;
-    }
+    } else if (value >= 40) {
 
-    updateFrameCounter();
-    renderCaptureSamples();
-
-    setQuality(quality);
-
-    showCaptureMessage(
-        "Zachytené ✓"
-    );
-}
-
-
-function updateFrameCounter() {
-
-    const counter = $("frameCounter");
-
-    if (!counter) return;
-
-    counter.textContent =
-        captureSamples.length +
-        (
-            captureSamples.length === 1
-                ? " sample"
-                : " samples"
-        );
-}
-
-
-/* =========================================================
-   CAPTURE PREVIEW UI
-========================================================= */
-
-function ensureCaptureGallery() {
-
-    let gallery = $("captureGallery");
-
-    if (gallery) {
-        return gallery;
-    }
-
-    /*
-      We create the gallery dynamically.
-      Therefore index.html does not need another edit.
-    */
-
-    gallery = document.createElement("div");
-
-    gallery.id = "captureGallery";
-
-    gallery.style.marginTop = "14px";
-    gallery.style.display = "grid";
-    gallery.style.gridTemplateColumns =
-        "repeat(3, minmax(0, 1fr))";
-    gallery.style.gap = "8px";
-
-    const title = document.createElement("div");
-
-    title.id = "captureGalleryTitle";
-
-    title.textContent =
-        "ZACHYTENÉ ZÁBERY";
-
-    title.style.margin =
-        "12px 0 8px 0";
-
-    title.style.fontSize =
-        "12px";
-
-    title.style.fontWeight =
-        "700";
-
-    title.style.opacity =
-        "0.7";
-
-    const controls = document.querySelector(
-        "#camera .controls"
-    );
-
-    if (controls && controls.parentNode) {
-
-        controls.parentNode.insertBefore(
-            title,
-            controls.nextSibling
-        );
-
-        controls.parentNode.insertBefore(
-            gallery,
-            title.nextSibling
-        );
+      text.textContent =
+        "FAIR";
 
     } else {
 
-        const camera = $("camera");
+      text.textContent =
+        "LOW";
 
-        if (camera) {
-            camera.appendChild(title);
-            camera.appendChild(gallery);
-        }
     }
 
-    return gallery;
+  }
+
 }
 
 
-function renderCaptureSamples() {
+/* =========================================================
+   SCAN STATUS
+========================================================= */
 
-    const gallery =
-        ensureCaptureGallery();
+function updateScanStatus(text) {
 
-    if (!gallery) return;
+  const instruction =
+    $("instruction");
 
-    gallery.innerHTML = "";
-
-    captureSamples.forEach(sample => {
-
-        const card =
-            document.createElement("div");
-
-        card.style.position =
-            "relative";
-
-        card.style.borderRadius =
-            "10px";
-
-        card.style.overflow =
-            "hidden";
-
-        card.style.background =
-            "#151820";
-
-        card.style.border =
-            "1px solid rgba(255,255,255,.12)";
-
-        const image =
-            document.createElement("img");
-
-        image.src =
-            sample.image;
-
-        image.alt =
-            "Captured sample " +
-            sample.index;
-
-        image.style.width =
-            "100%";
-
-        image.style.aspectRatio =
-            "1 / 1";
-
-        image.style.objectFit =
-            "cover";
-
-        image.style.display =
-            "block";
-
-        const label =
-            document.createElement("div");
-
-        label.textContent =
-            "#" +
-            sample.index +
-            " • " +
-            sample.quality +
-            "%";
-
-        label.style.position =
-            "absolute";
-
-        label.style.left =
-            "5px";
-
-        label.style.bottom =
-            "5px";
-
-        label.style.padding =
-            "3px 6px";
-
-        label.style.borderRadius =
-            "5px";
-
-        label.style.background =
-            "rgba(0,0,0,.75)";
-
-        label.style.color =
-            "#fff";
-
-        label.style.fontSize =
-            "10px";
-
-        card.appendChild(image);
-        card.appendChild(label);
-
-        gallery.appendChild(card);
-    });
-}
-
-
-function showCaptureMessage(message) {
-
-    const instruction =
-        $("instruction");
-
-    if (!instruction) return;
-
+  if (instruction) {
     instruction.textContent =
-        message;
+      text;
+  }
 
-    setTimeout(() => {
+}
 
-        if (
-            scanRunning &&
-            instruction
-        ) {
-            instruction.textContent =
-                "Move the nose into the circle.";
+
+function updateSampleCounter() {
+
+  const counter =
+    $("frameCounter");
+
+  if (!counter) {
+    return;
+  }
+
+  counter.textContent =
+    automaticSamples.length +
+    " / " +
+    REQUIRED_SAMPLES;
+
+}
+
+
+/* =========================================================
+   CAMERA START
+========================================================= */
+
+async function startCamera() {
+
+  show("camera");
+
+  resetAutomaticScan();
+
+  updateScanStatus(
+    "Starting camera…"
+  );
+
+  try {
+
+    stream =
+      await navigator.mediaDevices.getUserMedia({
+
+        video: {
+
+          facingMode: {
+            ideal: "environment"
+          },
+
+          width: {
+            ideal: 1280
+          },
+
+          height: {
+            ideal: 720
+          },
+
+          frameRate: {
+            ideal: 30,
+            min: 24,
+            max: 60
+          }
+
+        },
+
+        audio: false
+
+      });
+
+    const video =
+      $("video");
+
+    video.srcObject =
+      stream;
+
+    await video.play();
+
+    updateScanStatus(
+      "Looking for the cat…"
+    );
+
+    scanRunning = true;
+    scanFinished = false;
+
+    scanStartTime =
+      performance.now();
+
+    startDetection();
+
+    startScanLoop();
+
+  } catch (error) {
+
+    console.error(
+      "Camera error:",
+      error
+    );
+
+    updateScanStatus(
+      "Camera access failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CAMERA STOP
+========================================================= */
+
+function stopCamera(
+  returnHome = true
+) {
+
+  scanRunning = false;
+
+  detectorBusy = false;
+
+  if (animationFrame) {
+
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+    animationFrame = null;
+
+  }
+
+  if (detectionTimer) {
+
+    clearTimeout(
+      detectionTimer
+    );
+
+    detectionTimer = null;
+
+  }
+
+  if (stream) {
+
+    stream
+      .getTracks()
+      .forEach(
+        track => {
+
+          try {
+            track.stop();
+          } catch (_) {}
+
         }
+      );
 
-    }, 1200);
+    stream = null;
+
+  }
+
+  const video =
+    $("video");
+
+  if (video) {
+    video.srcObject = null;
+  }
+
+  if (returnHome) {
+    show("home");
+  }
+
 }
 
 
 /* =========================================================
-   RESET SCAN
+   RESET
 ========================================================= */
 
-function resetScan() {
+function resetAutomaticScan() {
 
-    captureSamples = [];
-    bestCapture = null;
-    bestCaptureScore = 0;
+  automaticSamples = [];
 
-    sampleCounter = 0;
-    currentQuality = 0;
+  bestCapture = null;
 
-    updateFrameCounter();
-    setQuality(0);
+  lastCatDetection = null;
 
-    const gallery =
-        $("captureGallery");
+  lastCatDetectionTime = 0;
 
-    if (gallery) {
-        gallery.innerHTML = "";
-    }
+  scanFinished = false;
 
-    const title =
-        $("captureGalleryTitle");
+  updateSampleCounter();
 
-    if (title) {
-        title.remove();
-    }
+  updateQuality(0);
+
 }
 
 
 /* =========================================================
-   FINISH SCAN
+   LIVE SCAN LOOP
 ========================================================= */
 
-function finishScan() {
+function startScanLoop() {
 
-    if (!captureSamples.length) {
+  if (animationFrame) {
 
-        showCaptureMessage(
-            "Najprv zachyť aspoň jeden záber."
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+  }
+
+  function loop() {
+
+    if (!scanRunning) {
+      return;
+    }
+
+    const video =
+      $("video");
+
+    const canvas =
+      $("frameCanvas");
+
+    if (
+      video &&
+      canvas &&
+      video.readyState >= 2 &&
+      video.videoWidth
+    ) {
+
+      if (
+        drawVideoToCanvas(
+          video,
+          canvas
+        )
+      ) {
+
+        const quality =
+          calculateQuality(
+            canvas
+          );
+
+        updateQuality(
+          quality
         );
 
-        return;
+        /*
+          Automatic candidate selection.
+          No user button is required.
+        */
+
+        tryAutomaticCapture(
+          video,
+          canvas,
+          quality
+        );
+
+      }
+
     }
 
     /*
-      Sort only for determining the best captured sample.
+      Hard scan timeout.
     */
-    const sorted =
-        [...captureSamples].sort(
-            (a, b) =>
-                b.quality - a.quality
-        );
+
+    if (
+      performance.now() -
+      scanStartTime >=
+      MAX_SCAN_TIME
+    ) {
+
+      finishAutomaticScan();
+
+      return;
+
+    }
+
+    animationFrame =
+      requestAnimationFrame(
+        loop
+      );
+
+  }
+
+  animationFrame =
+    requestAnimationFrame(
+      loop
+    );
+
+}
+
+
+/* =========================================================
+   AUTOMATIC FRAME SELECTION
+========================================================= */
+
+let lastAcceptedFrameTime = 0;
+
+function tryAutomaticCapture(
+  video,
+  canvas,
+  quality
+) {
+
+  if (!scanRunning) {
+    return;
+  }
+
+  /*
+    We need the cat detector to confirm
+    that a cat is actually present.
+  */
+
+  if (!lastCatDetection) {
+
+    updateScanStatus(
+      "Looking for the cat…"
+    );
+
+    return;
+
+  }
+
+  /*
+    Require reasonable image quality.
+  */
+
+  if (
+    quality <
+    MIN_QUALITY
+  ) {
+
+    updateScanStatus(
+      "Cat found — improving image…"
+    );
+
+    return;
+
+  }
+
+  const now =
+    performance.now();
+
+  if (
+    now -
+    lastAcceptedFrameTime <
+    MIN_SAMPLE_INTERVAL
+  ) {
+    return;
+  }
+
+  /*
+    Extract a candidate region around
+    the detected cat.
+
+    IMPORTANT:
+    This is a cat-region candidate,
+    not yet a trained nose detector.
+  */
+
+  const image =
+    createCandidateImage(
+      video,
+      lastCatDetection
+    );
+
+  if (!image) {
+    return;
+  }
+
+  /*
+    Avoid accepting almost identical frames.
+  */
+
+  if (
+    isTooSimilarToExisting(
+      image
+    )
+  ) {
+    return;
+  }
+
+  const sample = {
+
+    id:
+      Date.now(),
+
+    image:
+
+      image,
+
+    quality:
+      quality,
+
+    catScore:
+      lastCatDetection.score,
+
+    timestamp:
+      new Date()
+        .toISOString()
+
+  };
+
+  automaticSamples.push(
+    sample
+  );
+
+  lastAcceptedFrameTime =
+    now;
+
+  updateSampleCounter();
+
+  /*
+    Keep the highest-quality sample.
+  */
+
+  if (
+    !bestCapture ||
+    sample.quality >
+    bestCapture.quality
+  ) {
 
     bestCapture =
-        sorted[0].image;
+      sample;
 
-    bestCaptureScore =
-        sorted[0].quality;
+  }
 
-    /*
-      Stop camera.
-    */
-    stopCamera(false);
+  updateScanStatus(
+    "Candidate " +
+    automaticSamples.length +
+    " / " +
+    REQUIRED_SAMPLES +
+    " captured ✓"
+  );
 
-    /*
-      Move to profile.
-    */
-    show("profile");
+  /*
+    Once five suitable candidates
+    are available, finish immediately.
+  */
 
-    const savedInfo =
-        $("savedInfo");
+  if (
+    automaticSamples.length >=
+    REQUIRED_SAMPLES
+  ) {
 
-    if (savedInfo) {
+    finishAutomaticScan();
 
-        savedInfo.classList.remove(
-            "hidden"
-        );
+  }
 
-        savedInfo.innerHTML = `
-            <strong>Scan pripravený</strong>
-            <p>${captureSamples.length} zachytených záberov</p>
-            <p>Najlepší záber: ${bestCaptureScore}%</p>
-            <img
-                src="${bestCapture}"
-                style="
-                    width:100%;
-                    max-width:320px;
-                    border-radius:12px;
-                    margin-top:10px;
-                    display:block;
-                "
-                alt="Best captured cat nose sample"
-            >
-        `;
-    }
 }
 
 
 /* =========================================================
-   PROFILE
+   CANDIDATE IMAGE
+========================================================= */
+
+function createCandidateImage(
+  video,
+  detection
+) {
+
+  if (
+    !video ||
+    !detection ||
+    !detection.bbox
+  ) {
+    return null;
+  }
+
+  const [
+    x,
+    y,
+    width,
+    height
+  ] =
+    detection.bbox;
+
+  /*
+    Add a little margin around
+    the detected cat.
+  */
+
+  const marginX =
+    width * 0.08;
+
+  const marginY =
+    height * 0.08;
+
+  const sx =
+    Math.max(
+      0,
+      x - marginX
+    );
+
+  const sy =
+    Math.max(
+      0,
+      y - marginY
+    );
+
+  const ex =
+    Math.min(
+      video.videoWidth,
+      x + width + marginX
+    );
+
+  const ey =
+    Math.min(
+      video.videoHeight,
+      y + height + marginY
+    );
+
+  const sw =
+    ex - sx;
+
+  const sh =
+    ey - sy;
+
+  if (
+    sw < 30 ||
+    sh < 30
+  ) {
+    return null;
+  }
+
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+  canvas.width =
+    640;
+
+  canvas.height =
+    640;
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+  /*
+    Center-crop the cat region
+    into a square.
+  */
+
+  const size =
+    Math.min(
+      sw,
+      sh
+    );
+
+  const cropX =
+    sx +
+    (sw - size) / 2;
+
+  const cropY =
+    sy +
+    (sh - size) / 2;
+
+  ctx.drawImage(
+    video,
+    cropX,
+    cropY,
+    size,
+    size,
+    0,
+    0,
+    640,
+    640
+  );
+
+  return canvas.toDataURL(
+    "image/jpeg",
+    0.9
+  );
+
+}
+
+
+/* =========================================================
+   DIFFERENCE CHECK
+========================================================= */
+
+function isTooSimilarToExisting(
+  newImage
+) {
+
+  if (
+    !automaticSamples.length
+  ) {
+    return false;
+  }
+
+  /*
+    Convert image to a tiny grayscale
+    representation and compare it
+    with previous candidates.
+  */
+
+  const current =
+    createImageSignature(
+      newImage
+    );
+
+  if (!current) {
+    return false;
+  }
+
+  for (
+    const sample
+    of automaticSamples
+  ) {
+
+    const previous =
+      createImageSignature(
+        sample.image
+      );
+
+    if (!previous) {
+      continue;
+    }
+
+    const difference =
+      signatureDifference(
+        current,
+        previous
+      );
+
+    if (
+      difference <
+      MIN_DIFFERENCE
+    ) {
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+}
+
+
+/* =========================================================
+   IMAGE SIGNATURE
+========================================================= */
+
+function createImageSignature(
+  dataUrl
+) {
+
+  return new Promise(
+    resolve => {
+
+      const image =
+        new Image();
+
+      image.onload =
+        () => {
+
+          const canvas =
+            document.createElement(
+              "canvas"
+            );
+
+          canvas.width = 16;
+          canvas.height = 16;
+
+          const ctx =
+            canvas.getContext(
+              "2d"
+            );
+
+          ctx.drawImage(
+            image,
+            0,
+            0,
+            16,
+            16
+          );
+
+          const data =
+            ctx.getImageData(
+              0,
+              0,
+              16,
+              16
+            ).data;
+
+          const signature =
+            [];
+
+          for (
+            let i = 0;
+            i < data.length;
+            i += 4
+          ) {
+
+            signature.push(
+              (
+                0.2126 * data[i] +
+                0.7152 * data[i + 1] +
+                0.0722 * data[i + 2]
+              ) / 255
+            );
+
+          }
+
+          resolve(
+            signature
+          );
+
+        };
+
+      image.onerror =
+        () => resolve(null);
+
+      image.src =
+        dataUrl;
+
+    }
+  );
+
+}
+
+
+function signatureDifference(
+  a,
+  b
+) {
+
+  if (
+    !a ||
+    !b ||
+    a.length !== b.length
+  ) {
+    return 1;
+  }
+
+  let total = 0;
+
+  for (
+    let i = 0;
+    i < a.length;
+    i++
+  ) {
+
+    total +=
+      Math.abs(
+        a[i] - b[i]
+      );
+
+  }
+
+  return (
+    total / a.length
+  );
+
+}
+
+
+/* =========================================================
+   AUTOMATIC SCAN FINISH
+========================================================= */
+
+function finishAutomaticScan() {
+
+  if (scanFinished) {
+    return;
+  }
+
+  scanFinished = true;
+
+  scanRunning = false;
+
+  if (animationFrame) {
+
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+    animationFrame = null;
+
+  }
+
+  /*
+    If we have fewer than five candidates,
+    we do not pretend that the scan succeeded.
+  */
+
+  if (
+    automaticSamples.length <
+    REQUIRED_SAMPLES
+  ) {
+
+    updateScanStatus(
+      "Not enough suitable frames. Please try again."
+    );
+
+    setTimeout(
+      () => {
+
+        if (!scanRunning) {
+          show("camera");
+        }
+
+      },
+      1800
+    );
+
+    return;
+  }
+
+  /*
+    Select the best candidate.
+  */
+
+  automaticSamples.sort(
+    (a, b) =>
+      b.quality -
+      a.quality
+  );
+
+  bestCapture =
+    automaticSamples[0];
+
+  /*
+    Stop camera after successful scan.
+  */
+
+  stopCamera(
+    false
+  );
+
+  /*
+    Show the automatically collected
+    samples in the profile/result screen.
+  */
+
+  show("profile");
+
+  renderAutomaticResults();
+
+}
+
+
+/* =========================================================
+   AUTOMATIC RESULTS
+========================================================= */
+
+function renderAutomaticResults() {
+
+  const savedInfo =
+    $("savedInfo");
+
+  if (!savedInfo) {
+    return;
+  }
+
+  savedInfo.classList.remove(
+    "hidden"
+  );
+
+  let html = "";
+
+  html +=
+    "<h3>SCAN COMPLETE</h3>";
+
+  html +=
+    "<p>Automatically selected " +
+    automaticSamples.length +
+    " candidate frames.</p>";
+
+  html +=
+    "<div style='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px'>";
+
+  automaticSamples.forEach(
+    (sample, index) => {
+
+      html +=
+        "<div style='position:relative;overflow:hidden;border-radius:10px;background:#111'>";
+
+      html +=
+        "<img src='" +
+        sample.image +
+        "' style='width:100%;display:block;aspect-ratio:1/1;object-fit:cover'>";
+
+      html +=
+        "<div style='position:absolute;left:5px;bottom:5px;background:rgba(0,0,0,.75);color:#fff;padding:3px 6px;border-radius:5px;font-size:10px'>" +
+        "#" +
+        (index + 1) +
+        " • " +
+        sample.quality +
+        "%" +
+        "</div>";
+
+      html +=
+        "</div>";
+
+    }
+  );
+
+  html +=
+    "</div>";
+
+  html +=
+    "<p style='margin-top:12px'>The current prototype has collected image candidates. It does not yet perform biometric identification.</p>";
+
+  savedInfo.innerHTML =
+    html;
+
+}
+
+
+/* =========================================================
+   PROFILE SAVE
 ========================================================= */
 
 function saveProfile() {
 
-    const name =
-        $("catName")?.value.trim();
+  const name =
+    $("catName")?.value.trim() ||
+    "Unknown Cat";
 
-    const nickname =
-        $("catNickname")?.value.trim();
+  const nickname =
+    $("catNickname")?.value.trim() ||
+    "";
 
-    if (!name) {
+  if (
+    !automaticSamples.length
+  ) {
 
-        alert(
-            "Zadaj meno mačky."
-        );
-
-        return;
-    }
-
-    const savedInfo =
-        $("savedInfo");
-
-    if (!savedInfo) return;
-
-    savedInfo.classList.remove(
-        "hidden"
+    alert(
+      "No scan samples available."
     );
 
-    savedInfo.innerHTML = `
-        <strong>Vzorka uložená</strong>
-        <p>Mačka: ${escapeHtml(name)}</p>
-        ${
-            nickname
-                ? `<p>Prezývka: ${escapeHtml(nickname)}</p>`
-                : ""
-        }
-        <p>Zachytených záberov: ${captureSamples.length}</p>
-        <p>Najlepší záber: ${bestCaptureScore}%</p>
-        ${
-            bestCapture
-                ? `
-                    <img
-                        src="${bestCapture}"
-                        style="
-                            width:100%;
-                            max-width:320px;
-                            border-radius:12px;
-                            margin-top:10px;
-                            display:block;
-                        "
-                        alt="Saved nose sample"
-                    >
-                `
-                : ""
-        }
-    `;
-}
+    return;
 
+  }
 
-function escapeHtml(value) {
+  const record = {
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    id:
+      "cat_" +
+      Date.now(),
+
+    name:
+      name,
+
+    nickname:
+      nickname,
+
+    createdAt:
+      new Date()
+        .toISOString(),
+
+    samples:
+      automaticSamples,
+
+    bestSample:
+      bestCapture
+
+  };
+
+  try {
+
+    localStorage.setItem(
+      "catNosePrototype_last",
+      JSON.stringify(
+        record
+      )
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Local storage error:",
+      error
+    );
+
+  }
+
+  const savedInfo =
+    $("savedInfo");
+
+  if (savedInfo) {
+
+    savedInfo.innerHTML +=
+      "<p><b>SCAN SAVED.</b></p>";
+
+  }
+
 }
 
 
 /* =========================================================
-   CAT DETECTOR
+   CAT DETECTION
 ========================================================= */
 
 async function loadCatDetector() {
 
-    if (catModel || modelLoading) {
-        return;
-    }
+  if (
+    catModel ||
+    typeof cocoSsd ===
+    "undefined"
+  ) {
+    return;
+  }
 
-    if (
-        typeof cocoSsd ===
-        "undefined"
-    ) {
+  try {
 
-        console.warn(
-            "COCO-SSD library not available."
-        );
+    updateScanStatus(
+      "Loading cat detector…"
+    );
 
-        const note =
-            $("detectorNote");
+    catModel =
+      await cocoSsd.load({
+        base:
+          "lite_mobilenet_v2"
+      });
 
-        if (note) {
-            note.textContent =
-                "Cat detector unavailable. Camera capture still works.";
-        }
+    updateScanStatus(
+      "Looking for the cat…"
+    );
 
-        return;
-    }
+  } catch (error) {
 
-    modelLoading = true;
+    console.warn(
+      "Cat detector error:",
+      error
+    );
 
-    const instruction =
-        $("instruction");
+    /*
+      Without a cat detector we do not
+      automatically accept frames.
+    */
 
-    if (instruction) {
-        instruction.textContent =
-            "Loading cat detector…";
-    }
+    updateScanStatus(
+      "Cat detector unavailable."
+    );
 
-    try {
+  }
 
-        catModel =
-            await cocoSsd.load({
-                base:
-                    "lite_mobilenet_v2"
-            });
-
-        if (instruction) {
-            instruction.textContent =
-                "Move the nose into the circle.";
-        }
-
-        runDetector();
-
-    } catch (error) {
-
-        console.warn(
-            "Cat detector failed:",
-            error
-        );
-
-        if (instruction) {
-            instruction.textContent =
-                "Detector unavailable — capture mode still works.";
-        }
-
-    } finally {
-
-        modelLoading = false;
-    }
 }
 
 
 /* =========================================================
-   CAT DETECTION LOOP
+   DETECTION LOOP
 ========================================================= */
 
-async function runDetector() {
+function startDetection() {
 
-    if (
-        detectorRunning ||
-        !catModel
-    ) {
-        return;
-    }
+  loadCatDetector()
+    .then(
+      () => {
 
-    detectorRunning = true;
-
-    const video =
-        $("video");
-
-    const overlay =
-        $("detectionOverlay");
-
-    if (!video || !overlay) {
-        detectorRunning = false;
-        return;
-    }
-
-    const ctx =
-        overlay.getContext("2d");
-
-    const detect = async () => {
-
-        if (
-            !scanRunning ||
-            !catModel ||
-            video.readyState < 2
-        ) {
-            detectorRunning = false;
-            return;
+        if (!catModel) {
+          return;
         }
 
-        try {
+        detectionLoop();
 
-            const predictions =
-                await catModel.detect(
-                    video
-                );
+      }
+    );
 
-            const cats =
-                predictions.filter(
-                    item =>
-                        item.class === "cat" &&
-                        item.score >= 0.25
-                );
-
-            if (cats.length) {
-
-                cats.sort(
-                    (a, b) =>
-                        b.score - a.score
-                );
-
-                lastDetection =
-                    cats[0];
-
-            } else {
-
-                lastDetection = null;
-            }
-
-            drawDetection();
-
-        } catch (error) {
-
-            console.warn(
-                "Detection error:",
-                error
-            );
-        }
-
-        /*
-          Detection is intentionally throttled.
-          Camera capture itself runs independently at
-          the browser's animation-frame frequency.
-        */
-        if (scanRunning) {
-            setTimeout(
-                detect,
-                120
-            );
-        } else {
-            detectorRunning = false;
-        }
-    };
-
-    detect();
 }
 
 
-function drawDetection() {
+async function detectionLoop() {
 
-    const video =
-        $("video");
+  if (
+    !scanRunning ||
+    !catModel ||
+    detectorBusy
+  ) {
 
-    const overlay =
-        $("detectionOverlay");
+    if (scanRunning) {
 
-    if (
-        !video ||
-        !overlay
-    ) {
-        return;
-    }
-
-    const width =
-        video.videoWidth ||
-        video.clientWidth;
-
-    const height =
-        video.videoHeight ||
-        video.clientHeight;
-
-    if (!width || !height) {
-        return;
-    }
-
-    overlay.width =
-        width;
-
-    overlay.height =
-        height;
-
-    const ctx =
-        overlay.getContext("2d");
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-    if (!lastDetection) {
-        return;
-    }
-
-    const [
-        x,
-        y,
-        w,
-        h
-    ] =
-        lastDetection.bbox;
-
-    ctx.strokeStyle =
-        "#ffffff";
-
-    ctx.lineWidth =
-        Math.max(
-            3,
-            width / 300
+      detectionTimer =
+        setTimeout(
+          detectionLoop,
+          120
         );
 
-    ctx.setLineDash([
-        10,
-        8
-    ]);
+    }
 
-    ctx.strokeRect(
-        x,
-        y,
-        w,
-        h
-    );
+    return;
 
-    ctx.setLineDash([]);
+  }
 
-    ctx.font =
-        `${Math.max(
-            16,
-            width / 45
-        )}px sans-serif`;
+  const video =
+    $("video");
 
-    ctx.fillStyle =
-        "#ffffff";
+  if (
+    !video ||
+    video.readyState < 2 ||
+    !video.videoWidth
+  ) {
 
-    ctx.fillText(
-        "CAT " +
-        Math.round(
-            lastDetection.score * 100
-        ) +
-        "%",
-        x,
-        Math.max(
-            25,
-            y - 10
+    detectionTimer =
+      setTimeout(
+        detectionLoop,
+        120
+      );
+
+    return;
+
+  }
+
+  detectorBusy = true;
+
+  try {
+
+    const predictions =
+      await catModel.detect(
+        video,
+        5,
+        0.30
+      );
+
+    const cats =
+      predictions
+        .filter(
+          item =>
+            item.class ===
+            "cat" &&
+            item.score >=
+            0.30
         )
+        .sort(
+          (a, b) =>
+            b.score -
+            a.score
+        );
+
+    if (cats.length) {
+
+      lastCatDetection =
+        cats[0];
+
+      lastCatDetectionTime =
+        performance.now();
+
+      drawCatDetection(
+        cats[0]
+      );
+
+      updateScanStatus(
+        "Cat detected — automatically scanning…"
+      );
+
+    } else {
+
+      lastCatDetection =
+        null;
+
+      clearDetectionOverlay();
+
+      updateScanStatus(
+        "Looking for the cat…"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Detection error:",
+      error
     );
+
+  } finally {
+
+    detectorBusy = false;
+
+    if (scanRunning) {
+
+      detectionTimer =
+        setTimeout(
+          detectionLoop,
+          120
+        );
+
+    }
+
+  }
+
 }
 
 
 /* =========================================================
-   VIDEO TEST
+   DETECTION DRAWING
 ========================================================= */
 
-function handleMediaInput(event) {
+function clearDetectionOverlay() {
 
-    const file =
-        event.target.files?.[0];
+  const overlay =
+    $("detectionOverlay");
 
-    if (!file) return;
+  if (!overlay) {
+    return;
+  }
 
-    const url =
-        URL.createObjectURL(file);
+  const ctx =
+    overlay.getContext(
+      "2d"
+    );
 
-    const sourceVideo =
-        $("sourceVideo");
+  ctx.clearRect(
+    0,
+    0,
+    overlay.width,
+    overlay.height
+  );
 
-    if (
-        file.type.startsWith("video/") &&
-        sourceVideo
-    ) {
-
-        sourceVideo.src =
-            url;
-
-        sourceVideo.load();
-
-        show("videoTest");
-
-        return;
-    }
-
-    if (
-        file.type.startsWith("image/")
-    ) {
-
-        /*
-          Convert image to a one-frame video-like
-          test result by displaying it in the sample area.
-        */
-
-        show("videoTest");
-
-        const samples =
-            $("videoSamples");
-
-        if (samples) {
-
-            samples.innerHTML = `
-                <img
-                    src="${url}"
-                    style="
-                        width:100%;
-                        max-width:420px;
-                        border-radius:12px;
-                    "
-                    alt="Uploaded test image"
-                >
-            `;
-        }
-    }
 }
 
+
+function drawCatDetection(
+  detection
+) {
+
+  const video =
+    $("video");
+
+  const overlay =
+    $("detectionOverlay");
+
+  if (
+    !video ||
+    !overlay ||
+    !detection
+  ) {
+    return;
+  }
+
+  overlay.width =
+    video.videoWidth;
+
+  overlay.height =
+    video.videoHeight;
+
+  const ctx =
+    overlay.getContext(
+      "2d"
+    );
+
+  ctx.clearRect(
+    0,
+    0,
+    overlay.width,
+    overlay.height
+  );
+
+  const [
+    x,
+    y,
+    width,
+    height
+  ] =
+    detection.bbox;
+
+  ctx.strokeStyle =
+    "#ffffff";
+
+  ctx.lineWidth =
+    Math.max(
+      3,
+      overlay.width / 300
+    );
+
+  ctx.setLineDash([
+    10,
+    8
+  ]);
+
+  ctx.strokeRect(
+    x,
+    y,
+    width,
+    height
+  );
+
+  ctx.setLineDash([]);
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.font =
+    `${Math.max(
+      16,
+      overlay.width / 40
+    )}px system-ui`;
+
+  ctx.fillText(
+    "CAT " +
+    Math.round(
+      detection.score * 100
+    ) +
+    "%",
+    x,
+    Math.max(
+      24,
+      y - 8
+    )
+  );
+
+}
+
+
+/* =========================================================
+   VIDEO / PHOTO TEST
+========================================================= */
+
+function handleMediaInput(
+  event
+) {
+
+  const file =
+    event.target.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  const url =
+    URL.createObjectURL(
+      file
+    );
+
+  if (
+    file.type.startsWith(
+      "video/"
+    )
+  ) {
+
+    const video =
+      $("sourceVideo");
+
+    if (video) {
+
+      video.src =
+        url;
+
+      video.load();
+
+    }
+
+    show(
+      "videoTest"
+    );
+
+    return;
+
+  }
+
+  if (
+    file.type.startsWith(
+      "image/"
+    )
+  ) {
+
+    const samples =
+      $("videoSamples");
+
+    if (samples) {
+
+      samples.innerHTML =
+        "<img src='" +
+        url +
+        "' style='width:100%;border-radius:12px'>";
+
+    }
+
+    show(
+      "videoTest"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   VIDEO ANALYSIS
+========================================================= */
 
 async function analyzeVideo() {
 
-    const video =
-        $("sourceVideo");
+  const video =
+    $("sourceVideo");
 
-    const canvas =
-        $("videoCanvas");
+  const canvas =
+    $("videoCanvas");
 
-    if (
-        !video ||
-        !canvas ||
-        !video.duration ||
-        !isFinite(video.duration)
-    ) {
+  const result =
+    $("videoResult");
 
-        const result =
-            $("videoResult");
-
-        if (result) {
-            result.classList.remove(
-                "hidden"
-            );
-
-            result.textContent =
-                "Nahraj najprv video.";
-        }
-
-        return;
-    }
-
-    const samples = [];
-
-    const duration =
-        video.duration;
-
-    /*
-      Sample much more frequently than the old version.
-      This matters for cats because they can move very quickly.
-    */
-    const SAMPLE_INTERVAL =
-        0.10;
-
-    const positions = [];
-
-    for (
-        let t = 0;
-        t < duration;
-        t += SAMPLE_INTERVAL
-    ) {
-        positions.push(
-            Math.min(
-                t,
-                Math.max(
-                    0,
-                    duration - 0.01
-                )
-            )
-        );
-    }
-
-    const result =
-        $("videoResult");
+  if (
+    !video ||
+    !canvas ||
+    !video.duration
+  ) {
 
     if (result) {
 
-        result.classList.remove(
-            "hidden"
-        );
+      result.classList.remove(
+        "hidden"
+      );
 
-        result.textContent =
-            "Analyzujem " +
-            positions.length +
-            " snímok…";
+      result.textContent =
+        "Choose a video first.";
+
     }
 
-    let best = null;
+    return;
 
-    for (
-        let i = 0;
-        i < positions.length;
-        i++
-    ) {
+  }
 
-        const time =
-            positions[i];
+  const duration =
+    video.duration;
 
-        await seekVideo(
-            video,
-            time
-        );
+  const interval =
+    0.10;
 
-        if (
-            !drawVideoToCanvas(
-                video,
-                canvas
-            )
-        ) {
-            continue;
-        }
+  const positions = [];
 
-        const quality =
-            calculateImageQuality(
-                canvas
-            );
+  for (
+    let t = 0;
+    t < duration;
+    t += interval
+  ) {
 
-        const image =
-            canvas.toDataURL(
-                "image/jpeg",
-                JPEG_QUALITY
-            );
-
-        samples.push({
-            time,
-            quality,
-            image
-        });
-
-        if (
-            !best ||
-            quality > best.quality
-        ) {
-            best =
-                samples[samples.length - 1];
-        }
-
-        if (result) {
-
-            result.textContent =
-                "Analyzujem " +
-                (i + 1) +
-                " / " +
-                positions.length +
-                " snímok…";
-        }
-
-        /*
-          Give the browser time to update the UI.
-        */
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    0
-                )
-        );
-    }
-
-    samples.sort(
-        (a, b) =>
-            b.quality - a.quality
+    positions.push(
+      Math.min(
+        t,
+        Math.max(
+          0,
+          duration - 0.01
+        )
+      )
     );
 
-    const top =
-        samples.slice(
-            0,
-            9
-        );
+  }
 
-    const sampleGrid =
-        $("videoSamples");
+  const frames = [];
 
-    if (sampleGrid) {
+  if (result) {
 
-        sampleGrid.innerHTML = "";
+    result.classList.remove(
+      "hidden"
+    );
 
-        top.forEach(
-            (sample, index) => {
+    result.textContent =
+      "Analyzing video…";
 
-                const wrapper =
-                    document.createElement(
-                        "div"
-                    );
+  }
 
-                wrapper.style.position =
-                    "relative";
+  for (
+    let i = 0;
+    i < positions.length;
+    i++
+  ) {
 
-                wrapper.style.borderRadius =
-                    "10px";
+    await seekVideo(
+      video,
+      positions[i]
+    );
 
-                wrapper.style.overflow =
-                    "hidden";
-
-                const image =
-                    document.createElement(
-                        "img"
-                    );
-
-                image.src =
-                    sample.image;
-
-                image.style.width =
-                    "100%";
-
-                image.style.display =
-                    "block";
-
-                const label =
-                    document.createElement(
-                        "div"
-                    );
-
-                label.textContent =
-                    "#" +
-                    (index + 1) +
-                    " • " +
-                    sample.quality +
-                    "%";
-
-                label.style.position =
-                    "absolute";
-
-                label.style.bottom =
-                    "5px";
-
-                label.style.left =
-                    "5px";
-
-                label.style.padding =
-                    "3px 6px";
-
-                label.style.background =
-                    "rgba(0,0,0,.75)";
-
-                label.style.color =
-                    "#fff";
-
-                label.style.fontSize =
-                    "10px";
-
-                wrapper.appendChild(
-                    image
-                );
-
-                wrapper.appendChild(
-                    label
-                );
-
-                sampleGrid.appendChild(
-                    wrapper
-                );
-            }
-        );
+    if (
+      !drawVideoToCanvas(
+        video,
+        canvas
+      )
+    ) {
+      continue;
     }
+
+    const quality =
+      calculateQuality(
+        canvas
+      );
+
+    const image =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.9
+      );
+
+    frames.push({
+      image,
+      quality,
+      time:
+        positions[i]
+    });
 
     if (result) {
 
-        result.innerHTML = `
-            <strong>Analýza dokončená</strong>
-            <p>
-                Skontrolovaných snímok:
-                ${samples.length}
-            </p>
-            <p>
-                Najlepší záber:
-                ${best ? best.quality : 0}%
-            </p>
-        `;
+      result.textContent =
+        "Analyzing " +
+        (i + 1) +
+        " / " +
+        positions.length;
+
     }
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          0
+        )
+    );
+
+  }
+
+  frames.sort(
+    (a, b) =>
+      b.quality -
+      a.quality
+  );
+
+  const best =
+    frames.slice(
+      0,
+      9
+    );
+
+  if (result) {
+
+    result.innerHTML =
+      "<b>VIDEO ANALYSIS COMPLETE</b>" +
+      "<p>Sampled " +
+      frames.length +
+      " frames.</p>" +
+      "<p>Best generic image quality: " +
+      (
+        best.length
+          ? best[0].quality
+          : 0
+      ) +
+      "%.</p>" +
+      "<p>This is image/cat candidate analysis, not biometric identification.</p>";
+
+  }
+
+  const grid =
+    $("videoSamples");
+
+  if (grid) {
+
+    grid.innerHTML = "";
+
+    best.forEach(
+      (frame, index) => {
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+        div.innerHTML =
+          "<img src='" +
+          frame.image +
+          "' style='width:100%;border-radius:10px'>" +
+          "<small>#"+
+          (index + 1) +
+          " • " +
+          frame.quality +
+          "%</small>";
+
+        grid.appendChild(
+          div
+        );
+
+      }
+    );
+
+  }
+
 }
 
 
-function seekVideo(video, time) {
+function seekVideo(
+  video,
+  time
+) {
 
-    return new Promise(resolve => {
+  return new Promise(
+    resolve => {
 
-        const handler = () => {
+      const handler =
+        () => {
 
-            video.removeEventListener(
-                "seeked",
-                handler
-            );
-
-            resolve();
-        };
-
-        video.addEventListener(
+          video.removeEventListener(
             "seeked",
             handler
-        );
+          );
 
-        video.currentTime =
-            time;
-    });
+          resolve();
+
+        };
+
+      video.addEventListener(
+        "seeked",
+        handler
+      );
+
+      video.currentTime =
+        time;
+
+    }
+  );
+
 }
 
 
 /* =========================================================
-   EVENT LISTENERS
+   EVENT HANDLERS
 ========================================================= */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+  "DOMContentLoaded",
+  () => {
 
-        const start =
-            $("startCamera");
+    const start =
+      $("startCamera");
 
-        if (start) {
-            start.addEventListener(
-                "click",
-                startCamera
-            );
-        }
+    if (start) {
 
-        const stop =
-            $("stopCamera");
+      start.onclick =
+        startCamera;
 
-        if (stop) {
-            stop.addEventListener(
-                "click",
-                () =>
-                    stopCamera(true)
-            );
-        }
-
-        const capture =
-            $("captureNow");
-
-        if (capture) {
-
-            capture.addEventListener(
-                "click",
-                captureBestFrame
-            );
-        }
-
-        const finish =
-            $("finishScan");
-
-        if (finish) {
-
-            finish.addEventListener(
-                "click",
-                finishScan
-            );
-        }
-
-        const media =
-            $("mediaInput");
-
-        if (media) {
-
-            media.addEventListener(
-                "change",
-                handleMediaInput
-            );
-        }
-
-        const backHome =
-            $("backHome");
-
-        if (backHome) {
-
-            backHome.addEventListener(
-                "click",
-                () => show("home")
-            );
-        }
-
-        const profileBack =
-            $("profileBack");
-
-        if (profileBack) {
-
-            profileBack.addEventListener(
-                "click",
-                () => show("camera")
-            );
-        }
-
-        const analyze =
-            $("analyzeVideo");
-
-        if (analyze) {
-
-            analyze.addEventListener(
-                "click",
-                analyzeVideo
-            );
-        }
-
-        const saveProfileButton =
-            $("saveProfile");
-
-        if (saveProfileButton) {
-
-            saveProfileButton.addEventListener(
-                "click",
-                saveProfile
-            );
-        }
-
-        const status =
-            $("engineStatus");
-
-        if (status) {
-            status.textContent =
-                "Capture engine ready";
-        }
     }
+
+    const stop =
+      $("stopCamera");
+
+    if (stop) {
+
+      stop.onclick =
+        () =>
+          stopCamera(
+            true
+          );
+
+    }
+
+    const finish =
+      $("finishScan");
+
+    if (finish) {
+
+      finish.onclick =
+        finishAutomaticScan;
+
+    }
+
+    const backHome =
+      $("backHome");
+
+    if (backHome) {
+
+      backHome.onclick =
+        () =>
+          show("home");
+
+    }
+
+    const profileBack =
+      $("profileBack");
+
+    if (profileBack) {
+
+      profileBack.onclick =
+        () =>
+          show("camera");
+
+    }
+
+    const save =
+      $("saveProfile");
+
+    if (save) {
+
+      save.onclick =
+        saveProfile;
+
+    }
+
+    const media =
+      $("mediaInput");
+
+    if (media) {
+
+      media.onchange =
+        handleMediaInput;
+
+    }
+
+    const analyze =
+      $("analyzeVideo");
+
+    if (analyze) {
+
+      analyze.onclick =
+        analyzeVideo;
+
+    }
+
+    updateSampleCounter();
+
+  }
 );

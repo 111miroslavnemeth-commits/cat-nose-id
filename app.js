@@ -2,8 +2,13 @@ const $=id=>document.getElementById(id);
 const screens=["home","camera","videoTest","profile"];
 let stream=null,bestCapture=null,captureSamples=[],scanTimer=null;
 
+const LIVE_DETECT_INTERVAL=140;
+const VIDEO_SAMPLES_PER_SECOND=8;
+const MAX_VIDEO_SAMPLES=120;
+
 function show(n){screens.forEach(s=>$(s).classList.toggle("active",s===n))}
 function luminance(r,g,b){return .2126*r+.7152*g+.0722*b}
+
 function scoreCanvas(c){
   const x=c.getContext("2d",{willReadFrequently:true}),w=c.width,h=c.height,d=x.getImageData(0,0,w,h).data,step=4;
   let s=0,s2=0,n=0;
@@ -13,10 +18,12 @@ function scoreCanvas(c){
   }
   return Math.min(100,Math.sqrt(Math.max(0,s2/n-(s/n)**2))*2.4)
 }
+
 function drawVideo(v,c){
   let w=360,h=Math.round(360*(v.videoHeight/v.videoWidth||1));
   c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h)
 }
+
 function cropCenter(v,c){
   let w=v.videoWidth||c.width,h=v.videoHeight||c.height;
   c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h);
@@ -25,13 +32,22 @@ function cropCenter(v,c){
   o.getContext("2d").drawImage(c,x,y,sz,sz,0,0,640,640);
   return o.toDataURL("image/jpeg",.9)
 }
+
+function cropNoseCandidate(v,candidate){
+  if(!candidate)return null;
+  const [nx,ny,nw,nh]=candidate.box,o=document.createElement("canvas");
+  o.width=o.height=640;
+  o.getContext("2d").drawImage(v,nx,ny,nw,nh,0,0,640,640);
+  return o.toDataURL("image/jpeg",.9)
+}
+
 function setQ(q){
   $("qualityBar").style.width=q+"%";
   $("qualityText").textContent=q<25?"MOVE CLOSER":q<45?"HOLD STEADY":q<65?"GOOD":"EXCELLENT"
 }
 
 let catModel=null,lastCatBox=null,lastCatScore=0,lastDetect=0;
-let noseCandidate=null,noseCandidateScore=0;
+let noseCandidate=null,noseCandidateScore=0,detectBusy=false;
 
 async function loadCatDetector(){
   try{
@@ -167,7 +183,9 @@ function drawNoseCandidate(candidate){
 }
 
 async function detectCat(){
-  if(!catModel||!$("video").videoWidth)return;
+  if(!catModel||!$("video").videoWidth||detectBusy)return;
+
+  detectBusy=true;
 
   try{
     const p=await catModel.detect($("video"),5,.45);
@@ -202,6 +220,8 @@ async function detectCat(){
 
   }catch(e){
     console.warn(e)
+  }finally{
+    detectBusy=false
   }
 }
 
@@ -251,9 +271,9 @@ function loop(){
 
   resizeOverlay();
 
-  if(performance.now()-lastDetect>350){
+  if(performance.now()-lastDetect>=LIVE_DETECT_INTERVAL){
     lastDetect=performance.now();
-    detectCat()
+    detectCat();
   }
 
   drawVideo(v,c);
@@ -262,8 +282,12 @@ function loop(){
   setQ(q);
 
   if(q>55){
+    const img=noseCandidate
+      ?cropNoseCandidate(v,noseCandidate)
+      :cropCenter(v,c);
+
     bestCapture={
-      dataUrl:cropCenter(v,c),
+      dataUrl:img,
       quality:q
     };
 
@@ -292,41 +316,27 @@ $("captureNow").onclick=()=>{
   drawVideo(v,c);
 
   let q=scoreCanvas(c);
-  let img;
+  let img=noseCandidate
+    ?cropNoseCandidate(v,noseCandidate)
+    :cropCenter(v,c);
 
-  if(noseCandidate){
-    const [nx,ny,nw,nh]=noseCandidate.box;
-    const o=document.createElement("canvas");
-
-    o.width=o.height=640;
-
-    o.getContext("2d").drawImage(
-      v,
-      nx,ny,nw,nh,
-      0,0,640,640
-    );
-
-    img=o.toDataURL("image/jpeg",.9);
-
-  }else{
-    img=cropCenter(v,c)
-  }
-
-  captureSamples.push({
-    dataUrl:img,
-    quality:q
-  });
-
-  bestCapture={
+  const sample={
     dataUrl:img,
     quality:q
   };
+
+  captureSamples.push(sample);
+  bestCapture=sample;
 
   $("frameCounter").textContent=
     captureSamples.length+" samples";
 };
 
 $("finishScan").onclick=()=>{
+  if(!captureSamples.length&&bestCapture){
+    captureSamples.push(bestCapture);
+  }
+
   if(!bestCapture&&!captureSamples.length){
     return alert("No sample captured yet.");
   }
@@ -359,7 +369,7 @@ $("saveProfile").onclick=()=>{
   $("savedInfo").innerHTML=
     "<h3>🐱 "+name+"</h3>"+
     "<p><b>NOSE SAMPLE SAVED</b></p>"+
-    "<p>v0.4 uses cat detection plus an experimental nose-candidate stage. "+
+    "<p>v0.4.1 uses faster live detection and an experimental nose-candidate stage. "+
     "This is not yet biometric recognition.</p>"+
     "<img src='"+s.dataUrl+"' style='width:100%;border-radius:16px'>";
 };
@@ -431,8 +441,8 @@ $("analyzeVideo").onclick=async()=>{
   let c=$("videoCanvas");
   let a=[];
   let N=Math.min(
-    30,
-    Math.max(12,Math.floor(v.duration*2))
+    MAX_VIDEO_SAMPLES,
+    Math.max(24,Math.floor(v.duration*VIDEO_SAMPLES_PER_SECOND))
   );
 
   for(let i=0;i<N;i++){
@@ -469,10 +479,11 @@ $("analyzeVideo").onclick=async()=>{
   $("videoResult").innerHTML=
     "<b>VIDEO ANALYSIS COMPLETE</b>"+
     "<p>Sampled "+N+
-    " frames. Best generic quality score: "+
+    " frames at up to "+VIDEO_SAMPLES_PER_SECOND+
+    " frames/sec. Best generic quality score: "+
     Math.round(best[0].q)+
-    ".</p>"+
-    "<p><b>Important:</b> the current prototype still uses an experimental nose-candidate stage; this is not a trained nose detector.</p>";
+    "%.</p>"+
+    "<p><b>Important:</b> this is still an experimental nose-candidate stage, not a trained biometric nose detector.</p>";
 
   $("videoSamples").innerHTML=
     best.map(x=>"<img src='"+x.img+"'>").join("")

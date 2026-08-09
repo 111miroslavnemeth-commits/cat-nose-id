@@ -2200,6 +2200,8 @@ SPÄŤ
 
 </div>
 
+</div>
+
 </section>
 
 
@@ -2232,29 +2234,55 @@ let selectedIncidentType="ukradla jedlo";
 NAVIGATION HISTORY
 ===================================================== */
 
-/*
-    Toto je hlavná oprava.
-
-    historyStack obsahuje skutočnú cestu používateľa
-    medzi obrazovkami.
-
-    Príklad:
-
-    home
-      ↓
-    catFile
-      ↓
-    incident
-      ↓
-    catFile
-
-    goBack() potom vráti používateľa presne
-    na predchádzajúcu obrazovku.
-*/
-
 let historyStack=["home"];
 
 let isNavigatingBack=false;
+
+
+/* =====================================================
+NATIVE PHONE BACK BUTTON
+===================================================== */
+
+let nativeBackGuard=false;
+
+function syncBrowserHistory(){
+
+    if(nativeBackGuard)return;
+
+    history.replaceState(
+        {catNoseGuard:true},
+        "",
+        window.location.href
+    );
+
+    history.pushState(
+        {catNoseGuard:true},
+        "",
+        window.location.href
+    );
+
+}
+
+
+window.addEventListener("popstate",()=>{
+
+    if(nativeBackGuard)return;
+
+    nativeBackGuard=true;
+
+    history.pushState(
+        {catNoseGuard:true},
+        "",
+        window.location.href
+    );
+
+    goBack();
+
+    setTimeout(()=>{
+        nativeBackGuard=false;
+    },0);
+
+});
 
 
 /* =====================================================
@@ -2282,6 +2310,8 @@ function navigateTo(id){
     }
 
     showScreen(id);
+
+    syncBrowserHistory();
 
 }
 
@@ -2343,15 +2373,12 @@ function goBack(){
 
         historyStack=["home"];
 
+        syncBrowserHistory();
+
         return;
 
     }
 
-
-    /*
-       Odstránime aktuálnu obrazovku
-       a vezmeme predchádzajúcu.
-    */
 
     historyStack.pop();
 
@@ -2365,13 +2392,13 @@ function goBack(){
 
     isNavigatingBack=false;
 
+    syncBrowserHistory();
+
 }
 
 
 /* =====================================================
 RESET NAVIGATION
-Používa sa iba vtedy, keď chceme zámerne
-začať novú cestu od hlavnej obrazovky.
 ===================================================== */
 
 function resetNavigation(id){
@@ -2379,6 +2406,8 @@ function resetNavigation(id){
     historyStack=[id];
 
     showScreen(id);
+
+    syncBrowserHistory();
 
 }
 
@@ -2608,11 +2637,6 @@ function saveCat(){
 
     catPhotoData="";
 
-
-    /*
-       Po uložení ideme do CAT FILE
-       ako novú obrazovku v aktuálnej ceste.
-    */
 
     navigateTo("catFile");
 
@@ -3314,11 +3338,6 @@ function deleteCurrentCat(){
     currentCatId=null;
 
 
-    /*
-       Po vymazaní je správne začať
-       novú navigačnú cestu na HOME.
-    */
-
     resetNavigation("home");
 
 }
@@ -3592,6 +3611,8 @@ document.addEventListener(
     renderIncidentOptions();
 
     updateIncidentDate();
+
+    syncBrowserHistory();
 
 });
 

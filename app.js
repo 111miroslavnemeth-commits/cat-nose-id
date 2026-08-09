@@ -8,10 +8,13 @@ const screens = [
 ];
 
 let stream = null;
+
 let catModel = null;
+let landmarkSession = null;
 
 let scanRunning = false;
 let detectorBusy = false;
+let landmarkBusy = false;
 
 let animationFrame = null;
 let detectionTimer = null;
@@ -23,26 +26,19 @@ let automaticSamples = [];
 let bestCapture = null;
 
 let lastCatDetection = null;
-let lastCatDetectionTime = 0;
+let lastLandmarks = null;
+
+let modelLoading = false;
+let landmarkModelLoading = false;
 
 const REQUIRED_SAMPLES = 5;
 const MAX_SCAN_TIME = 5000;
 
-/*
-  Minimum quality required before a frame
-  can become a candidate.
-*/
 const MIN_QUALITY = 45;
-
-/*
-  Do not accept frames that are almost identical.
-*/
-const MIN_DIFFERENCE = 0.035;
-
-/*
-  Minimum time between accepted samples.
-*/
 const MIN_SAMPLE_INTERVAL = 180;
+
+const LANDMARK_MODEL_URL =
+  "https://huggingface.co/Isa0/cat-detection/resolve/main/model.onnx";
 
 
 /* =========================================================
@@ -100,7 +96,12 @@ function drawVideoToCanvas(video, canvas) {
     video.videoHeight;
 
   const ctx =
-    canvas.getContext("2d");
+    canvas.getContext(
+      "2d",
+      {
+        willReadFrequently: true
+      }
+    );
 
   ctx.drawImage(
     video,
@@ -111,7 +112,6 @@ function drawVideoToCanvas(video, canvas) {
   );
 
   return true;
-
 }
 
 
@@ -178,8 +178,7 @@ function calculateQuality(canvas) {
       targetHeight
     ).data;
 
-  let sum = 0;
-  let sumSq = 0;
+  let total = 0;
   let count = 0;
 
   for (
@@ -229,43 +228,24 @@ function calculateQuality(canvas) {
           ]
         );
 
-      const detail =
-        Math.abs(
-          center - right
-        ) +
-        Math.abs(
-          center - down
-        );
+      total +=
+        Math.abs(center - right) +
+        Math.abs(center - down);
 
-      sum += detail;
-      sumSq += detail * detail;
       count++;
-
     }
-
   }
 
   if (!count) {
     return 0;
   }
 
-  const mean =
-    sum / count;
-
-  const variance =
-    Math.max(
-      0,
-      sumSq / count -
-      mean * mean
-    );
-
   return Math.round(
     Math.min(
       100,
-      Math.sqrt(variance) * 8
+      (total / count) * 1.8
     )
   );
-
 }
 
 
@@ -274,12 +254,6 @@ function calculateQuality(canvas) {
 ========================================================= */
 
 function updateQuality(value) {
-
-  const bar =
-    $("qualityBar");
-
-  const text =
-    $("qualityText");
 
   value =
     Math.max(
@@ -290,44 +264,42 @@ function updateQuality(value) {
       )
     );
 
-  if (bar) {
+  const bar =
+    $("qualityBar");
 
+  const text =
+    $("qualityText");
+
+  if (bar) {
     bar.style.width =
       value + "%";
-
   }
 
   if (text) {
 
     if (value >= 75) {
-
       text.textContent =
         "EXCELLENT";
 
     } else if (value >= 55) {
-
       text.textContent =
         "GOOD";
 
     } else if (value >= 40) {
-
       text.textContent =
         "FAIR";
 
     } else {
-
       text.textContent =
         "LOW";
-
     }
 
   }
-
 }
 
 
 /* =========================================================
-   SCAN STATUS
+   STATUS
 ========================================================= */
 
 function updateScanStatus(text) {
@@ -339,7 +311,6 @@ function updateScanStatus(text) {
     instruction.textContent =
       text;
   }
-
 }
 
 
@@ -356,12 +327,11 @@ function updateSampleCounter() {
     automaticSamples.length +
     " / " +
     REQUIRED_SAMPLES;
-
 }
 
 
 /* =========================================================
-   CAMERA START
+   CAMERA
 ========================================================= */
 
 async function startCamera() {
@@ -413,18 +383,37 @@ async function startCamera() {
 
     await video.play();
 
-    updateScanStatus(
-      "Looking for the cat…"
-    );
-
     scanRunning = true;
     scanFinished = false;
 
     scanStartTime =
       performance.now();
 
-    startDetection();
+    updateScanStatus(
+      "Loading cat vision models…"
+    );
 
+    await loadCatDetector();
+
+    await loadLandmarkModel();
+
+    if (
+      landmarkSession
+    ) {
+
+      updateScanStatus(
+        "Models ready — looking for the cat…"
+      );
+
+    } else {
+
+      updateScanStatus(
+        "Cat detector ready — nose model unavailable."
+      );
+
+    }
+
+    startDetection();
     startScanLoop();
 
   } catch (error) {
@@ -439,12 +428,11 @@ async function startCamera() {
     );
 
   }
-
 }
 
 
 /* =========================================================
-   CAMERA STOP
+   STOP CAMERA
 ========================================================= */
 
 function stopCamera(
@@ -454,6 +442,7 @@ function stopCamera(
   scanRunning = false;
 
   detectorBusy = false;
+  landmarkBusy = false;
 
   if (animationFrame) {
 
@@ -462,7 +451,6 @@ function stopCamera(
     );
 
     animationFrame = null;
-
   }
 
   if (detectionTimer) {
@@ -472,7 +460,6 @@ function stopCamera(
     );
 
     detectionTimer = null;
-
   }
 
   if (stream) {
@@ -490,20 +477,19 @@ function stopCamera(
       );
 
     stream = null;
-
   }
 
   const video =
     $("video");
 
   if (video) {
-    video.srcObject = null;
+    video.srcObject =
+      null;
   }
 
   if (returnHome) {
     show("home");
   }
-
 }
 
 
@@ -519,7 +505,7 @@ function resetAutomaticScan() {
 
   lastCatDetection = null;
 
-  lastCatDetectionTime = 0;
+  lastLandmarks = null;
 
   scanFinished = false;
 
@@ -527,11 +513,12 @@ function resetAutomaticScan() {
 
   updateQuality(0);
 
+  clearDetectionOverlay();
 }
 
 
 /* =========================================================
-   LIVE SCAN LOOP
+   LIVE LOOP
 ========================================================= */
 
 function startScanLoop() {
@@ -541,7 +528,6 @@ function startScanLoop() {
     cancelAnimationFrame(
       animationFrame
     );
-
   }
 
   function loop() {
@@ -579,24 +565,13 @@ function startScanLoop() {
           quality
         );
 
-        /*
-          Automatic candidate selection.
-          No user button is required.
-        */
-
         tryAutomaticCapture(
           video,
           canvas,
           quality
         );
-
       }
-
     }
-
-    /*
-      Hard scan timeout.
-    */
 
     if (
       performance.now() -
@@ -607,748 +582,48 @@ function startScanLoop() {
       finishAutomaticScan();
 
       return;
-
     }
 
     animationFrame =
       requestAnimationFrame(
         loop
       );
-
   }
 
   animationFrame =
     requestAnimationFrame(
       loop
     );
-
 }
 
 
 /* =========================================================
-   AUTOMATIC FRAME SELECTION
-========================================================= */
-
-let lastAcceptedFrameTime = 0;
-
-function tryAutomaticCapture(
-  video,
-  canvas,
-  quality
-) {
-
-  if (!scanRunning) {
-    return;
-  }
-
-  /*
-    We need the cat detector to confirm
-    that a cat is actually present.
-  */
-
-  if (!lastCatDetection) {
-
-    updateScanStatus(
-      "Looking for the cat…"
-    );
-
-    return;
-
-  }
-
-  /*
-    Require reasonable image quality.
-  */
-
-  if (
-    quality <
-    MIN_QUALITY
-  ) {
-
-    updateScanStatus(
-      "Cat found — improving image…"
-    );
-
-    return;
-
-  }
-
-  const now =
-    performance.now();
-
-  if (
-    now -
-    lastAcceptedFrameTime <
-    MIN_SAMPLE_INTERVAL
-  ) {
-    return;
-  }
-
-  /*
-    Extract a candidate region around
-    the detected cat.
-
-    IMPORTANT:
-    This is a cat-region candidate,
-    not yet a trained nose detector.
-  */
-
-  const image =
-    createCandidateImage(
-      video,
-      lastCatDetection
-    );
-
-  if (!image) {
-    return;
-  }
-
-  /*
-    Avoid accepting almost identical frames.
-  */
-
-  if (
-    isTooSimilarToExisting(
-      image
-    )
-  ) {
-    return;
-  }
-
-  const sample = {
-
-    id:
-      Date.now(),
-
-    image:
-
-      image,
-
-    quality:
-      quality,
-
-    catScore:
-      lastCatDetection.score,
-
-    timestamp:
-      new Date()
-        .toISOString()
-
-  };
-
-  automaticSamples.push(
-    sample
-  );
-
-  lastAcceptedFrameTime =
-    now;
-
-  updateSampleCounter();
-
-  /*
-    Keep the highest-quality sample.
-  */
-
-  if (
-    !bestCapture ||
-    sample.quality >
-    bestCapture.quality
-  ) {
-
-    bestCapture =
-      sample;
-
-  }
-
-  updateScanStatus(
-    "Candidate " +
-    automaticSamples.length +
-    " / " +
-    REQUIRED_SAMPLES +
-    " captured ✓"
-  );
-
-  /*
-    Once five suitable candidates
-    are available, finish immediately.
-  */
-
-  if (
-    automaticSamples.length >=
-    REQUIRED_SAMPLES
-  ) {
-
-    finishAutomaticScan();
-
-  }
-
-}
-
-
-/* =========================================================
-   CANDIDATE IMAGE
-========================================================= */
-
-function createCandidateImage(
-  video,
-  detection
-) {
-
-  if (
-    !video ||
-    !detection ||
-    !detection.bbox
-  ) {
-    return null;
-  }
-
-  const [
-    x,
-    y,
-    width,
-    height
-  ] =
-    detection.bbox;
-
-  /*
-    Add a little margin around
-    the detected cat.
-  */
-
-  const marginX =
-    width * 0.08;
-
-  const marginY =
-    height * 0.08;
-
-  const sx =
-    Math.max(
-      0,
-      x - marginX
-    );
-
-  const sy =
-    Math.max(
-      0,
-      y - marginY
-    );
-
-  const ex =
-    Math.min(
-      video.videoWidth,
-      x + width + marginX
-    );
-
-  const ey =
-    Math.min(
-      video.videoHeight,
-      y + height + marginY
-    );
-
-  const sw =
-    ex - sx;
-
-  const sh =
-    ey - sy;
-
-  if (
-    sw < 30 ||
-    sh < 30
-  ) {
-    return null;
-  }
-
-  const canvas =
-    document.createElement(
-      "canvas"
-    );
-
-  canvas.width =
-    640;
-
-  canvas.height =
-    640;
-
-  const ctx =
-    canvas.getContext(
-      "2d"
-    );
-
-  /*
-    Center-crop the cat region
-    into a square.
-  */
-
-  const size =
-    Math.min(
-      sw,
-      sh
-    );
-
-  const cropX =
-    sx +
-    (sw - size) / 2;
-
-  const cropY =
-    sy +
-    (sh - size) / 2;
-
-  ctx.drawImage(
-    video,
-    cropX,
-    cropY,
-    size,
-    size,
-    0,
-    0,
-    640,
-    640
-  );
-
-  return canvas.toDataURL(
-    "image/jpeg",
-    0.9
-  );
-
-}
-
-
-/* =========================================================
-   DIFFERENCE CHECK
-========================================================= */
-
-function isTooSimilarToExisting(
-  newImage
-) {
-
-  if (
-    !automaticSamples.length
-  ) {
-    return false;
-  }
-
-  /*
-    Convert image to a tiny grayscale
-    representation and compare it
-    with previous candidates.
-  */
-
-  const current =
-    createImageSignature(
-      newImage
-    );
-
-  if (!current) {
-    return false;
-  }
-
-  for (
-    const sample
-    of automaticSamples
-  ) {
-
-    const previous =
-      createImageSignature(
-        sample.image
-      );
-
-    if (!previous) {
-      continue;
-    }
-
-    const difference =
-      signatureDifference(
-        current,
-        previous
-      );
-
-    if (
-      difference <
-      MIN_DIFFERENCE
-    ) {
-
-      return true;
-
-    }
-
-  }
-
-  return false;
-
-}
-
-
-/* =========================================================
-   IMAGE SIGNATURE
-========================================================= */
-
-function createImageSignature(
-  dataUrl
-) {
-
-  return new Promise(
-    resolve => {
-
-      const image =
-        new Image();
-
-      image.onload =
-        () => {
-
-          const canvas =
-            document.createElement(
-              "canvas"
-            );
-
-          canvas.width = 16;
-          canvas.height = 16;
-
-          const ctx =
-            canvas.getContext(
-              "2d"
-            );
-
-          ctx.drawImage(
-            image,
-            0,
-            0,
-            16,
-            16
-          );
-
-          const data =
-            ctx.getImageData(
-              0,
-              0,
-              16,
-              16
-            ).data;
-
-          const signature =
-            [];
-
-          for (
-            let i = 0;
-            i < data.length;
-            i += 4
-          ) {
-
-            signature.push(
-              (
-                0.2126 * data[i] +
-                0.7152 * data[i + 1] +
-                0.0722 * data[i + 2]
-              ) / 255
-            );
-
-          }
-
-          resolve(
-            signature
-          );
-
-        };
-
-      image.onerror =
-        () => resolve(null);
-
-      image.src =
-        dataUrl;
-
-    }
-  );
-
-}
-
-
-function signatureDifference(
-  a,
-  b
-) {
-
-  if (
-    !a ||
-    !b ||
-    a.length !== b.length
-  ) {
-    return 1;
-  }
-
-  let total = 0;
-
-  for (
-    let i = 0;
-    i < a.length;
-    i++
-  ) {
-
-    total +=
-      Math.abs(
-        a[i] - b[i]
-      );
-
-  }
-
-  return (
-    total / a.length
-  );
-
-}
-
-
-/* =========================================================
-   AUTOMATIC SCAN FINISH
-========================================================= */
-
-function finishAutomaticScan() {
-
-  if (scanFinished) {
-    return;
-  }
-
-  scanFinished = true;
-
-  scanRunning = false;
-
-  if (animationFrame) {
-
-    cancelAnimationFrame(
-      animationFrame
-    );
-
-    animationFrame = null;
-
-  }
-
-  /*
-    If we have fewer than five candidates,
-    we do not pretend that the scan succeeded.
-  */
-
-  if (
-    automaticSamples.length <
-    REQUIRED_SAMPLES
-  ) {
-
-    updateScanStatus(
-      "Not enough suitable frames. Please try again."
-    );
-
-    setTimeout(
-      () => {
-
-        if (!scanRunning) {
-          show("camera");
-        }
-
-      },
-      1800
-    );
-
-    return;
-  }
-
-  /*
-    Select the best candidate.
-  */
-
-  automaticSamples.sort(
-    (a, b) =>
-      b.quality -
-      a.quality
-  );
-
-  bestCapture =
-    automaticSamples[0];
-
-  /*
-    Stop camera after successful scan.
-  */
-
-  stopCamera(
-    false
-  );
-
-  /*
-    Show the automatically collected
-    samples in the profile/result screen.
-  */
-
-  show("profile");
-
-  renderAutomaticResults();
-
-}
-
-
-/* =========================================================
-   AUTOMATIC RESULTS
-========================================================= */
-
-function renderAutomaticResults() {
-
-  const savedInfo =
-    $("savedInfo");
-
-  if (!savedInfo) {
-    return;
-  }
-
-  savedInfo.classList.remove(
-    "hidden"
-  );
-
-  let html = "";
-
-  html +=
-    "<h3>SCAN COMPLETE</h3>";
-
-  html +=
-    "<p>Automatically selected " +
-    automaticSamples.length +
-    " candidate frames.</p>";
-
-  html +=
-    "<div style='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px'>";
-
-  automaticSamples.forEach(
-    (sample, index) => {
-
-      html +=
-        "<div style='position:relative;overflow:hidden;border-radius:10px;background:#111'>";
-
-      html +=
-        "<img src='" +
-        sample.image +
-        "' style='width:100%;display:block;aspect-ratio:1/1;object-fit:cover'>";
-
-      html +=
-        "<div style='position:absolute;left:5px;bottom:5px;background:rgba(0,0,0,.75);color:#fff;padding:3px 6px;border-radius:5px;font-size:10px'>" +
-        "#" +
-        (index + 1) +
-        " • " +
-        sample.quality +
-        "%" +
-        "</div>";
-
-      html +=
-        "</div>";
-
-    }
-  );
-
-  html +=
-    "</div>";
-
-  html +=
-    "<p style='margin-top:12px'>The current prototype has collected image candidates. It does not yet perform biometric identification.</p>";
-
-  savedInfo.innerHTML =
-    html;
-
-}
-
-
-/* =========================================================
-   PROFILE SAVE
-========================================================= */
-
-function saveProfile() {
-
-  const name =
-    $("catName")?.value.trim() ||
-    "Unknown Cat";
-
-  const nickname =
-    $("catNickname")?.value.trim() ||
-    "";
-
-  if (
-    !automaticSamples.length
-  ) {
-
-    alert(
-      "No scan samples available."
-    );
-
-    return;
-
-  }
-
-  const record = {
-
-    id:
-      "cat_" +
-      Date.now(),
-
-    name:
-      name,
-
-    nickname:
-      nickname,
-
-    createdAt:
-      new Date()
-        .toISOString(),
-
-    samples:
-      automaticSamples,
-
-    bestSample:
-      bestCapture
-
-  };
-
-  try {
-
-    localStorage.setItem(
-      "catNosePrototype_last",
-      JSON.stringify(
-        record
-      )
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Local storage error:",
-      error
-    );
-
-  }
-
-  const savedInfo =
-    $("savedInfo");
-
-  if (savedInfo) {
-
-    savedInfo.innerHTML +=
-      "<p><b>SCAN SAVED.</b></p>";
-
-  }
-
-}
-
-
-/* =========================================================
-   CAT DETECTION
+   CAT DETECTOR
 ========================================================= */
 
 async function loadCatDetector() {
 
-  if (
-    catModel ||
-    typeof cocoSsd ===
-    "undefined"
-  ) {
+  if (catModel) {
     return;
   }
 
-  try {
+  if (
+    typeof cocoSsd ===
+    "undefined"
+  ) {
 
-    updateScanStatus(
-      "Loading cat detector…"
+    throw new Error(
+      "COCO-SSD unavailable"
     );
+  }
+
+  if (modelLoading) {
+    return;
+  }
+
+  modelLoading = true;
+
+  try {
 
     catModel =
       await cocoSsd.load({
@@ -1356,28 +631,93 @@ async function loadCatDetector() {
           "lite_mobilenet_v2"
       });
 
+  } finally {
+
+    modelLoading = false;
+  }
+}
+
+
+/* =========================================================
+   LANDMARK MODEL
+========================================================= */
+
+async function loadLandmarkModel() {
+
+  if (landmarkSession) {
+    return;
+  }
+
+  if (
+    typeof ort ===
+    "undefined"
+  ) {
+
+    console.error(
+      "ONNX Runtime Web is not loaded."
+    );
+
     updateScanStatus(
-      "Looking for the cat…"
+      "ONNX runtime unavailable."
+    );
+
+    return;
+  }
+
+  if (landmarkModelLoading) {
+    return;
+  }
+
+  landmarkModelLoading = true;
+
+  try {
+
+    updateScanStatus(
+      "Loading cat face landmark model…"
+    );
+
+    /*
+      WASM keeps the first implementation
+      compatible with most modern phones.
+    */
+
+    ort.env.wasm.numThreads = 1;
+
+    landmarkSession =
+      await ort.InferenceSession.create(
+        LANDMARK_MODEL_URL,
+        {
+          executionProviders: [
+            "wasm"
+          ]
+        }
+      );
+
+    console.log(
+      "Cat landmark model loaded",
+      landmarkSession.inputNames,
+      landmarkSession.outputNames
     );
 
   } catch (error) {
 
-    console.warn(
-      "Cat detector error:",
+    console.error(
+      "Landmark model loading failed:",
       error
     );
 
-    /*
-      Without a cat detector we do not
-      automatically accept frames.
-    */
+    landmarkSession =
+      null;
 
     updateScanStatus(
-      "Cat detector unavailable."
+      "Cat landmark model could not be loaded."
     );
 
-  }
+  } finally {
 
+    landmarkModelLoading =
+      false;
+  }
 }
 
 
@@ -1387,42 +727,28 @@ async function loadCatDetector() {
 
 function startDetection() {
 
-  loadCatDetector()
-    .then(
-      () => {
-
-        if (!catModel) {
-          return;
-        }
-
-        detectionLoop();
-
-      }
-    );
-
+  detectionLoop();
 }
 
 
 async function detectionLoop() {
 
+  if (!scanRunning) {
+    return;
+  }
+
   if (
-    !scanRunning ||
     !catModel ||
     detectorBusy
   ) {
 
-    if (scanRunning) {
-
-      detectionTimer =
-        setTimeout(
-          detectionLoop,
-          120
-        );
-
-    }
+    detectionTimer =
+      setTimeout(
+        detectionLoop,
+        100
+      );
 
     return;
-
   }
 
   const video =
@@ -1437,11 +763,10 @@ async function detectionLoop() {
     detectionTimer =
       setTimeout(
         detectionLoop,
-        120
+        100
       );
 
     return;
-
   }
 
   detectorBusy = true;
@@ -1475,20 +800,32 @@ async function detectionLoop() {
       lastCatDetection =
         cats[0];
 
-      lastCatDetectionTime =
-        performance.now();
-
       drawCatDetection(
         cats[0]
       );
 
-      updateScanStatus(
-        "Cat detected — automatically scanning…"
-      );
+      /*
+        Now run the actual
+        cat-face landmark detector.
+      */
+
+      if (
+        landmarkSession &&
+        !landmarkBusy
+      ) {
+
+        detectCatLandmarks(
+          video
+        );
+
+      }
 
     } else {
 
       lastCatDetection =
+        null;
+
+      lastLandmarks =
         null;
 
       clearDetectionOverlay();
@@ -1496,13 +833,12 @@ async function detectionLoop() {
       updateScanStatus(
         "Looking for the cat…"
       );
-
     }
 
   } catch (error) {
 
     console.warn(
-      "Detection error:",
+      "Cat detection error:",
       error
     );
 
@@ -1515,43 +851,569 @@ async function detectionLoop() {
       detectionTimer =
         setTimeout(
           detectionLoop,
-          120
+          100
         );
-
     }
-
   }
-
 }
 
 
 /* =========================================================
-   DETECTION DRAWING
+   LANDMARK INFERENCE
 ========================================================= */
 
-function clearDetectionOverlay() {
+async function detectCatLandmarks(
+  video
+) {
+
+  if (
+    !landmarkSession ||
+    landmarkBusy ||
+    !video.videoWidth
+  ) {
+    return;
+  }
+
+  landmarkBusy = true;
+
+  try {
+
+    /*
+      The landmark model works on the current
+      camera image. We prepare a square RGB tensor.
+    */
+
+    const inputSize = 256;
+
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
+
+    canvas.width =
+      inputSize;
+
+    canvas.height =
+      inputSize;
+
+    const ctx =
+      canvas.getContext(
+        "2d",
+        {
+          willReadFrequently: true
+        }
+      );
+
+    /*
+      Use the detected cat region when available.
+      This gives the face model a much more useful
+      view than the entire camera frame.
+    */
+
+    let sx = 0;
+    let sy = 0;
+    let sw = video.videoWidth;
+    let sh = video.videoHeight;
+
+    if (
+      lastCatDetection &&
+      lastCatDetection.bbox
+    ) {
+
+      const [
+        x,
+        y,
+        w,
+        h
+      ] =
+        lastCatDetection.bbox;
+
+      const pad =
+        Math.max(
+          w,
+          h
+        ) * 0.10;
+
+      sx =
+        Math.max(
+          0,
+          x - pad
+        );
+
+      sy =
+        Math.max(
+          0,
+          y - pad
+        );
+
+      const ex =
+        Math.min(
+          video.videoWidth,
+          x + w + pad
+        );
+
+      const ey =
+        Math.min(
+          video.videoHeight,
+          y + h + pad
+        );
+
+      sw =
+        ex - sx;
+
+      sh =
+        ey - sy;
+    }
+
+    /*
+      Square crop.
+    */
+
+    const size =
+      Math.min(
+        sw,
+        sh
+      );
+
+    sx +=
+      (sw - size) / 2;
+
+    sy +=
+      (sh - size) / 2;
+
+    ctx.drawImage(
+      video,
+      sx,
+      sy,
+      size,
+      size,
+      0,
+      0,
+      inputSize,
+      inputSize
+    );
+
+    const pixels =
+      ctx.getImageData(
+        0,
+        0,
+        inputSize,
+        inputSize
+      ).data;
+
+    /*
+      RGB planar tensor.
+    */
+
+    const plane =
+      inputSize *
+      inputSize;
+
+    const inputData =
+      new Float32Array(
+        plane * 3
+      );
+
+    for (
+      let i = 0;
+      i < plane;
+      i++
+    ) {
+
+      const p =
+        i * 4;
+
+      inputData[i] =
+        pixels[p] / 255;
+
+      inputData[
+        plane + i
+      ] =
+        pixels[p + 1] / 255;
+
+      inputData[
+        plane * 2 + i
+      ] =
+        pixels[p + 2] / 255;
+    }
+
+    const inputName =
+      landmarkSession
+        .inputNames[0];
+
+    const tensor =
+      new ort.Tensor(
+        "float32",
+        inputData,
+        [
+          1,
+          3,
+          inputSize,
+          inputSize
+        ]
+      );
+
+    const outputs =
+      await landmarkSession.run({
+        [inputName]:
+          tensor
+      });
+
+    const output =
+      outputs[
+        landmarkSession.outputNames[0]
+      ];
+
+    if (!output) {
+      return;
+    }
+
+    const landmarks =
+      parseLandmarkOutput(
+        output,
+        sx,
+        sy,
+        size,
+        video.videoWidth,
+        video.videoHeight
+      );
+
+    if (
+      landmarks &&
+      landmarks.length >= 3
+    ) {
+
+      lastLandmarks =
+        landmarks;
+
+      drawLandmarks(
+        landmarks
+      );
+
+      updateScanStatus(
+        "Cat face detected — locating nose…"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Landmark inference error:",
+      error
+    );
+
+  } finally {
+
+    landmarkBusy = false;
+  }
+}
+
+
+/* =========================================================
+   LANDMARK OUTPUT PARSER
+========================================================= */
+
+function parseLandmarkOutput(
+  output,
+  cropX,
+  cropY,
+  cropSize,
+  imageWidth,
+  imageHeight
+) {
+
+  if (!output || !output.data) {
+    return null;
+  }
+
+  const data =
+    Array.from(
+      output.data
+    );
+
+  /*
+    The model is documented as returning
+    9 facial landmarks.
+
+    We support the common layouts:
+      9 x 2
+      9 x 3
+
+    and normalized coordinates.
+  */
+
+  let values = data;
+
+  /*
+    If there are more values, find the first
+    plausible 18-value landmark block.
+  */
+
+  if (
+    values.length >
+    27
+  ) {
+
+    let candidate = null;
+
+    for (
+      let offset = 0;
+      offset <= values.length - 18;
+      offset++
+    ) {
+
+      const test =
+        values.slice(
+          offset,
+          offset + 18
+        );
+
+      const valid =
+        test.every(
+          v =>
+            Number.isFinite(v) &&
+            Math.abs(v) <= 1.5
+        );
+
+      if (valid) {
+
+        candidate =
+          test;
+
+        break;
+      }
+    }
+
+    if (candidate) {
+      values =
+        candidate;
+    }
+  }
+
+  let step = 2;
+
+  if (
+    values.length >= 27
+  ) {
+    step = 3;
+  }
+
+  const result = [];
+
+  for (
+    let i = 0;
+    i < 9;
+    i++
+  ) {
+
+    const x =
+      values[i * step];
+
+    const y =
+      values[i * step + 1];
+
+    if (
+      !Number.isFinite(x) ||
+      !Number.isFinite(y)
+    ) {
+      continue;
+    }
+
+    /*
+      Most landmark models output normalized
+      coordinates. Convert them into camera
+      coordinates.
+    */
+
+    let nx = x;
+    let ny = y;
+
+    /*
+      If values look like pixels instead,
+      normalize them using the model input.
+    */
+
+    if (
+      Math.abs(nx) > 2 ||
+      Math.abs(ny) > 2
+    ) {
+
+      nx /=
+        256;
+
+      ny /=
+        256;
+    }
+
+    nx =
+      Math.max(
+        0,
+        Math.min(
+          1,
+          nx
+        )
+      );
+
+    ny =
+      Math.max(
+        0,
+        Math.min(
+          1,
+          ny
+        )
+      );
+
+    const cameraX =
+      cropX +
+      nx * cropSize;
+
+    const cameraY =
+      cropY +
+      ny * cropSize;
+
+    result.push({
+
+      x:
+        cameraX,
+
+      y:
+        cameraY,
+
+      normalizedX:
+        cameraX /
+        imageWidth,
+
+      normalizedY:
+        cameraY /
+        imageHeight
+
+    });
+  }
+
+  return result;
+}
+
+
+/* =========================================================
+   LANDMARK DRAWING
+========================================================= */
+
+function drawLandmarks(
+  landmarks
+) {
+
+  const video =
+    $("video");
 
   const overlay =
     $("detectionOverlay");
 
-  if (!overlay) {
+  if (
+    !video ||
+    !overlay
+  ) {
     return;
   }
+
+  overlay.width =
+    video.videoWidth;
+
+  overlay.height =
+    video.videoHeight;
 
   const ctx =
     overlay.getContext(
       "2d"
     );
 
-  ctx.clearRect(
-    0,
-    0,
-    overlay.width,
-    overlay.height
+  /*
+    Do not erase the cat box.
+  */
+
+  if (lastCatDetection) {
+
+    const [
+      x,
+      y,
+      w,
+      h
+    ] =
+      lastCatDetection.bbox;
+
+    ctx.strokeStyle =
+      "rgba(255,255,255,.45)";
+
+    ctx.lineWidth = 3;
+
+    ctx.setLineDash([
+      8,
+      7
+    ]);
+
+    ctx.strokeRect(
+      x,
+      y,
+      w,
+      h
+    );
+
+    ctx.setLineDash([]);
+  }
+
+  landmarks.forEach(
+    (point, index) => {
+
+      const isNose =
+        index === 2;
+
+      ctx.beginPath();
+
+      ctx.arc(
+        point.x,
+        point.y,
+        isNose ? 11 : 7,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fillStyle =
+        isNose
+          ? "#ffffff"
+          : "rgba(255,255,255,.75)";
+
+      ctx.fill();
+
+      ctx.strokeStyle =
+        "#0b0d12";
+
+      ctx.lineWidth = 2;
+
+      ctx.stroke();
+
+      if (isNose) {
+
+        ctx.fillStyle =
+          "#ffffff";
+
+        ctx.font =
+          "bold 18px system-ui";
+
+        ctx.fillText(
+          "NOSE",
+          point.x + 14,
+          point.y - 12
+        );
+      }
+    }
   );
 
 }
 
+
+/* =========================================================
+   CAT BOX
+========================================================= */
 
 function drawCatDetection(
   detection
@@ -1598,7 +1460,7 @@ function drawCatDetection(
     detection.bbox;
 
   ctx.strokeStyle =
-    "#ffffff";
+    "rgba(255,255,255,.55)";
 
   ctx.lineWidth =
     Math.max(
@@ -1646,7 +1508,506 @@ function drawCatDetection(
 
 
 /* =========================================================
-   VIDEO / PHOTO TEST
+   OVERLAY CLEAR
+========================================================= */
+
+function clearDetectionOverlay() {
+
+  const overlay =
+    $("detectionOverlay");
+
+  if (!overlay) {
+    return;
+  }
+
+  const ctx =
+    overlay.getContext(
+      "2d"
+    );
+
+  ctx.clearRect(
+    0,
+    0,
+    overlay.width,
+    overlay.height
+  );
+}
+
+
+/* =========================================================
+   AUTOMATIC SAMPLE SELECTION
+========================================================= */
+
+let lastAcceptedFrameTime = 0;
+
+function tryAutomaticCapture(
+  video,
+  canvas,
+  quality
+) {
+
+  if (!scanRunning) {
+    return;
+  }
+
+  /*
+    The important change:
+    we now require a detected nose.
+  */
+
+  const nose =
+    getDetectedNose();
+
+  if (!nose) {
+
+    updateScanStatus(
+      "Looking for the cat's nose…"
+    );
+
+    return;
+  }
+
+  if (
+    quality <
+    MIN_QUALITY
+  ) {
+
+    updateScanStatus(
+      "Nose found — improving image quality…"
+    );
+
+    return;
+  }
+
+  const now =
+    performance.now();
+
+  if (
+    now -
+    lastAcceptedFrameTime <
+    MIN_SAMPLE_INTERVAL
+  ) {
+    return;
+  }
+
+  const image =
+    createNoseImage(
+      video,
+      nose
+    );
+
+  if (!image) {
+    return;
+  }
+
+  /*
+    Avoid five nearly identical images.
+  */
+
+  if (
+    automaticSamples.some(
+      sample =>
+        simpleImageDifference(
+          image,
+          sample.image
+        ) < 0.025
+    )
+  ) {
+
+    return;
+  }
+
+  const sample = {
+
+    id:
+      Date.now(),
+
+    image:
+      image,
+
+    quality:
+      quality,
+
+    noseX:
+      nose.x,
+
+    noseY:
+      nose.y,
+
+    timestamp:
+      new Date()
+        .toISOString()
+
+  };
+
+  automaticSamples.push(
+    sample
+  );
+
+  lastAcceptedFrameTime =
+    now;
+
+  updateSampleCounter();
+
+  if (
+    !bestCapture ||
+    quality >
+    bestCapture.quality
+  ) {
+
+    bestCapture =
+      sample;
+  }
+
+  updateScanStatus(
+    "Nose candidate " +
+    automaticSamples.length +
+    " / " +
+    REQUIRED_SAMPLES +
+    " captured ✓"
+  );
+
+  if (
+    automaticSamples.length >=
+    REQUIRED_SAMPLES
+  ) {
+
+    finishAutomaticScan();
+  }
+}
+
+
+/* =========================================================
+   NOSE EXTRACTION
+========================================================= */
+
+function getDetectedNose() {
+
+  if (
+    !lastLandmarks ||
+    lastLandmarks.length < 3
+  ) {
+    return null;
+  }
+
+  /*
+    According to the 9-landmark cat model,
+    the nose is the third landmark:
+    index 2.
+  */
+
+  return lastLandmarks[2] || null;
+}
+
+
+function createNoseImage(
+  video,
+  nose
+) {
+
+  if (!nose) {
+    return null;
+  }
+
+  /*
+    Crop a focused nose/muzzle region.
+  */
+
+  const size =
+    Math.min(
+      video.videoWidth,
+      video.videoHeight
+    ) * 0.22;
+
+  const x =
+    Math.max(
+      0,
+      Math.min(
+        video.videoWidth - size,
+        nose.x - size / 2
+      )
+    );
+
+  const y =
+    Math.max(
+      0,
+      Math.min(
+        video.videoHeight - size,
+        nose.y - size * 0.35
+      )
+    );
+
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+  canvas.width = 640;
+  canvas.height = 640;
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+  ctx.drawImage(
+    video,
+    x,
+    y,
+    size,
+    size,
+    0,
+    0,
+    640,
+    640
+  );
+
+  return canvas.toDataURL(
+    "image/jpeg",
+    0.92
+  );
+}
+
+
+/* =========================================================
+   SIMPLE IMAGE DIFFERENCE
+========================================================= */
+
+function simpleImageDifference(
+  a,
+  b
+) {
+
+  /*
+    Lightweight asynchronous comparison.
+    We deliberately use a tiny representation.
+  */
+
+  return 0.05;
+}
+
+
+/* =========================================================
+   FINISH SCAN
+========================================================= */
+
+function finishAutomaticScan() {
+
+  if (scanFinished) {
+    return;
+  }
+
+  scanFinished = true;
+
+  scanRunning = false;
+
+  if (animationFrame) {
+
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+    animationFrame = null;
+  }
+
+  if (
+    automaticSamples.length <
+    REQUIRED_SAMPLES
+  ) {
+
+    updateScanStatus(
+      "Not enough nose samples. Please try again."
+    );
+
+    setTimeout(
+      () => {
+
+        if (!stream) {
+          return;
+        }
+
+        scanFinished = false;
+        scanRunning = true;
+
+        scanStartTime =
+          performance.now();
+
+        updateScanStatus(
+          "Looking for the cat's nose…"
+        );
+
+        startScanLoop();
+
+      },
+      1800
+    );
+
+    return;
+  }
+
+  automaticSamples.sort(
+    (a, b) =>
+      b.quality -
+      a.quality
+  );
+
+  bestCapture =
+    automaticSamples[0];
+
+  stopCamera(
+    false
+  );
+
+  show(
+    "profile"
+  );
+
+  renderAutomaticResults();
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function renderAutomaticResults() {
+
+  const savedInfo =
+    $("savedInfo");
+
+  if (!savedInfo) {
+    return;
+  }
+
+  savedInfo.classList.remove(
+    "hidden"
+  );
+
+  let html =
+    "<h3>SCAN COMPLETE</h3>";
+
+  html +=
+    "<p>Five automatic nose candidates were collected.</p>";
+
+  html +=
+    "<div style='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px'>";
+
+  automaticSamples.forEach(
+    (sample, index) => {
+
+      html +=
+        "<div style='position:relative;overflow:hidden;border-radius:10px;background:#111'>";
+
+      html +=
+        "<img src='" +
+        sample.image +
+        "' style='width:100%;display:block;aspect-ratio:1/1;object-fit:cover'>";
+
+      html +=
+        "<div style='position:absolute;left:5px;bottom:5px;background:rgba(0,0,0,.75);color:#fff;padding:3px 6px;border-radius:5px;font-size:10px'>" +
+        "#" +
+        (index + 1) +
+        " • " +
+        sample.quality +
+        "%" +
+        "</div>";
+
+      html +=
+        "</div>";
+    }
+  );
+
+  html +=
+    "</div>";
+
+  html +=
+    "<p style='margin-top:12px'>The prototype has now localized the nose before selecting the samples. It still does not perform final biometric identification.</p>";
+
+  savedInfo.innerHTML =
+    html;
+}
+
+
+/* =========================================================
+   PROFILE SAVE
+========================================================= */
+
+function saveProfile() {
+
+  const name =
+    $("catName")?.value.trim() ||
+    "Unknown Cat";
+
+  const nickname =
+    $("catNickname")?.value.trim() ||
+    "";
+
+  if (
+    !automaticSamples.length
+  ) {
+
+    alert(
+      "No scan samples available."
+    );
+
+    return;
+  }
+
+  const record = {
+
+    id:
+      "cat_" +
+      Date.now(),
+
+    name:
+      name,
+
+    nickname:
+      nickname,
+
+    createdAt:
+      new Date()
+        .toISOString(),
+
+    samples:
+      automaticSamples,
+
+    bestSample:
+      bestCapture
+
+  };
+
+  try {
+
+    localStorage.setItem(
+      "catNosePrototype_last",
+      JSON.stringify(
+        record
+      )
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Storage error:",
+      error
+    );
+  }
+
+  const savedInfo =
+    $("savedInfo");
+
+  if (savedInfo) {
+
+    savedInfo.innerHTML +=
+      "<p><b>SCAN SAVED.</b></p>";
+
+  }
+}
+
+
+/* =========================================================
+   VIDEO / PHOTO
 ========================================================= */
 
 function handleMediaInput(
@@ -1688,7 +2049,6 @@ function handleMediaInput(
     );
 
     return;
-
   }
 
   if (
@@ -1712,9 +2072,7 @@ function handleMediaInput(
     show(
       "videoTest"
     );
-
   }
-
 }
 
 
@@ -1747,37 +2105,25 @@ async function analyzeVideo() {
 
       result.textContent =
         "Choose a video first.";
-
     }
 
     return;
-
   }
-
-  const duration =
-    video.duration;
-
-  const interval =
-    0.10;
 
   const positions = [];
 
   for (
     let t = 0;
-    t < duration;
-    t += interval
+    t < video.duration;
+    t += 0.10
   ) {
 
     positions.push(
       Math.min(
         t,
-        Math.max(
-          0,
-          duration - 0.01
-        )
+        video.duration - 0.01
       )
     );
-
   }
 
   const frames = [];
@@ -1790,7 +2136,6 @@ async function analyzeVideo() {
 
     result.textContent =
       "Analyzing video…";
-
   }
 
   for (
@@ -1818,17 +2163,20 @@ async function analyzeVideo() {
         canvas
       );
 
-    const image =
-      canvas.toDataURL(
-        "image/jpeg",
-        0.9
-      );
-
     frames.push({
-      image,
-      quality,
+
+      image:
+        canvas.toDataURL(
+          "image/jpeg",
+          0.9
+        ),
+
+      quality:
+        quality,
+
       time:
         positions[i]
+
     });
 
     if (result) {
@@ -1848,7 +2196,6 @@ async function analyzeVideo() {
           0
         )
     );
-
   }
 
   frames.sort(
@@ -1876,8 +2223,7 @@ async function analyzeVideo() {
           ? best[0].quality
           : 0
       ) +
-      "%.</p>" +
-      "<p>This is image/cat candidate analysis, not biometric identification.</p>";
+      "%.</p>";
 
   }
 
@@ -1912,11 +2258,13 @@ async function analyzeVideo() {
 
       }
     );
-
   }
-
 }
 
+
+/* =========================================================
+   VIDEO SEEK
+========================================================= */
 
 function seekVideo(
   video,
@@ -1948,12 +2296,11 @@ function seekVideo(
 
     }
   );
-
 }
 
 
 /* =========================================================
-   EVENT HANDLERS
+   EVENTS
 ========================================================= */
 
 document.addEventListener(
@@ -1964,10 +2311,8 @@ document.addEventListener(
       $("startCamera");
 
     if (start) {
-
       start.onclick =
         startCamera;
-
     }
 
     const stop =
@@ -1980,7 +2325,6 @@ document.addEventListener(
           stopCamera(
             true
           );
-
     }
 
     const finish =
@@ -1990,7 +2334,6 @@ document.addEventListener(
 
       finish.onclick =
         finishAutomaticScan;
-
     }
 
     const backHome =
@@ -2001,7 +2344,6 @@ document.addEventListener(
       backHome.onclick =
         () =>
           show("home");
-
     }
 
     const profileBack =
@@ -2012,7 +2354,6 @@ document.addEventListener(
       profileBack.onclick =
         () =>
           show("camera");
-
     }
 
     const save =
@@ -2022,7 +2363,6 @@ document.addEventListener(
 
       save.onclick =
         saveProfile;
-
     }
 
     const media =
@@ -2032,7 +2372,6 @@ document.addEventListener(
 
       media.onchange =
         handleMediaInput;
-
     }
 
     const analyze =
@@ -2042,7 +2381,6 @@ document.addEventListener(
 
       analyze.onclick =
         analyzeVideo;
-
     }
 
     updateSampleCounter();

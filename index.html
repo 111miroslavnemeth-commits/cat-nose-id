@@ -2,8 +2,8 @@
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<meta name="theme-color" content="#070a19">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b19">
 
 <title>CAT NOSE ID</title>
 
@@ -13,53 +13,42 @@
 
 <style>
 
+/* =========================================================
+   BASE
+========================================================= */
+
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
-:root{
-    --bg:#070a19;
-    --panel:#111831;
-    --panel2:#151c3b;
-    --blue:#20a9ff;
-    --pink:#ff238f;
-    --pink2:#ff63b9;
-    --white:#ffffff;
-    --muted:#aeb7d1;
-    --green:#35f58a;
-    --red:#ff526d;
-    --yellow:#ffd34d;
+html{
+    min-height:100%;
+    background:#080b19;
 }
 
-html,
 body{
     margin:0;
-    min-height:100%;
+    min-height:100vh;
     background:
         radial-gradient(
-            circle at 15% 0%,
-            rgba(39,96,255,.20),
-            transparent 32%
+            circle at 10% 0%,
+            rgba(35,110,255,.18),
+            transparent 30%
         ),
         radial-gradient(
-            circle at 90% 35%,
-            rgba(255,20,145,.14),
-            transparent 35%
+            circle at 90% 20%,
+            rgba(255,32,145,.13),
+            transparent 32%
         ),
-        #070a19;
+        #080b19;
     color:#fff;
-    font-family:"Nunito",system-ui,sans-serif;
-}
-
-body{
-    min-height:100vh;
+    font-family:"Nunito",sans-serif;
 }
 
 button,
 input,
-textarea,
-select{
+textarea{
     font:inherit;
 }
 
@@ -68,22 +57,22 @@ button{
 }
 
 .app{
-    width:min(760px,100%);
+    width:min(980px,100%);
     min-height:100vh;
     margin:auto;
-    padding:17px 15px 45px;
+    padding:20px 18px 55px;
 }
 
 .screen{
     display:none;
-    animation:screenIn .25s ease;
+    animation:showScreen .22s ease;
 }
 
 .screen.active{
     display:block;
 }
 
-@keyframes screenIn{
+@keyframes showScreen{
     from{
         opacity:0;
         transform:translateY(8px);
@@ -95,100 +84,95 @@ button{
     }
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
 
-.header{
+/* =========================================================
+   TOP BRAND
+========================================================= */
+
+.brand{
     display:flex;
     align-items:center;
-    gap:13px;
+    gap:14px;
     margin-bottom:18px;
 }
 
-.header-logo{
-    width:64px;
-    height:64px;
+.brand-logo{
+    width:62px;
+    height:62px;
     flex:none;
     border-radius:21px;
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(255,40,157,.16),
-            transparent 68%
-        ),
-        #10162d;
-    border:1px solid rgba(48,194,255,.48);
+    background:#10152d;
+    border:1px solid #304779;
     display:grid;
     place-items:center;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
 }
 
-.header-logo svg{
-    width:50px;
-    height:50px;
+.brand-logo svg{
+    width:49px;
+    height:49px;
 }
 
-.eyebrow{
-    font-family:"Nunito",sans-serif;
+.brand-kicker{
     font-size:10px;
-    letter-spacing:.16em;
-    color:#8e9abc;
     font-weight:900;
-    text-transform:uppercase;
+    letter-spacing:.18em;
+    color:#7e8aaa;
 }
 
-.header h1{
+.brand-title{
+    margin:2px 0 0;
     font-family:"Baloo 2",sans-serif;
-    font-size:29px;
-    line-height:.9;
-    margin:4px 0 3px;
-    letter-spacing:-.03em;
+    font-size:28px;
     font-weight:800;
+    line-height:.9;
 }
 
-.header p{
-    margin:0;
-    color:#aab4cf;
+.brand-subtitle{
+    margin:4px 0 0;
+    color:#9ca8c5;
     font-size:12px;
     font-weight:700;
 }
 
-/* =====================================================
-   GENERAL
-===================================================== */
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .card{
+    position:relative;
     background:
         linear-gradient(
             145deg,
             rgba(24,31,61,.97),
             rgba(10,14,31,.98)
         );
-    border:1px solid rgba(82,108,180,.40);
-    border-radius:29px;
+    border:1px solid rgba(76,103,167,.40);
+    border-radius:30px;
     box-shadow:
-        0 20px 60px rgba(0,0,0,.30),
+        0 22px 65px rgba(0,0,0,.30),
         inset 0 1px 0 rgba(255,255,255,.025);
 }
 
-.section-card{
-    padding:20px;
+.section{
+    padding:22px;
     margin-top:16px;
 }
 
+h1,
 h2,
 h3{
     font-family:"Baloo 2",sans-serif;
-    font-weight:800;
 }
 
 h2{
-    font-size:27px;
+    font-size:28px;
     line-height:1;
 }
 
 h3{
-    font-size:20px;
+    font-size:21px;
 }
 
 p{
@@ -196,20 +180,283 @@ p{
 }
 
 .muted{
-    color:var(--muted);
+    color:#a3aec8;
 }
 
 .small{
     font-size:12px;
 }
 
-.hidden{
-    display:none!important;
+
+/* =========================================================
+   CAT DRAWINGS
+========================================================= */
+
+.cat-drawing{
+    width:100%;
+    height:auto;
+    display:block;
 }
 
-/* =====================================================
+.cat-drawing path,
+.cat-drawing circle,
+.cat-drawing line{
+    fill:none;
+    stroke:#fff;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.cat-drawing .pink{
+    stroke:#ff48ab;
+}
+
+.cat-drawing .blue{
+    stroke:#35bcff;
+}
+
+
+/* =========================================================
+   DECORATIVE CORNER CATS
+========================================================= */
+
+.corner-cat{
+    position:absolute;
+    pointer-events:none;
+    z-index:4;
+}
+
+.corner-cat svg{
+    width:100%;
+    height:100%;
+}
+
+.corner-cat path,
+.corner-cat circle{
+    fill:none;
+    stroke:#fff;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.corner-cat .pink{
+    stroke:#ff45a8;
+}
+
+.corner-cat-left{
+    width:135px;
+    height:135px;
+    left:-24px;
+    bottom:-27px;
+    transform:rotate(-8deg);
+}
+
+.corner-cat-right{
+    width:145px;
+    height:145px;
+    right:-24px;
+    top:-25px;
+    transform:rotate(8deg);
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+.home{
+    overflow:hidden;
+    padding:31px 22px 27px;
+    text-align:center;
+}
+
+.home:before{
+    content:"";
+    position:absolute;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    background:rgba(35,106,255,.06);
+    left:50%;
+    top:-230px;
+    transform:translateX(-50%);
+}
+
+.home-cat{
+    position:relative;
+    width:min(310px,82%);
+    margin:0 auto 3px;
+    z-index:2;
+}
+
+.home-title{
+    position:relative;
+    z-index:3;
+    margin:2px 0 8px;
+    font-size:38px;
+    font-weight:800;
+    line-height:.96;
+    letter-spacing:-.03em;
+}
+
+.home-title span{
+    color:#ff4eaa;
+}
+
+.home-description{
+    position:relative;
+    z-index:3;
+    max-width:640px;
+    margin:0 auto;
+    color:#b0bad2;
+    font-size:15px;
+}
+
+.home-description strong{
+    color:#ff68b8;
+}
+
+.home-joke{
+    position:relative;
+    z-index:3;
+    max-width:620px;
+    margin:14px auto 20px;
+    padding:12px 15px;
+    border:1px dashed #394a76;
+    border-radius:18px;
+    color:#aeb8d0;
+    font-size:12px;
+}
+
+.home-joke strong{
+    color:#fff;
+}
+
+
+/* =========================================================
+   REAL PAW BUTTON
+========================================================= */
+
+.paw-button{
+    position:relative;
+    display:block;
+    width:100%;
+    min-height:145px;
+    margin:12px 0;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:#fff;
+    transition:transform .12s ease;
+}
+
+.paw-button:active{
+    transform:scale(.985);
+}
+
+.paw-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:visible;
+    filter:
+        drop-shadow(0 10px 17px rgba(0,0,0,.32))
+        drop-shadow(0 0 16px rgba(255,37,146,.13));
+}
+
+.paw-svg .main{
+    fill:url(#pawPink);
+    stroke:#ff69b9;
+    stroke-width:2;
+}
+
+.paw-button.blue .paw-svg .main{
+    fill:url(#pawBlue);
+    stroke:#45c6ff;
+}
+
+.paw-content{
+    position:absolute;
+    inset:35px 20% 20px 20%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    z-index:2;
+    font-family:"Baloo 2",sans-serif;
+    font-size:22px;
+    line-height:.98;
+    font-weight:800;
+    letter-spacing:.01em;
+}
+
+.paw-content small{
+    display:block;
+    margin-top:5px;
+    font-family:"Nunito",sans-serif;
+    font-size:10px;
+    line-height:1.2;
+    font-weight:800;
+    color:rgba(255,255,255,.78);
+}
+
+.paw-button.blue .paw-content{
+    color:#fff;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+    margin-top:17px;
+    padding:20px;
+    border-radius:23px;
+    background:#10162e;
+    border:1px solid #293961;
+}
+
+.info h3{
+    margin:0 0 6px;
+}
+
+.info p{
+    margin:0;
+    color:#9faac3;
+    font-size:13px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:13px;
+    padding:13px 16px;
+    border-radius:18px;
+    background:#10162d;
+    border:1px solid #2d416d;
+    color:#aeb9d1;
+    font-size:12px;
+    font-weight:800;
+}
+
+.status-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#3df08c;
+    box-shadow:0 0 12px rgba(61,240,140,.8);
+}
+
+
+/* =========================================================
    BACK
-===================================================== */
+========================================================= */
 
 .back-row{
     display:flex;
@@ -218,238 +465,35 @@ p{
     margin-bottom:14px;
 }
 
-.back-button{
-    width:47px;
-    height:47px;
+.back{
+    width:48px;
+    height:48px;
+    flex:none;
     border-radius:17px;
-    border:1px solid #31406c;
     background:#11172e;
-    color:white;
-    font-size:27px;
-    font-weight:400;
-    font-family:"Nunito";
+    border:1px solid #31446f;
+    color:#fff;
+    font-size:28px;
+    line-height:1;
 }
 
-.back-row h2{
+.back-title h2{
     margin:0;
-    font-size:23px;
+    font-size:25px;
 }
 
-.back-row small{
-    color:#7683a6;
+.back-title small{
+    color:#7180a2;
     font-size:11px;
 }
 
-/* =====================================================
-   ONE LINE CAT
-===================================================== */
 
-.cat-line{
-    width:100%;
-    max-width:280px;
-    display:block;
-    margin:auto;
-}
+/* =========================================================
+   FORM
+========================================================= */
 
-.cat-line path,
-.cat-line circle,
-.cat-line line{
-    fill:none;
-    stroke:#fff;
-    stroke-width:4;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
-
-.cat-line .pink{
-    stroke:#ff45a9;
-}
-
-/* =====================================================
-   HOME
-===================================================== */
-
-.home-hero{
-    padding:26px 19px 24px;
-    text-align:center;
-    position:relative;
-    overflow:hidden;
-}
-
-.home-hero:before{
-    content:"";
-    position:absolute;
-    width:310px;
-    height:310px;
-    border-radius:50%;
-    background:rgba(39,104,255,.08);
-    filter:blur(12px);
-    top:-120px;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.home-cat{
-    position:relative;
-    margin:0 auto 5px;
-}
-
-.home-cat svg{
-    width:230px;
-    height:175px;
-}
-
-.home-title{
-    position:relative;
-    margin:0 0 7px;
-    font-family:"Baloo 2",sans-serif;
-    font-size:34px;
-    line-height:.98;
-    font-weight:800;
-    letter-spacing:-.035em;
-}
-
-.home-description{
-    position:relative;
-    max-width:570px;
-    margin:0 auto;
-    color:#b1bad2;
-    font-size:15px;
-    line-height:1.62;
-}
-
-.home-description strong{
-    color:#ff6abc;
-}
-
-.free-note{
-    position:relative;
-    max-width:560px;
-    margin:15px auto 17px;
-    color:#c4ccdf;
-    font-size:13px;
-    line-height:1.6;
-}
-
-/* =====================================================
-   PAW BUTTON
-===================================================== */
-
-.paw-button{
-    position:relative;
-    width:100%;
-    min-height:112px;
-    border:0;
-    background:transparent;
-    color:#fff;
-    padding:0;
-    margin:8px 0;
-    overflow:visible;
-    transition:transform .12s ease;
-}
-
-.paw-button:active{
-    transform:scale(.982);
-}
-
-.paw-button .paw-shape{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    filter:
-        drop-shadow(
-            0 7px 14px rgba(0,0,0,.32)
-        )
-        drop-shadow(
-            0 0 12px rgba(255,35,143,.16)
-        );
-}
-
-.paw-button .paw-shape path{
-    fill:url(#pinkPaw);
-    stroke:#ff71c1;
-    stroke-width:2;
-}
-
-.paw-button.blue .paw-shape path{
-    fill:url(#bluePaw);
-    stroke:#49c8ff;
-}
-
-.paw-content{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:11px;
-    padding:0 36px;
-    font-family:"Baloo 2",sans-serif;
-    font-size:18px;
-    line-height:1;
-    font-weight:800;
-    letter-spacing:.01em;
-    text-align:center;
-}
-
-.paw-content .mini-paw{
-    width:31px;
-    height:31px;
-    flex:none;
-}
-
-/* =====================================================
-   INFO
-===================================================== */
-
-.info-box{
-    margin-top:16px;
-    padding:20px;
-    border-radius:24px;
-    background:rgba(19,25,49,.91);
-    border:1px solid rgba(87,105,158,.34);
-}
-
-.info-box h3{
-    margin:0 0 6px;
-    font-size:21px;
-}
-
-.info-box p{
-    color:#9da8c2;
-    font-size:13px;
-    margin:0;
-}
-
-.status{
-    margin-top:14px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    border:1px solid rgba(67,102,176,.40);
-    border-radius:20px;
-    padding:14px 17px;
-    background:#10162c;
-    color:#b9c2d8;
-    font-size:12px;
-    font-weight:800;
-}
-
-.status-dot{
-    width:10px;
-    height:10px;
-    background:var(--green);
-    border-radius:50%;
-    box-shadow:0 0 12px rgba(53,245,138,.8);
-}
-
-/* =====================================================
-   FORMS
-===================================================== */
-
-.form-card{
-    padding:21px;
+.form{
+    padding:22px;
 }
 
 .field{
@@ -458,61 +502,137 @@ p{
 
 .field label{
     display:block;
-    font-size:12px;
-    color:#aeb8d1;
-    font-weight:900;
     margin-bottom:7px;
+    color:#abb6cf;
+    font-size:12px;
+    font-weight:900;
 }
 
 .field input,
-.field textarea,
-.field select{
+.field textarea{
     width:100%;
-    border:1px solid #34436e;
-    background:#0b1128;
-    color:#fff;
-    border-radius:15px;
     padding:14px 15px;
+    border-radius:15px;
+    border:1px solid #34466f;
+    background:#0b1127;
+    color:#fff;
     outline:none;
-    font-family:"Nunito",sans-serif;
-}
-
-.field select{
-    appearance:auto;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-    border-color:#2dbaff;
-    box-shadow:0 0 0 3px rgba(45,186,255,.08);
 }
 
 .field textarea{
-    min-height:110px;
+    min-height:105px;
     resize:vertical;
 }
 
-.photo-box{
-    border:1px dashed #4562a0;
-    border-radius:22px;
-    padding:15px;
-    background:#0b1127;
+.field input:focus,
+.field textarea:focus{
+    border-color:#2dbbff;
+    box-shadow:0 0 0 3px rgba(45,187,255,.08);
+}
+
+
+/* =========================================================
+   CAT LIST
+========================================================= */
+
+.cat-list{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
+.cat-empty{
+    padding:25px 15px;
     text-align:center;
+    color:#7684a5;
+    border:1px dashed #33476f;
+    border-radius:20px;
+}
+
+.cat-item{
+    display:flex;
+    align-items:center;
+    width:100%;
+    gap:13px;
+    padding:12px;
+    text-align:left;
+    color:#fff;
+    background:#0c1228;
+    border:1px solid #293c66;
+    border-radius:21px;
+}
+
+.cat-item:hover{
+    border-color:#2dbaff;
+}
+
+.cat-photo{
+    width:65px;
+    height:65px;
+    flex:none;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border-radius:20px;
+    background:#18213d;
+    border:1px solid #41547d;
+    font-size:31px;
+}
+
+.cat-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cat-info{
+    flex:1;
+    min-width:0;
+}
+
+.cat-info strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:19px;
+    line-height:1;
+}
+
+.cat-info span{
+    display:block;
+    margin-top:4px;
+    color:#7887a6;
+    font-size:11px;
+}
+
+.cat-arrow{
+    color:#6a7ca5;
+    font-size:27px;
+}
+
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+.photo-box{
+    padding:16px;
+    text-align:center;
+    border:1px dashed #3c5588;
+    border-radius:22px;
+    background:#0b1128;
 }
 
 .photo-preview{
-    width:110px;
-    height:110px;
-    border-radius:50%;
-    margin:0 auto 12px;
-    overflow:hidden;
-    border:2px solid #2faeff;
-    background:#171f3d;
+    width:120px;
+    height:120px;
+    margin:0 auto 13px;
     display:grid;
     place-items:center;
-    color:#66769e;
-    font-size:38px;
+    overflow:hidden;
+    border-radius:50%;
+    background:#18213d;
+    border:2px solid #35baff;
+    font-size:45px;
 }
 
 .photo-preview img{
@@ -525,87 +645,10 @@ p{
     display:none;
 }
 
-/* =====================================================
-   CAT LIST
-===================================================== */
 
-.cat-list{
-    display:grid;
-    gap:11px;
-    margin-top:15px;
-}
-
-.cat-list-empty{
-    text-align:center;
-    padding:22px 12px;
-    border-radius:20px;
-    border:1px dashed #33466f;
-    color:#7685a8;
-    font-size:13px;
-}
-
-.cat-list-item{
-    width:100%;
-    display:flex;
-    align-items:center;
-    gap:13px;
-    padding:12px;
-    border-radius:20px;
-    border:1px solid #2b3b63;
-    background:#0c1228;
-    color:white;
-    text-align:left;
-}
-
-.cat-list-item:hover{
-    border-color:#28aefc;
-}
-
-.cat-list-photo{
-    width:62px;
-    height:62px;
-    flex:none;
-    border-radius:18px;
-    overflow:hidden;
-    background:#18213e;
-    border:1px solid #40547f;
-    display:grid;
-    place-items:center;
-    font-size:28px;
-}
-
-.cat-list-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.cat-list-name{
-    flex:1;
-    min-width:0;
-}
-
-.cat-list-name strong{
-    display:block;
-    font-family:"Baloo 2",sans-serif;
-    font-size:18px;
-    line-height:1;
-    margin-bottom:4px;
-}
-
-.cat-list-name span{
-    color:#7887a8;
-    font-size:11px;
-}
-
-.cat-list-arrow{
-    color:#5f729d;
-    font-size:26px;
-}
-
-/* =====================================================
+/* =========================================================
    SCAN
-===================================================== */
+========================================================= */
 
 .scan-card{
     padding:12px;
@@ -613,12 +656,12 @@ p{
 
 .camera{
     position:relative;
+    overflow:hidden;
     width:100%;
     aspect-ratio:3/4;
-    border-radius:25px;
-    overflow:hidden;
-    background:#05060c;
-    border:1px solid #334268;
+    border-radius:26px;
+    background:#05070e;
+    border:1px solid #33466f;
 }
 
 .camera-placeholder{
@@ -627,70 +670,71 @@ p{
     display:grid;
     place-items:center;
     text-align:center;
-    padding:30px;
-    color:#8794b6;
+    padding:25px;
+    color:#8794b5;
     background:
         radial-gradient(
-            circle at center,
-            rgba(36,91,176,.12),
-            transparent 50%
-        ),
-        #070b18;
+            circle,
+            rgba(39,106,180,.13),
+            transparent 52%
+        );
+}
+
+.camera-placeholder-content{
+    max-width:300px;
+}
+
+.camera-placeholder svg{
+    width:150px;
+    max-width:65%;
 }
 
 .camera-placeholder strong{
     display:block;
     margin-top:8px;
     font-family:"Baloo 2",sans-serif;
-    font-size:20px;
-    color:#d8deed;
-}
-
-.camera-placeholder svg{
-    width:125px;
-    height:125px;
-    opacity:.75;
+    font-size:22px;
+    color:#dce2f1;
 }
 
 .scan-frame{
     position:absolute;
-    width:63%;
-    aspect-ratio:1;
     left:50%;
     top:48%;
+    width:min(58%,380px);
+    aspect-ratio:1;
     transform:translate(-50%,-50%);
-    border:3px solid #34bfff;
+    border:3px solid #30bcff;
     border-radius:50%;
     box-shadow:
-        0 0 0 999px rgba(0,0,0,.20),
-        0 0 35px rgba(24,184,255,.45);
+        0 0 0 999px rgba(0,0,0,.22),
+        0 0 32px rgba(48,188,255,.45);
 }
 
 .scan-frame:after{
     content:"";
     position:absolute;
-    width:16px;
-    height:16px;
+    width:15px;
+    height:15px;
+    right:16px;
+    top:13px;
     border-radius:50%;
-    background:#ff2b98;
-    top:14px;
-    right:18px;
-    box-shadow:0 0 15px #ff2b98;
+    background:#ff2e99;
+    box-shadow:0 0 14px #ff2e99;
 }
 
 .scan-label{
     position:absolute;
-    top:16%;
+    top:15%;
     left:50%;
     transform:translateX(-50%);
-    background:#090e20;
-    border:1px solid #426195;
     padding:8px 14px;
     border-radius:99px;
+    background:#090e20ee;
+    border:1px solid #415983;
+    font-size:10px;
+    font-weight:900;
     white-space:nowrap;
-    font-family:"Baloo 2",sans-serif;
-    font-size:12px;
-    font-weight:800;
 }
 
 .scan-message{
@@ -700,120 +744,135 @@ p{
     transform:translateX(-50%);
     width:max-content;
     max-width:90%;
-    background:rgba(7,11,27,.93);
-    border:1px solid #3a4b77;
-    padding:10px 15px;
+    padding:10px 14px;
     border-radius:99px;
-    font-size:12px;
-    font-weight:800;
+    background:#090e20ee;
+    border:1px solid #3c4e7a;
     text-align:center;
+    font-size:11px;
+    font-weight:900;
 }
 
 .scan-meter{
-    margin:14px 4px 5px;
+    margin:14px 5px 5px;
 }
 
-.meter-title{
+.meter-top{
     display:flex;
     justify-content:space-between;
+    color:#8390ad;
     font-size:10px;
-    color:#8f9bb8;
     font-weight:900;
 }
 
 .meter-track{
     height:8px;
-    background:#161d36;
-    border-radius:99px;
     margin-top:7px;
     overflow:hidden;
+    border-radius:99px;
+    background:#171e36;
 }
 
 .meter-fill{
-    height:100%;
     width:0;
+    height:100%;
+    border-radius:99px;
     background:linear-gradient(
         90deg,
         #20a9ff,
         #ff238f
     );
-    border-radius:99px;
-    transition:width .25s;
+    transition:width .2s;
 }
 
-/* =====================================================
-   EVIDENCE
-===================================================== */
 
-.evidence-grid{
+/* =========================================================
+   INCIDENTS
+========================================================= */
+
+.incident-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:9px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
     margin-top:15px;
 }
 
-.evidence{
-    aspect-ratio:1;
-    border-radius:17px;
-    overflow:hidden;
-    border:2px solid #27385f;
-    background:#101631;
-    position:relative;
-    cursor:pointer;
+.incident-option{
+    min-height:132px;
+    padding:15px;
+    text-align:left;
+    border-radius:22px;
+    border:1px solid #30446e;
+    background:#0b1228;
+    color:#fff;
+    transition:.15s;
 }
 
-.evidence.selected{
-    border-color:#ff2b98;
-    box-shadow:0 0 18px rgba(255,43,152,.35);
+.incident-option:hover{
+    transform:translateY(-1px);
+    border-color:#ff3da3;
 }
 
-.evidence-face{
+.incident-option.selected{
+    border-color:#ff3da3;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,43,153,.15),
+            #0b1228
+        );
+    box-shadow:0 0 22px rgba(255,43,153,.10);
+}
+
+.incident-art{
+    width:56px;
+    height:56px;
+    margin-bottom:6px;
+}
+
+.incident-art svg{
     width:100%;
     height:100%;
-    display:grid;
-    place-items:center;
-    font-size:43px;
 }
 
-.check{
-    position:absolute;
-    right:6px;
-    bottom:6px;
-    width:25px;
-    height:25px;
-    border-radius:50%;
-    background:#35f58a;
-    color:#07101b;
-    display:none;
-    place-items:center;
-    font-weight:950;
+.incident-option strong{
+    display:block;
+    font-family:"Baloo 2",sans-serif;
+    font-size:17px;
+    line-height:1;
 }
 
-.evidence.selected .check{
-    display:grid;
+.incident-option span{
+    display:block;
+    margin-top:5px;
+    color:#7786a6;
+    font-size:10px;
+    line-height:1.35;
 }
 
-/* =====================================================
-   PROFILE
-===================================================== */
 
-.profile-head{
-    padding:22px;
+/* =========================================================
+   CAT FILE
+========================================================= */
+
+.profile{
+    padding:25px 20px;
     text-align:center;
+    overflow:hidden;
 }
 
 .profile-photo{
-    width:125px;
-    height:125px;
-    margin:0 auto 13px;
-    border-radius:50%;
-    overflow:hidden;
-    border:3px solid #ff2c98;
-    box-shadow:0 0 25px rgba(255,44,152,.22);
-    background:#151f3c;
+    width:135px;
+    height:135px;
+    margin:0 auto 12px;
     display:grid;
     place-items:center;
-    font-size:47px;
+    overflow:hidden;
+    border-radius:50%;
+    background:#151e3c;
+    border:3px solid #ff2d99;
+    box-shadow:0 0 28px rgba(255,45,153,.20);
+    font-size:52px;
 }
 
 .profile-photo img{
@@ -822,88 +881,95 @@ p{
     object-fit:cover;
 }
 
-.profile-head h2{
-    font-size:31px;
-    margin:0 0 4px;
+.profile h2{
+    margin:0;
+    font-size:33px;
 }
 
 .badge{
     display:inline-block;
-    padding:7px 11px;
+    margin-top:5px;
+    padding:7px 12px;
     border-radius:99px;
+    background:#19244a;
+    border:1px solid #3d4f80;
+    color:#bcc9ea;
     font-size:10px;
     font-weight:900;
-    background:#1b2548;
-    color:#b9c9ef;
-    border:1px solid #3b4c7d;
 }
 
 .stats{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-top:18px;
+    margin-top:19px;
 }
 
 .stat{
-    background:#0c1228;
-    border:1px solid #293963;
-    border-radius:18px;
     padding:14px;
-    text-align:center;
+    border-radius:19px;
+    background:#0b1228;
+    border:1px solid #293c66;
 }
 
 .stat strong{
     display:block;
     font-family:"Baloo 2",sans-serif;
-    font-size:28px;
+    font-size:29px;
     line-height:1;
 }
 
 .stat span{
     display:block;
     margin-top:5px;
-    color:#8290af;
+    color:#7786a6;
     font-size:9px;
     font-weight:900;
     text-transform:uppercase;
 }
 
-/* =====================================================
-   INCIDENT CARDS
-===================================================== */
+.register-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
 
-.incidents{
-    margin-top:15px;
+.register-title h3{
+    margin:0;
+}
+
+.incident-list{
     display:grid;
     gap:9px;
+    margin-top:14px;
 }
 
 .incident-card{
     display:grid;
-    grid-template-columns:58px 1fr auto;
+    grid-template-columns:62px 1fr auto;
     align-items:center;
-    gap:12px;
-    min-height:76px;
-    padding:10px 12px;
+    gap:11px;
+    min-height:80px;
+    padding:10px;
     border-radius:21px;
-    background:#0b1229;
-    border:1px solid #293961;
+    background:#0b1228;
+    border:1px solid #293c66;
 }
 
 .incident-icon{
-    width:55px;
-    height:55px;
-    border-radius:18px;
+    width:58px;
+    height:58px;
     display:grid;
     place-items:center;
-    background:#171f3f;
-    border:1px solid #3b4d7c;
+    border-radius:18px;
+    background:#171f3d;
+    border:1px solid #3d507e;
 }
 
 .incident-icon svg{
-    width:38px;
-    height:38px;
+    width:42px;
+    height:42px;
 }
 
 .incident-text{
@@ -913,238 +979,286 @@ p{
 .incident-text strong{
     display:block;
     font-family:"Baloo 2",sans-serif;
-    font-size:17px;
-    line-height:1.05;
+    font-size:18px;
+    line-height:1;
 }
 
 .incident-text span{
     display:block;
-    margin-top:3px;
-    color:#7180a1;
+    margin-top:4px;
+    color:#7180a0;
     font-size:10px;
-    line-height:1.35;
 }
 
 .incident-count{
-    min-width:45px;
-    text-align:center;
+    min-width:42px;
+    color:#ff61b5;
     font-family:"Baloo 2",sans-serif;
-    font-size:22px;
-    color:#ff65b8;
+    font-size:23px;
+    text-align:center;
 }
 
-.incident-empty{
-    text-align:center;
-    padding:22px 12px;
+.no-incidents{
+    padding:25px 15px;
     border-radius:20px;
-    border:1px dashed #33466f;
-    color:#7685a8;
+    border:1px dashed #33476f;
+    color:#7785a5;
+    text-align:center;
     font-size:13px;
 }
 
-/* =====================================================
-   INCIDENT SELECT
-===================================================== */
 
-.incident-select-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-}
-
-.incident-option{
-    border:1px solid #304268;
-    background:#0c1228;
-    color:white;
-    border-radius:21px;
-    min-height:100px;
-    padding:12px;
-    text-align:left;
-    transition:.15s;
-}
-
-.incident-option:hover{
-    border-color:#ff3aa2;
-}
-
-.incident-option.active{
-    border-color:#ff3aa2;
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,35,143,.15),
-            #0c1228
-        );
-    box-shadow:
-        0 0 20px rgba(255,35,143,.10);
-}
-
-.incident-option-icon{
-    width:40px;
-    height:40px;
-    margin-bottom:5px;
-}
-
-.incident-option-icon svg{
-    width:100%;
-    height:100%;
-}
-
-.incident-option strong{
-    display:block;
-    font-family:"Baloo 2",sans-serif;
-    font-size:15px;
-    line-height:1;
-}
-
-.incident-option span{
-    display:block;
-    color:#7685a7;
-    font-size:9px;
-    margin-top:4px;
-}
-
-/* =====================================================
+/* =========================================================
    RESULT
-===================================================== */
+========================================================= */
 
-.result-card{
-    padding:26px 20px;
+.result{
+    padding:30px 20px;
     text-align:center;
 }
 
-.result-icon{
-    width:110px;
-    height:110px;
-    margin:0 auto 12px;
+.result-cat{
+    width:170px;
+    margin:0 auto 5px;
 }
 
-.result-card h2{
-    font-size:31px;
-    margin:0 0 7px;
+.result h2{
+    margin:0;
+    font-size:33px;
 }
 
 .confidence{
+    width:108px;
+    height:108px;
     margin:17px auto;
-    width:105px;
-    height:105px;
-    border-radius:50%;
-    border:7px solid #ff2797;
     display:grid;
     place-items:center;
+    border-radius:50%;
+    border:7px solid #ff2d99;
     font-family:"Baloo 2",sans-serif;
-    font-size:27px;
-    font-weight:800;
+    font-size:28px;
 }
 
-.result-note{
-    color:#aeb9d1;
-    line-height:1.6;
-    font-size:13px;
-}
 
-/* =====================================================
+/* =========================================================
    ERROR
-===================================================== */
+========================================================= */
 
-.error-box{
-    padding:26px 21px;
+.error{
+    padding:30px 20px;
     text-align:center;
 }
 
-.error-symbol{
+.error-icon{
     font-size:55px;
-    margin-bottom:7px;
 }
 
-.error-box h2{
-    color:#ff6680;
-    margin-bottom:8px;
+.error h2{
+    color:#ff6782;
+    margin:5px 0;
 }
 
-.error-box p{
-    color:#aab4cb;
-}
 
-/* =====================================================
+/* =========================================================
    FOOTER
-===================================================== */
+========================================================= */
 
 .footer{
+    padding:25px 10px 0;
     text-align:center;
-    padding:26px 10px 0;
-    color:#5d6885;
+    color:#58647f;
     font-size:10px;
 }
 
 .footer strong{
-    color:#8a95b0;
+    color:#8290ac;
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
 
-@media(max-width:480px){
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(min-width:760px){
 
     .app{
-        padding:13px 12px 35px;
+        padding-top:30px;
     }
 
-    .header-logo{
-        width:56px;
-        height:56px;
+    .home{
+        padding:45px 70px 40px;
     }
 
-    .header h1{
-        font-size:25px;
-    }
-
-    .home-hero{
-        padding:23px 13px 20px;
+    .home-cat{
+        width:330px;
     }
 
     .home-title{
-        font-size:29px;
+        font-size:48px;
+    }
+
+    .home-description{
+        font-size:17px;
+    }
+
+    .home-joke{
+        font-size:13px;
+    }
+
+    .paw-button{
+        min-height:170px;
+        max-width:760px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .paw-content{
+        font-size:25px;
+        inset:40px 22% 24px;
+    }
+
+    .paw-content small{
+        font-size:11px;
+    }
+
+    .corner-cat-left{
+        width:185px;
+        height:185px;
+        left:-32px;
+        bottom:-38px;
+    }
+
+    .corner-cat-right{
+        width:190px;
+        height:190px;
+        right:-32px;
+        top:-38px;
+    }
+
+    .incident-grid{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .incident-option{
+        min-height:160px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    .app{
+        padding:13px 11px 40px;
+    }
+
+    .brand-logo{
+        width:55px;
+        height:55px;
+    }
+
+    .brand-title{
+        font-size:25px;
+    }
+
+    .home{
+        padding:24px 13px 22px;
+    }
+
+    .home-title{
+        font-size:32px;
     }
 
     .home-description{
         font-size:14px;
     }
 
+    .corner-cat-left{
+        width:105px;
+        height:105px;
+        left:-22px;
+        bottom:-21px;
+    }
+
+    .corner-cat-right{
+        width:110px;
+        height:110px;
+        right:-22px;
+        top:-20px;
+    }
+
     .paw-button{
-        min-height:102px;
+        min-height:125px;
     }
 
     .paw-content{
-        font-size:16px;
-        padding:0 31px;
+        inset:31px 21% 17px;
+        font-size:18px;
     }
 
-    .evidence-grid{
-        grid-template-columns:repeat(2,1fr);
+    .paw-content small{
+        font-size:9px;
     }
 
-    .incident-select-grid{
+    .incident-grid{
         grid-template-columns:1fr 1fr;
     }
 
+    .incident-option{
+        min-height:132px;
+        padding:12px;
+    }
+
+    .incident-art{
+        width:48px;
+        height:48px;
+    }
+
+    .incident-option strong{
+        font-size:15px;
+    }
+
     .incident-card{
-        grid-template-columns:53px 1fr auto;
-        gap:9px;
+        grid-template-columns:55px 1fr auto;
     }
 
     .incident-icon{
-        width:51px;
-        height:51px;
+        width:52px;
+        height:52px;
     }
 
 }
 
-/* =====================================================
-   SVG ICON COLORS
-===================================================== */
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media(max-width:370px){
+
+    .paw-button{
+        min-height:115px;
+    }
+
+    .paw-content{
+        inset:29px 19% 15px;
+        font-size:15px;
+    }
+
+    .incident-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+/* =========================================================
+   ICON STYLES
+========================================================= */
 
 .icon-stroke{
     fill:none;
@@ -1156,7 +1270,7 @@ p{
 
 .icon-pink{
     fill:none;
-    stroke:#ff4cab;
+    stroke:#ff4baa;
     stroke-width:4;
     stroke-linecap:round;
     stroke-linejoin:round;
@@ -1164,7 +1278,7 @@ p{
 
 .icon-blue{
     fill:none;
-    stroke:#38baff;
+    stroke:#35baff;
     stroke-width:4;
     stroke-linecap:round;
     stroke-linejoin:round;
@@ -1185,6 +1299,7 @@ p{
 
 <div class="app">
 
+
 <!-- =====================================================
      SVG DEFINITIONS
 ===================================================== -->
@@ -1193,15 +1308,14 @@ p{
 
 <defs>
 
-<linearGradient id="pinkPaw" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#ff54b5"/>
-    <stop offset="55%" stop-color="#ff238f"/>
-    <stop offset="100%" stop-color="#e91580"/>
+<linearGradient id="pawPink" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ff59b7"/>
+    <stop offset="100%" stop-color="#e91582"/>
 </linearGradient>
 
-<linearGradient id="bluePaw" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#287dff"/>
-    <stop offset="100%" stop-color="#1744b8"/>
+<linearGradient id="pawBlue" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#2a91ff"/>
+    <stop offset="100%" stop-color="#1747bb"/>
 </linearGradient>
 
 </defs>
@@ -1210,19 +1324,19 @@ p{
 
 
 <!-- =====================================================
-     HEADER
+     BRAND
 ===================================================== -->
 
-<div class="header">
+<header class="brand">
 
-<div class="header-logo">
+<div class="brand-logo">
 
 <svg viewBox="0 0 100 100">
 
 <path
-d="M19 43 L18 18 L38 31
-Q50 23 62 31
-L82 18 L81 43"
+d="M20 45 L18 18 L39 31
+Q50 25 61 31
+L82 18 L80 45"
 fill="none"
 stroke="#fff"
 stroke-width="5"
@@ -1231,11 +1345,11 @@ stroke-linejoin="round"
 />
 
 <path
-d="M22 42
-Q50 24 78 42
+d="M22 43
+Q50 27 78 43
 L75 67
-Q70 83 50 86
-Q30 83 25 67Z"
+Q70 84 50 87
+Q30 84 25 67Z"
 fill="none"
 stroke="#fff"
 stroke-width="5"
@@ -1243,13 +1357,13 @@ stroke-linecap="round"
 stroke-linejoin="round"
 />
 
-<circle cx="39" cy="54" r="2.8" fill="#fff"/>
-<circle cx="61" cy="54" r="2.8" fill="#fff"/>
+<circle cx="39" cy="54" r="3" fill="#fff"/>
+<circle cx="61" cy="54" r="3" fill="#fff"/>
 
 <path
-d="M45 64 Q50 68 55 64"
+d="M44 64 Q50 69 56 64"
 fill="none"
-stroke="#ff45aa"
+stroke="#ff48aa"
 stroke-width="4"
 stroke-linecap="round"
 />
@@ -1260,21 +1374,21 @@ stroke-linecap="round"
 
 <div>
 
-<div class="eyebrow">
+<div class="brand-kicker">
 CAT NOSE ID
 </div>
 
-<h1>
+<div class="brand-title">
 CAT NOSE ID
-</h1>
+</div>
 
-<p>
-Najzbytočnejší biometrický systém na planéte.
-</p>
-
+<div class="brand-subtitle">
+Najzbytočnejší biometrický skener na planéte.
 </div>
 
 </div>
+
+</header>
 
 
 <!-- =====================================================
@@ -1283,87 +1397,32 @@ Najzbytočnejší biometrický systém na planéte.
 
 <section id="home" class="screen active">
 
-<div class="card home-hero">
+<div class="card home">
 
-<div class="home-cat">
 
-<svg viewBox="0 0 300 190">
+<!-- decorative cat left -->
 
-<!-- jednolinková veselá mačka -->
+<div class="corner-cat corner-cat-left">
 
-<path
-d="
-M92 91
-L82 45
-L112 63
-Q150 39 188 63
-L218 45
-L208 91
-Q217 111 203 137
-Q188 164 150 168
-Q112 164 97 137
-Q83 111 92 91
-Z"
-fill="none"
-stroke="#fff"
-stroke-width="5"
-stroke-linecap="round"
-stroke-linejoin="round"
-/>
-
-<circle
-cx="123"
-cy="103"
-r="5"
-fill="#fff"
-/>
-
-<circle
-cx="177"
-cy="103"
-r="5"
-fill="#fff"
-/>
+<svg viewBox="0 0 140 140">
 
 <path
-d="
-M139 121
-Q150 113
-161 121
-Q150 139
-139 121
-Z"
-fill="none"
-stroke="#ff4daa"
-stroke-width="4"
-stroke-linejoin="round"
+d="M36 85
+L31 48
+L54 61
+Q70 51 86 61
+L109 48
+L104 85
+Q105 110 70 119
+Q35 110 36 85Z"
 />
 
-<path
-d="M150 130 Q150 145 137 148"
-fill="none"
-stroke="#fff"
-stroke-width="4"
-stroke-linecap="round"
-/>
+<circle cx="54" cy="78" r="3"/>
+<circle cx="86" cy="78" r="3"/>
 
 <path
-d="M150 130 Q150 145 163 148"
-fill="none"
-stroke="#fff"
-stroke-width="4"
-stroke-linecap="round"
-/>
-
-<path
-d="M97 123 L59 113
-M97 135 L56 137
-M203 123 L241 113
-M203 135 L244 137"
-fill="none"
-stroke="#fff"
-stroke-width="3"
-stroke-linecap="round"
+class="pink"
+d="M62 91 Q70 98 78 91"
 />
 
 </svg>
@@ -1371,9 +1430,93 @@ stroke-linecap="round"
 </div>
 
 
-<h2 class="home-title">
-Kto je ten páchateľ?
-</h2>
+<!-- decorative cat right -->
+
+<div class="corner-cat corner-cat-right">
+
+<svg viewBox="0 0 140 140">
+
+<path
+d="M36 85
+L31 48
+L54 61
+Q70 51 86 61
+L109 48
+L104 85
+Q105 110 70 119
+Q35 110 36 85Z"
+/>
+
+<circle cx="54" cy="78" r="3"/>
+<circle cx="86" cy="78" r="3"/>
+
+<path
+class="pink"
+d="M62 91 Q70 98 78 91"
+/>
+
+</svg>
+
+</div>
+
+
+<!-- main cat -->
+
+<div class="home-cat">
+
+<svg
+class="cat-drawing"
+viewBox="0 0 300 220"
+>
+
+<path
+d="
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
+/>
+
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
+
+<path
+class="pink"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
+/>
+
+<path
+d="M150 141 Q150 154 137 158"
+class="cat-drawing"
+/>
+
+<path
+d="M150 141 Q150 154 163 158"
+/>
+
+<path
+d="
+M92 137 L47 126
+M94 150 L46 151
+M208 137 L253 126
+M206 150 L254 151
+"
+/>
+
+</svg>
+
+</div>
+
+
+<h1 class="home-title">
+KTO JE TEN <span>PÁCHATEĽ?</span>
+</h1>
 
 
 <p class="home-description">
@@ -1386,94 +1529,142 @@ pokúsiť sa zistiť, kto to je.
 </p>
 
 
-<p class="free-note">
+<div class="home-joke">
 
-Bez reklám. Bez platieb. Bez predplatného.
-Bez akéhokoľvek rozumného dôvodu túto aplikáciu používať.
-Presne tak, ako sme to plánovali. 🐾
+<strong>Upozornenie:</strong>
+Táto aplikácia nemá reklamy, nemá platby,
+nemá predplatné a nemá prakticky žiadny rozumný účel.
 
-</p>
+🐾
 
+</div>
+
+
+<!-- REAL PAW BUTTON -->
 
 <button
 class="paw-button"
+type="button"
 onclick="openScreen('scan')"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<!-- palm -->
+
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<!-- toe pads -->
+
+<ellipse class="main"
+cx="125" cy="38" rx="29" ry="24"/>
+
+<ellipse class="main"
+cx="205" cy="24" rx="30" ry="24"/>
+
+<ellipse class="main"
+cx="300" cy="21" rx="30" ry="24"/>
+
+<ellipse class="main"
+cx="395" cy="24" rx="30" ry="24"/>
+
+<ellipse class="main"
+cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 SKENOVAŤ MAČKU / PÁCHATEĽA
-</span>
+
+<div class="paw-content">
+
+IDENTIFIKOVAŤ
+MAČKU / PÁCHATEĽA
+
+<small>
+Nasmeruj kameru a nechaj nás vyšetrovať.
+</small>
+
+</div>
 
 </button>
 
 
 <button
 class="paw-button blue"
+type="button"
 onclick="openScreen('photoTest')"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-📷 TEST S FOTOGRAFIOU
-</span>
 
-</button>
+<div class="paw-content">
+
+TESTOVAŤ FOTOGRAFIU
+
+<small>
+Nemáš živého páchateľa? Nevadí.
+</small>
 
 </div>
 
+</button>
 
-<div class="info-box">
+
+<div class="info">
 
 <h3>
 🐱 Prečo táto aplikácia existuje?
@@ -1481,11 +1672,10 @@ C126 48 113 51 94 42Z"
 
 <p>
 
-Je vytvorená iba pre zábavu.
-Nemá reklamné bannery a nikdy ich mať nebude.
-Nemá platby a nikdy ich mať nebude.
-Je to jednoducho najzbytočnejší biometrický
-skener mačiek na planéte.
+Je vytvorená výhradne pre zábavu.
+Neobsahuje reklamné bannery a nikdy ich obsahovať nebude.
+Nemá žiadnu platobnú možnosť a nikdy ju mať nebude.
+Je to najzbytočnejší biometrický skener mačiek na planéte.
 
 </p>
 
@@ -1500,20 +1690,20 @@ CAT NOSE ID je pripravené na vyšetrovanie.
 
 </div>
 
+</div>
 
-<div class="card section-card">
 
-<h2>
+<!-- MY CATS -->
+
+<div class="card section">
+
+<h2 style="margin:0">
 Moje mačky 🐾
 </h2>
 
 <p class="muted">
-
-Registrovaní mačací páchatelia
-a ich trestné spisy.
-
+Registrovaní mačací páchatelia a ich CAT FILE.
 </p>
-
 
 <div
 id="catList"
@@ -1523,38 +1713,49 @@ class="cat-list"
 
 <button
 class="paw-button"
+type="button"
 onclick="openScreen('newCat')"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 PRIDAŤ MAČKU / PÁCHATEĽA
-</span>
+<div class="paw-content">
+
+PRIDAŤ MAČKU / PÁCHATEĽA
+
+</div>
 
 </button>
 
@@ -1572,20 +1773,21 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Nový páchateľ
 </h2>
 
 <small>
-Zaregistruj mačku do databázy
+Zaregistruj mačku do databázy.
 </small>
 
 </div>
@@ -1593,45 +1795,34 @@ Zaregistruj mačku do databázy
 </div>
 
 
-<div class="card form-card">
-
+<div class="card form">
 
 <svg
-class="cat-line"
+class="cat-drawing"
 viewBox="0 0 300 220"
+style="max-width:240px;margin:0 auto 8px"
 >
 
 <path
 d="
-M85 92
-L78 50
-L112 68
-Q150 48 188 68
-L222 50
-L215 92
-Q220 115 207 143
-Q190 184 150 190
-Q110 184 93 143
-Q80 115 85 92
-Z"
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
 />
 
-<circle cx="120" cy="115" r="5"/>
-<circle cx="180" cy="115" r="5"/>
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
 
 <path
 class="pink"
-d="
-M143 129
-Q150 122 157 129
-Q150 139 143 129Z"
-/>
-
-<path
-d="M98 130 L53 120
-M98 143 L51 146
-M202 130 L247 120
-M202 143 L249 146"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
 />
 
 </svg>
@@ -1645,6 +1836,7 @@ Meno mačky / páchateľa
 
 <input
 id="catName"
+type="text"
 placeholder="Napríklad Muro"
 />
 
@@ -1660,12 +1852,11 @@ Profilová fotografia
 <div class="photo-box">
 
 <div
-class="photo-preview"
 id="photoPreview"
+class="photo-preview"
 >
 🐱
 </div>
-
 
 <input
 id="catPhoto"
@@ -1673,43 +1864,51 @@ class="file-input"
 type="file"
 accept="image/*"
 onchange="previewCatPhoto(event)"
-/>
-
+>
 
 <button
 class="paw-button blue"
+type="button"
 onclick="document.getElementById('catPhoto').click()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-📷 PRIDAŤ FOTKU
-</span>
+<div class="paw-content">
+PRIDAŤ FOTOGRAFIU
+</div>
 
 </button>
 
@@ -1720,38 +1919,47 @@ C126 48 113 51 94 42Z"
 
 <button
 class="paw-button"
+type="button"
 onclick="saveCat()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 ULOŽIŤ MAČKU / PÁCHATEĽA
-</span>
+<div class="paw-content">
+ULOŽIŤ MAČKU / PÁCHATEĽA
+</div>
 
 </button>
 
@@ -1769,16 +1977,17 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
-Skenovanie páchateľa
+Skenovanie
 </h2>
 
 <small>
@@ -1796,50 +2005,44 @@ Mačka / páchateľ
 
 <div class="camera-placeholder">
 
-<div>
+<div class="camera-placeholder-content">
 
-<svg viewBox="0 0 300 220">
+<svg
+class="cat-drawing"
+viewBox="0 0 300 220"
+>
 
 <path
 d="
-M85 92
-L78 50
-L112 68
-Q150 48 188 68
-L222 50
-L215 92
-Q220 115 207 143
-Q190 184 150 190
-Q110 184 93 143
-Q80 115 85 92
-Z"
-fill="none"
-stroke="#fff"
-stroke-width="5"
-stroke-linecap="round"
-stroke-linejoin="round"
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
 />
 
-<circle cx="120" cy="115" r="5" fill="#fff"/>
-<circle cx="180" cy="115" r="5" fill="#fff"/>
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
 
 <path
-d="M140 130 Q150 120 160 130"
-fill="none"
-stroke="#ff45aa"
-stroke-width="5"
-stroke-linecap="round"
+class="pink"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
 />
 
 </svg>
 
 <strong>
-Hľadám mačku / páchateľa...
+HĽADÁM MAČKU / PÁCHATEĽA...
 </strong>
 
-<span class="small">
-Nasmeruj mačku do kruhu.
-A prosím, nech sa tentoraz spolupracuje.
+<span>
+Drž kameru stabilne.
+Páchateľ sa vraj ešte snaží utiecť.
 </span>
 
 </div>
@@ -1849,15 +2052,13 @@ A prosím, nech sa tentoraz spolupracuje.
 
 <div class="scan-frame"></div>
 
-
 <div class="scan-label">
 🐾 ZÓNA MAČKA / PÁCHATEĽ
 </div>
 
-
 <div
-class="scan-message"
 id="scanMessage"
+class="scan-message"
 >
 Drž kameru stabilne.
 </div>
@@ -1867,10 +2068,10 @@ Drž kameru stabilne.
 
 <div class="scan-meter">
 
-<div class="meter-title">
+<div class="meter-top">
 
 <span>
-DETEKCIA NOSA
+DETEKCIA
 </span>
 
 <span id="scanPercent">
@@ -1882,8 +2083,8 @@ DETEKCIA NOSA
 <div class="meter-track">
 
 <div
-class="meter-fill"
 id="scanMeter"
+class="meter-fill"
 ></div>
 
 </div>
@@ -1893,57 +2094,93 @@ id="scanMeter"
 </div>
 
 
-<div class="card info-box">
+<div class="card section">
 
-<h3>
-🐾 Ako na to?
+<div class="corner-cat corner-cat-right">
+
+<svg viewBox="0 0 140 140">
+
+<path
+d="M36 85
+L31 48
+L54 61
+Q70 51 86 61
+L109 48
+L104 85
+Q105 110 70 119
+Q35 110 36 85Z"
+/>
+
+<circle cx="54" cy="78" r="3"/>
+<circle cx="86" cy="78" r="3"/>
+
+<path
+class="pink"
+d="M62 91 Q70 98 78 91"
+/>
+
+</svg>
+
+</div>
+
+
+<h3 style="margin-top:0">
+Ako na to? 🐾
 </h3>
 
-<p>
+<p class="muted">
 
-Drž kameru stabilne a nasmeruj
-mačku / páchateľa do kruhu.
+Nasmeruj mačku / páchateľa do kruhu.
 Systém sa pokúsi nájsť nos,
-vybrať najlepší záber a následne
-páchateľa identifikovať.
+vybrať najlepší záber a porovnať
+ho s registrovanými profilmi.
 
 </p>
 
 
 <button
 class="paw-button"
+type="button"
 onclick="startDemoScan()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 SPUSTIŤ SKENOVANIE
-</span>
+<div class="paw-content">
+SPUSTIŤ SKENOVANIE
+</div>
 
 </button>
 
@@ -1961,20 +2198,21 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Test s fotografiou
 </h2>
 
 <small>
-Testovacie skenovanie
+Testovací režim
 </small>
 
 </div>
@@ -1982,16 +2220,46 @@ Testovacie skenovanie
 </div>
 
 
-<div class="card form-card">
+<div class="card form">
 
 <div class="photo-box">
 
+<svg
+class="cat-drawing"
+viewBox="0 0 300 220"
+style="max-width:220px;margin:auto"
+>
+
+<path
+d="
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
+/>
+
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
+
+<path
+class="pink"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
+/>
+
+</svg>
+
 <h3>
-📷 Vyber obrázok mačky
+📷 Vyber fotografiu mačky
 </h3>
 
 <p class="muted small">
-Ak práve nemáš živého páchateľa,
+Ak nemáš živého páchateľa,
 môžeme skúsiť fotografiu.
 </p>
 
@@ -2002,43 +2270,52 @@ class="file-input"
 type="file"
 accept="image/*"
 onchange="loadTestImage(event)"
-/>
+>
 
 
 <button
 class="paw-button blue"
+type="button"
 onclick="document.getElementById('testImage').click()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-📷 VYBRAŤ FOTOGRAFIU
-</span>
+<div class="paw-content">
+VYBRAŤ FOTOGRAFIU
+</div>
 
 </button>
 
@@ -2050,165 +2327,47 @@ C126 48 113 51 94 42Z"
 
 <button
 class="paw-button"
+type="button"
 onclick="runPhotoTest()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 ROZPOZNAŤ MAČKU / PÁCHATEĽA
-</span>
-
-</button>
-
+<div class="paw-content">
+ROZPOZNAŤ MAČKU / PÁCHATEĽA
 </div>
-
-</section>
-
-
-<!-- =====================================================
-     EVIDENCE
-===================================================== -->
-
-<section id="evidence" class="screen">
-
-<div class="back-row">
-
-<button
-class="back-button"
-onclick="openScreen('scan')"
->
-‹
-</button>
-
-<div>
-
-<h2>
-Dôkazový materiál
-</h2>
-
-<small>
-Vyber najlepšie zábery
-</small>
-
-</div>
-
-</div>
-
-
-<div class="card section-card">
-
-<div style="text-align:center">
-
-<div class="eyebrow">
-PÁCHATEĽ
-</div>
-
-<h2>
-Vyberieme dôkazy.
-</h2>
-
-<p class="muted">
-Označ zábery, na ktorých je
-mačka / páchateľ najlepšie viditeľný.
-</p>
-
-</div>
-
-
-<div class="evidence-grid">
-
-<div class="evidence selected">
-<div class="evidence-face">🐱</div>
-<div class="check">✓</div>
-</div>
-
-<div class="evidence selected">
-<div class="evidence-face">🐈</div>
-<div class="check">✓</div>
-</div>
-
-<div class="evidence">
-<div class="evidence-face">😼</div>
-<div class="check">✓</div>
-</div>
-
-<div class="evidence selected">
-<div class="evidence-face">🐱</div>
-<div class="check">✓</div>
-</div>
-
-<div class="evidence">
-<div class="evidence-face">😹</div>
-<div class="check">✓</div>
-</div>
-
-<div class="evidence">
-<div class="evidence-face">🐈</div>
-<div class="check">✓</div>
-</div>
-
-</div>
-
-
-<button
-class="paw-button"
-onclick="identifyDemo()"
->
-
-<svg
-class="paw-shape"
-viewBox="0 0 600 120"
-preserveAspectRatio="none"
->
-
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
-/>
-
-</svg>
-
-<span class="paw-content">
-🐾 POTVRDIŤ PÁCHATEĽA
-</span>
 
 </button>
 
@@ -2226,13 +2385,14 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 CAT FILE
@@ -2248,24 +2408,53 @@ Profil mačky / páchateľa
 
 
 <div
-class="card profile-head"
 id="profileCard"
+class="card profile"
 >
 
+<div class="corner-cat corner-cat-right">
+
+<svg viewBox="0 0 140 140">
+
+<path
+d="M36 85
+L31 48
+L54 61
+Q70 51 86 61
+L109 48
+L104 85
+Q105 110 70 119
+Q35 110 36 85Z"
+/>
+
+<circle cx="54" cy="78" r="3"/>
+<circle cx="86" cy="78" r="3"/>
+
+<path
+class="pink"
+d="M62 91 Q70 98 78 91"
+/>
+
+</svg>
+
+</div>
+
+
 <div
-class="profile-photo"
 id="profilePhoto"
+class="profile-photo"
 >
 🐱
 </div>
+
 
 <h2 id="profileName">
 Muro
 </h2>
 
-<span class="badge">
+<div class="badge">
 AKTÍVNY PÁCHATEĽ 🐾
-</span>
+</div>
 
 
 <div class="stats">
@@ -2277,11 +2466,10 @@ AKTÍVNY PÁCHATEĽ 🐾
 </strong>
 
 <span>
-registrovaných incidentov
+incidentov
 </span>
 
 </div>
-
 
 <div class="stat">
 
@@ -2300,18 +2488,11 @@ posledná zhoda
 </div>
 
 
-<div class="card section-card">
+<div class="card section">
 
-<div
-style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-"
->
+<div class="register-title">
 
-<h3 style="margin:0">
+<h3>
 Trestný register
 </h3>
 
@@ -2323,83 +2504,106 @@ CAT FILE
 
 
 <div
-class="incidents"
 id="incidentList"
+class="incident-list"
 ></div>
 
 
+<!-- IMPORTANT:
+     This is now a direct JS function,
+     not dependent on an inline navigation chain.
+-->
+
 <button
+id="addIncidentButton"
 class="paw-button"
-onclick="openIncidentForCurrentCat()"
+type="button"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 PRIDAŤ NOVÝ INCIDENT
-</span>
+<div class="paw-content">
+PRIDAŤ NOVÝ INCIDENT
+</div>
 
 </button>
 
 
 <button
 class="paw-button blue"
+type="button"
 onclick="deleteCurrentCat()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-ODSTRÁNIŤ Z REGISTRA
-</span>
+<div class="paw-content">
+ODSTRÁNIŤ PÁCHATEĽA
+</div>
 
 </button>
 
@@ -2417,13 +2621,14 @@ ODSTRÁNIŤ Z REGISTRA
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('catFile')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Nový mačací zločin
@@ -2438,58 +2643,59 @@ Nový mačací zločin
 </div>
 
 
-<div class="card form-card">
-
+<div class="card form">
 
 <svg
-class="cat-line"
-viewBox="0 0 300 200"
+class="cat-drawing"
+viewBox="0 0 300 220"
+style="max-width:210px;margin:0 auto 4px"
 >
 
 <path
 d="
-M85 82
-L80 40
-L113 59
-Q150 39 187 59
-L220 40
-L215 82
-Q220 105 207 135
-Q190 174 150 181
-Q110 174 93 135
-Q80 105 85 82Z"
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
 />
 
-<circle cx="120" cy="106" r="5"/>
-<circle cx="180" cy="106" r="5"/>
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
 
 <path
 class="pink"
-d="
-M143 120
-Q150 114 157 120
-Q150 130 143 120Z"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
 />
 
 </svg>
 
 
-<h2 style="text-align:center">
-Čo dnes páchateľ spáchal?
+<h2 style="text-align:center;margin:0">
+ČO DNES SPÁCHAL/A?
 </h2>
+
+<p
+class="muted"
+style="text-align:center"
+>
+Vyber jeden mačací priestupok.
+Dátum a čas sa pridajú automaticky.
+</p>
 
 
 <div
 id="incidentOptions"
-class="incident-select-grid"
->
-
-<!-- Filled by JS -->
-
-</div>
+class="incident-grid"
+></div>
 
 
-<div class="field" style="margin-top:17px">
+<div class="field" style="margin-top:18px">
 
 <label>
 Dátum a čas
@@ -2499,7 +2705,7 @@ Dátum a čas
 id="incidentDate"
 type="text"
 readonly
-/>
+>
 
 </div>
 
@@ -2512,7 +2718,7 @@ Dodatočná poznámka
 
 <textarea
 id="incidentNote"
-placeholder="Čokoľvek, čo by vyšetrovateľ mal vedieť..."
+placeholder="Čokoľvek, čo by mal vyšetrovateľ vedieť..."
 ></textarea>
 
 </div>
@@ -2520,38 +2726,47 @@ placeholder="Čokoľvek, čo by vyšetrovateľ mal vedieť..."
 
 <button
 class="paw-button"
+type="button"
 onclick="registerIncident()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 ZAREGISTROVAŤ ZLOČIN
-</span>
+<div class="paw-content">
+ZAREGISTROVAŤ ZLOČIN
+</div>
 
 </button>
 
@@ -2569,20 +2784,21 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Páchateľ identifikovaný
 </h2>
 
 <small>
-Máme ho v databáze
+Máme ho v databáze.
 </small>
 
 </div>
@@ -2590,59 +2806,35 @@ Máme ho v databáze
 </div>
 
 
-<div class="card result-card">
+<div class="card result">
 
-<div class="result-icon">
+<div class="result-cat">
 
-<svg viewBox="0 0 120 120">
-
-<circle
-cx="60"
-cy="60"
-r="54"
-fill="#121b3c"
-stroke="#ff2b98"
-stroke-width="3"
-/>
+<svg
+class="cat-drawing"
+viewBox="0 0 300 220"
+>
 
 <path
 d="
-M32 50
-L31 32
-L46 40
-Q60 32 74 40
-L89 32
-L88 50
-Q95 65 88 82
-Q77 101 60 103
-Q43 101 32 82
-Q25 65 32 50Z"
-fill="none"
-stroke="#fff"
-stroke-width="4"
-stroke-linejoin="round"
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
 />
 
-<circle
-cx="48"
-cy="61"
-r="3"
-fill="#fff"
-/>
-
-<circle
-cx="72"
-cy="61"
-r="3"
-fill="#fff"
-/>
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
 
 <path
-d="M51 73 Q60 81 69 73"
-fill="none"
-stroke="#ff3da4"
-stroke-width="3"
-stroke-linecap="round"
+class="pink"
+d="M140 133 Q150 124 160 133 Q150 146 140 133Z"
 />
 
 </svg>
@@ -2651,7 +2843,7 @@ stroke-linecap="round"
 
 
 <h2>
-Máme ho! 🐾
+MÁME HO! 🐾
 </h2>
 
 
@@ -2665,49 +2857,57 @@ Muro
 </h2>
 
 
-<p class="result-note">
+<p class="muted">
 
-Mačka / páchateľ bola úspešne rozpoznaná
-medzi registrovanými profilmi.
-Vyšetrovanie môže pokračovať.
+Mačka / páchateľ bola úspešne
+identifikovaná medzi registrovanými profilmi.
 
 </p>
 
 
 <button
 class="paw-button"
+type="button"
 onclick="openCurrentCatFile()"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 OTVORIŤ CAT FILE
-</span>
+<div class="paw-content">
+OTVORIŤ CAT FILE
+</div>
 
 </button>
 
@@ -2725,20 +2925,21 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Neznámy páchateľ
 </h2>
 
 <small>
-Nie je v databáze
+Nie je v databáze.
 </small>
 
 </div>
@@ -2746,45 +2947,40 @@ Nie je v databáze
 </div>
 
 
-<div class="card result-card">
+<div class="card result">
 
-<div class="result-icon">
+<div class="result-cat">
 
-<svg viewBox="0 0 120 120">
-
-<circle
-cx="60"
-cy="60"
-r="54"
-fill="#121b3c"
-stroke="#2c9fff"
-stroke-width="3"
-/>
+<svg
+class="cat-drawing"
+viewBox="0 0 300 220"
+>
 
 <path
 d="
-M32 50
-L31 32
-L46 40
-Q60 32 74 40
-L89 32
-L88 50
-Q95 65 88 82
-Q77 101 60 103
-Q43 101 32 82
-Q25 65 32 50Z"
-fill="none"
-stroke="#fff"
-stroke-width="4"
+M82 99
+L76 52
+L111 70
+Q150 47 189 70
+L224 52
+L218 99
+Q224 123 209 153
+Q190 190 150 197
+Q110 190 91 153
+Q76 123 82 99Z"
 />
 
+<circle cx="120" cy="117" r="5"/>
+<circle cx="180" cy="117" r="5"/>
+
 <text
-x="60"
-y="76"
+x="150"
+y="155"
 text-anchor="middle"
-fill="#ff3da6"
-font-size="31"
-font-weight="900"
+fill="#ff48aa"
+font-size="38"
+font-family="Baloo 2"
+font-weight="800"
 >
 ?
 </text>
@@ -2795,52 +2991,60 @@ font-weight="900"
 
 
 <h2>
-Hmm... kto to je?
+KTO JE TO? 🐾
 </h2>
 
-
-<p class="result-note">
+<p class="muted">
 
 Tohto mačacieho páchateľa zatiaľ
-nemáme v registri.
+v našom registri nemáme.
 
 </p>
 
 
 <button
 class="paw-button"
+type="button"
 onclick="openScreen('newCat')"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-🐾 PRIDAŤ DO REGISTRA
-</span>
+<div class="paw-content">
+PRIDAŤ DO REGISTRA
+</div>
 
 </button>
 
@@ -2858,20 +3062,21 @@ C126 48 113 51 94 42Z"
 <div class="back-row">
 
 <button
-class="back-button"
+class="back"
+type="button"
 onclick="openScreen('home')"
 >
 ‹
 </button>
 
-<div>
+<div class="back-title">
 
 <h2>
 Mačací problém
 </h2>
 
 <small>
-Systém hlási problém
+Niečo sa pokazilo.
 </small>
 
 </div>
@@ -2879,55 +3084,67 @@ Systém hlási problém
 </div>
 
 
-<div class="card error-box">
+<div class="card error">
 
-<div class="error-symbol">
+<div class="error-icon">
 🐾
 </div>
 
 <h2 id="errorTitle">
-Niečo sa pokazilo
+Niečo sa pokazilo.
 </h2>
 
-<p id="errorText">
+<p
+id="errorText"
+class="muted"
+>
 Skús to ešte raz.
 </p>
 
 
 <button
 class="paw-button"
+type="button"
 onclick="openScreen('home')"
 >
 
 <svg
-class="paw-shape"
-viewBox="0 0 600 120"
+class="paw-svg"
+viewBox="0 0 600 170"
 preserveAspectRatio="none"
 >
 
-<path d="
-M94 42
-C55 22 18 38 24 72
-C30 105 73 108 108 99
-C139 91 151 91 177 101
-C225 119 376 119 423 101
-C449 91 461 91 492 99
-C527 108 570 105 576 72
-C582 38 545 22 506 42
-C487 51 474 48 463 32
-C448 10 415 10 402 31
-C387 53 369 54 349 39
-C325 20 275 20 251 39
-C231 54 213 53 198 31
-C185 10 152 10 137 32
-C126 48 113 51 94 42Z"
+<path
+class="main"
+d="
+M170 73
+C137 55 104 67 108 99
+C111 124 142 136 174 126
+C204 116 220 120 247 139
+C270 155 330 155 353 139
+C380 120 396 116 426 126
+C458 136 489 124 492 99
+C496 67 463 55 430 73
+C411 83 397 79 390 58
+C382 34 350 29 334 51
+C320 70 303 72 285 56
+C265 38 235 38 215 56
+C197 72 180 70 166 51
+C150 29 118 34 110 58
+C103 79 189 83 170 73Z"
 />
+
+<ellipse class="main" cx="125" cy="38" rx="29" ry="24"/>
+<ellipse class="main" cx="205" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="300" cy="21" rx="30" ry="24"/>
+<ellipse class="main" cx="395" cy="24" rx="30" ry="24"/>
+<ellipse class="main" cx="475" cy="38" rx="29" ry="24"/>
 
 </svg>
 
-<span class="paw-content">
-SPÄŤ NA HLAVNÚ STRÁNKU
-</span>
+<div class="paw-content">
+SPÄŤ NA HLAVNÚ
+</div>
 
 </button>
 
@@ -2938,9 +3155,7 @@ SPÄŤ NA HLAVNÚ STRÁNKU
 
 <div class="footer">
 
-<strong>
-CAT NOSE ID
-</strong>
+<strong>CAT NOSE ID</strong>
 
 <br>
 
@@ -2952,14 +3167,13 @@ Vytvorené pre zábavu.
 </div>
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script>
 
-const STORAGE_KEY =
-    "catNoseDatabaseV2";
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const STORAGE_KEY = "catNoseDatabaseV3";
 
 let cats = [];
 
@@ -2971,274 +3185,198 @@ let testImageData = "";
 
 let scanRunning = false;
 
-let selectedIncidentType =
-    "ukradla jedlo";
+let selectedIncidentType = "ukradla jedlo";
 
 
-/* =====================================================
-   INCIDENT ICONS
-===================================================== */
+/* =========================================================
+   INCIDENT DEFINITIONS
+========================================================= */
 
-const incidentDefinitions = [
+const incidents = [
 
 {
     id:"ukradla jedlo",
-
     title:"Ukradla jedlo",
-
     description:"Neoprávnené získanie cudzej potravy",
-
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <path
-        class="icon-yellow"
-        d="M14 30
-        Q30 17 46 30
-        Q30 44 14 30Z"/>
-
+            class="icon-yellow"
+            d="M12 32 Q30 15 48 32 Q30 49 12 32Z"
+        />
         <path
-        class="icon-stroke"
-        d="M19 30 Q30 25 41 30"/>
-
+            class="icon-stroke"
+            d="M18 31 Q30 25 42 31"
+        />
         <path
-        class="icon-pink"
-        d="M26 24 Q30 17 34 24"/>
-
-    </svg>
-
-    `
+            class="icon-pink"
+            d="M25 25 Q30 16 35 25"
+        />
+    </svg>`
 },
 
 {
     id:"poškodila zariadenie",
-
     title:"Poškodila zariadenie",
-
-    description:"Mačací útok na majetok",
-
+    description:"Útok na majetok domácnosti",
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <rect
-        x="13"
-        y="15"
-        width="34"
-        height="30"
-        rx="5"
-        class="icon-stroke"/>
-
+            x="13"
+            y="13"
+            width="34"
+            height="34"
+            rx="5"
+            class="icon-stroke"
+        />
         <path
-        class="icon-pink"
-        d="M28 15 L23 27 L31 29 L26 43"/>
-
-    </svg>
-
-    `
+            class="icon-pink"
+            d="M31 14 L24 29 L32 30 L26 46"
+        />
+    </svg>`
 },
 
 {
     id:"poškriabala ma",
-
     title:"Poškrabala ma",
-
-    description:"Útok pazúrmi na civilistu",
-
+    description:"Neoprávnené použitie pazúrov",
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <path
-        class="icon-pink"
-        d="M18 18 L24 40
-        M29 16 L33 39
-        M40 19 L42 38"/>
-
+            class="icon-pink"
+            d="M17 17 L23 42
+               M29 14 L33 40
+               M41 17 L43 41"
+        />
         <path
-        class="icon-stroke"
-        d="M13 45 Q30 35 48 45"/>
-
-    </svg>
-
-    `
+            class="icon-stroke"
+            d="M12 46 Q30 34 48 46"
+        />
+    </svg>`
 },
 
 {
     id:"uhryzla ma",
-
     title:"Uhryzla ma",
-
     description:"Neautorizovaný zubný útok",
-
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <path
-        class="icon-stroke"
-        d="M13 28 Q30 12 47 28
-        Q30 46 13 28Z"/>
-
+            class="icon-stroke"
+            d="M12 28 Q30 12 48 28 Q30 46 12 28Z"
+        />
         <path
-        class="icon-pink"
-        d="M21 25 L24 32
-        M29 22 L31 31
-        M37 25 L38 32"/>
-
-    </svg>
-
-    `
+            class="icon-pink"
+            d="M21 24 L24 33
+               M30 21 L31 32
+               M39 24 L38 33"
+        />
+    </svg>`
 },
 
 {
     id:"obsadila cudziu posteľ",
-
     title:"Obsadila cudziu posteľ",
-
-    description:"Neoprávnené zabratie postele",
-
+    description:"Neoprávnené zabratie lôžka",
     icon:`
-
     <svg viewBox="0 0 60 60">
-
-        <rect
-        x="10"
-        y="31"
-        width="40"
-        height="14"
-        rx="4"
-        class="icon-stroke"/>
-
         <path
-        class="icon-stroke"
-        d="M15 31 L15 22
-        Q20 16 27 22
-        L27 31"/>
-
+            class="icon-stroke"
+            d="M11 33 L49 33 L49 46 L11 46Z"
+        />
         <path
-        class="icon-pink"
-        d="M35 23 Q42 16 47 24"/>
-
-    </svg>
-
-    `
+            class="icon-stroke"
+            d="M15 33 L15 23 Q21 16 29 23 L29 33"
+        />
+        <path
+            class="icon-pink"
+            d="M34 24 Q42 16 48 25"
+        />
+    </svg>`
 },
 
 {
     id:"netrafila sa do záchoda",
-
     title:"Netrafila sa do záchoda",
-
     description:"Incident s nejasným motívom",
-
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <path
-        class="icon-stroke"
-        d="M15 22
-        Q30 17 45 22
-        L43 40
-        Q30 47 17 40Z"/>
-
+            class="icon-stroke"
+            d="M14 22 Q30 16 46 22 L43 41 Q30 48 17 41Z"
+        />
         <path
-        class="icon-blue"
-        d="M23 27 Q30 31 37 27"/>
-
+            class="icon-blue"
+            d="M22 28 Q30 33 38 28"
+        />
         <path
-        class="icon-pink"
-        d="M30 14 L30 20"/>
-
-    </svg>
-
-    `
+            class="icon-pink"
+            d="M30 13 L30 19"
+        />
+    </svg>`
 },
 
 {
     id:"rozbila predmet",
-
     title:"Rozbila predmet",
-
     description:"Poškodenie cudzieho majetku",
-
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <path
-        class="icon-stroke"
-        d="M15 18 L43 42
-        M43 18 L15 42"/>
-
+            class="icon-stroke"
+            d="M14 17 L46 43 M46 17 L14 43"
+        />
         <path
-        class="icon-pink"
-        d="M29 12 L25 22
-        L32 24 L27 35"/>
-
-    </svg>
-
-    `
+            class="icon-pink"
+            d="M30 11 L25 23 L33 25 L27 37"
+        />
+    </svg>`
 },
 
 {
     id:"neznámy mačací zločin",
-
     title:"Neznámy zločin",
-
     description:"Vyšetrovanie stále prebieha",
-
     icon:`
-
     <svg viewBox="0 0 60 60">
-
         <circle
-        cx="30"
-        cy="30"
-        r="20"
-        class="icon-blue"/>
-
+            cx="30"
+            cy="30"
+            r="21"
+            class="icon-blue"
+        />
         <text
-        x="30"
-        y="38"
-        text-anchor="middle"
-        fill="#ff4cab"
-        font-size="28"
-        font-weight="900"
-        >
-        ?
-        </text>
-
-    </svg>
-
-    `
+            x="30"
+            y="39"
+            text-anchor="middle"
+            fill="#ff4baa"
+            font-size="29"
+            font-family="Baloo 2"
+            font-weight="800"
+        >?</text>
+    </svg>`
 }
 
 ];
 
 
-/* =====================================================
-   DATABASE
-===================================================== */
+/* =========================================================
+   LOAD / SAVE
+========================================================= */
 
 function loadDatabase(){
 
     try{
 
-        const saved =
+        const data =
             localStorage.getItem(STORAGE_KEY);
 
-        if(saved){
+        if(data){
 
-            cats =
-                JSON.parse(saved);
+            cats = JSON.parse(data);
 
             if(!Array.isArray(cats)){
-
                 cats = [];
-
             }
 
         }else{
@@ -3249,10 +3387,7 @@ function loadDatabase(){
 
     }catch(error){
 
-        console.error(
-            "CAT NOSE DATABASE ERROR:",
-            error
-        );
+        console.error(error);
 
         cats = [];
 
@@ -3272,10 +3407,7 @@ function saveDatabase(){
 
     }catch(error){
 
-        console.error(
-            "CAT NOSE SAVE ERROR:",
-            error
-        );
+        console.error(error);
 
         showError(
             "Nepodarilo sa uložiť profil",
@@ -3287,54 +3419,39 @@ function saveDatabase(){
 }
 
 
-/* =====================================================
+/* =========================================================
    NAVIGATION
-===================================================== */
+========================================================= */
 
 function openScreen(id){
-
-    document
-    .querySelectorAll(".screen")
-    .forEach(screen => {
-
-        screen.classList.remove("active");
-
-    });
-
 
     const target =
         document.getElementById(id);
 
-
     if(!target){
-
         return;
-
     }
 
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.remove("active");
+        });
 
     target.classList.add("active");
-
 
     window.scrollTo({
         top:0,
         behavior:"instant"
     });
 
-
     if(id === "home"){
-
         renderCatList();
-
     }
-
 
     if(id === "catFile"){
-
         renderCurrentCat();
-
     }
-
 
     if(id === "incident"){
 
@@ -3347,61 +3464,109 @@ function openScreen(id){
 }
 
 
-/* =====================================================
-   ERROR
-===================================================== */
+/* =========================================================
+   CAT LIST
+========================================================= */
 
-function showError(title,text){
+function renderCatList(){
 
-    document.getElementById(
-        "errorTitle"
-    ).textContent =
-        title;
+    const container =
+        document.getElementById("catList");
+
+    if(!container){
+        return;
+    }
+
+    if(cats.length === 0){
+
+        container.innerHTML = `
+            <div class="cat-empty">
+                Zatiaľ nemáš registrovaného
+                žiadneho mačacieho páchateľa.
+                <br><br>
+                Pridaj prvého. 🐾
+            </div>
+        `;
+
+        return;
+
+    }
 
 
-    document.getElementById(
-        "errorText"
-    ).textContent =
-        text;
+    container.innerHTML =
+        cats.map(cat => {
 
+            const count =
+                Array.isArray(cat.incidents)
+                ? cat.incidents.length
+                : 0;
 
-    openScreen("error");
+            const photo =
+                cat.photo
+                ? `<img src="${cat.photo}" alt="">`
+                : "🐱";
+
+            return `
+                <button
+                    type="button"
+                    class="cat-item"
+                    onclick="openCatFile('${cat.id}')"
+                >
+
+                    <div class="cat-photo">
+                        ${photo}
+                    </div>
+
+                    <div class="cat-info">
+
+                        <strong>
+                            ${escapeHtml(cat.name)}
+                        </strong>
+
+                        <span>
+                            ${count}
+                            registrovaných incidentov
+                        </span>
+
+                    </div>
+
+                    <div class="cat-arrow">
+                        ›
+                    </div>
+
+                </button>
+            `;
+
+        }).join("");
 
 }
 
 
-/* =====================================================
-   PHOTO
-===================================================== */
+/* =========================================================
+   ADD CAT
+========================================================= */
 
 function previewCatPhoto(event){
 
     const file =
         event.target.files[0];
 
-
     if(!file){
-
         return;
-
     }
-
 
     if(!file.type.startsWith("image/")){
 
         showError(
             "Toto nie je fotografia",
-            "Vyber obrázok mačky / páchateľa."
+            "Vyber obrázok mačky."
         );
 
         return;
-
     }
-
 
     const reader =
         new FileReader();
-
 
     reader.onload =
         function(e){
@@ -3409,51 +3574,35 @@ function previewCatPhoto(event){
             catPhotoData =
                 e.target.result;
 
-
             document.getElementById(
                 "photoPreview"
             ).innerHTML =
-
-            `<img
-                src="${e.target.result}"
-                alt="Profilová fotografia"
-            >`;
+                `<img src="${e.target.result}" alt="">`;
 
         };
-
 
     reader.readAsDataURL(file);
 
 }
 
 
-/* =====================================================
-   SAVE CAT
-===================================================== */
-
 function saveCat(){
 
     const input =
-        document.getElementById(
-            "catName"
-        );
-
+        document.getElementById("catName");
 
     const name =
         input.value.trim();
 
-
     if(!name){
 
         showError(
-            "Chýba meno páchateľa",
-            "Vyšetrovací tím potrebuje aspoň meno mačky / páchateľa."
+            "Chýba meno",
+            "Najprv zadaj meno mačky / páchateľa."
         );
 
         return;
-
     }
-
 
     const duplicate =
         cats.some(
@@ -3462,20 +3611,17 @@ function saveCat(){
                 name.toLowerCase()
         );
 
-
     if(duplicate){
 
         showError(
-            "Tento páchateľ už existuje",
+            "Páchateľ už existuje",
             "V registri už máme mačku s týmto menom."
         );
 
         return;
-
     }
 
-
-    const newCat = {
+    const cat = {
 
         id:
             "cat_" +
@@ -3483,7 +3629,7 @@ function saveCat(){
             "_" +
             Math.random()
                 .toString(36)
-                .substring(2,8),
+                .slice(2,8),
 
         name:name,
 
@@ -3499,165 +3645,46 @@ function saveCat(){
 
     };
 
-
-    cats.push(newCat);
+    cats.push(cat);
 
     saveDatabase();
 
-
     currentCatId =
-        newCat.id;
+        cat.id;
 
-
-    clearNewCatForm();
-
+    clearCatForm();
 
     renderCatList();
 
     renderCurrentCat();
-
 
     openScreen("catFile");
 
 }
 
 
-/* =====================================================
-   CLEAR FORM
-===================================================== */
-
-function clearNewCatForm(){
+function clearCatForm(){
 
     document.getElementById(
         "catName"
     ).value = "";
 
-
     document.getElementById(
         "catPhoto"
     ).value = "";
 
-
     document.getElementById(
         "photoPreview"
-    ).innerHTML =
-        "🐱";
-
+    ).innerHTML = "🐱";
 
     catPhotoData = "";
 
 }
 
 
-/* =====================================================
-   CAT LIST
-===================================================== */
-
-function renderCatList(){
-
-    const container =
-        document.getElementById(
-            "catList"
-        );
-
-
-    if(!container){
-
-        return;
-
-    }
-
-
-    if(cats.length === 0){
-
-        container.innerHTML = `
-
-            <div class="cat-list-empty">
-
-                Zatiaľ nemáš registrovaného
-                žiadneho mačacieho páchateľa.
-
-                <br><br>
-
-                Pridaj prvého. 🐾
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        cats
-        .map(
-            cat => {
-
-                const incidentCount =
-                    cat.incidents
-                    ? cat.incidents.length
-                    : 0;
-
-
-                const photo =
-                    cat.photo
-
-                    ?
-
-                    `<img
-                        src="${cat.photo}"
-                        alt=""
-                    >`
-
-                    :
-
-                    "🐱";
-
-
-                return `
-
-                    <button
-                        class="cat-list-item"
-                        onclick="openCatFile('${cat.id}')"
-                    >
-
-                        <div class="cat-list-photo">
-                            ${photo}
-                        </div>
-
-                        <div class="cat-list-name">
-
-                            <strong>
-                                ${escapeHtml(cat.name)}
-                            </strong>
-
-                            <span>
-                                ${incidentCount}
-                                registrovaných incidentov
-                            </span>
-
-                        </div>
-
-                        <div class="cat-list-arrow">
-                            ›
-                        </div>
-
-                    </button>
-
-                `;
-
-            }
-        )
-        .join("");
-
-}
-
-
-/* =====================================================
-   OPEN CAT FILE
-===================================================== */
+/* =========================================================
+   CAT FILE
+========================================================= */
 
 function openCatFile(id){
 
@@ -3667,22 +3694,18 @@ function openCatFile(id){
                 item.id === id
         );
 
-
     if(!cat){
 
         showError(
             "Profil sa nenašiel",
-            "Tento mačací profil už pravdepodobne neexistuje."
+            "Tento profil už pravdepodobne neexistuje."
         );
 
         return;
-
     }
-
 
     currentCatId =
         id;
-
 
     renderCurrentCat();
 
@@ -3695,7 +3718,7 @@ function openCurrentCatFile(){
 
     if(!currentCatId){
 
-        if(cats.length > 0){
+        if(cats.length){
 
             currentCatId =
                 cats[0].id;
@@ -3710,7 +3733,6 @@ function openCurrentCatFile(){
 
     }
 
-
     renderCurrentCat();
 
     openScreen("catFile");
@@ -3718,18 +3740,11 @@ function openCurrentCatFile(){
 }
 
 
-/* =====================================================
-   CURRENT CAT
-===================================================== */
-
 function renderCurrentCat(){
 
     if(!currentCatId){
-
         return;
-
     }
-
 
     const cat =
         cats.find(
@@ -3737,21 +3752,17 @@ function renderCurrentCat(){
                 item.id === currentCatId
         );
 
-
     if(!cat){
 
         openScreen("home");
 
         return;
-
     }
-
 
     document.getElementById(
         "profileName"
     ).textContent =
         cat.name;
-
 
     document.getElementById(
         "incidentCatName"
@@ -3760,16 +3771,14 @@ function renderCurrentCat(){
         cat.name +
         "?";
 
-
-    const photo =
+    const profilePhoto =
         document.getElementById(
             "profilePhoto"
         );
 
-
     if(cat.photo){
 
-        photo.innerHTML =
+        profilePhoto.innerHTML =
             `<img
                 src="${cat.photo}"
                 alt="${escapeHtml(cat.name)}"
@@ -3777,23 +3786,20 @@ function renderCurrentCat(){
 
     }else{
 
-        photo.innerHTML =
+        profilePhoto.innerHTML =
             "🐱";
 
     }
 
-
-    const total =
-        cat.incidents
+    const count =
+        Array.isArray(cat.incidents)
         ? cat.incidents.length
         : 0;
-
 
     document.getElementById(
         "totalIncidents"
     ).textContent =
-        total;
-
+        count;
 
     document.getElementById(
         "confidenceValue"
@@ -3802,15 +3808,84 @@ function renderCurrentCat(){
         ? cat.lastMatch + "%"
         : "—";
 
-
     renderIncidentList(cat);
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   IMPORTANT INCIDENT BUTTON
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const button =
+            document.getElementById(
+                "addIncidentButton"
+            );
+
+        if(button){
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    if(!currentCatId){
+
+                        showError(
+                            "Nie je vybraná mačka",
+                            "Najprv otvor CAT FILE konkrétnej mačky."
+                        );
+
+                        return;
+
+                    }
+
+                    const cat =
+                        cats.find(
+                            item =>
+                                item.id ===
+                                currentCatId
+                        );
+
+                    if(!cat){
+
+                        showError(
+                            "Profil sa nenašiel",
+                            "Tento mačací profil už neexistuje."
+                        );
+
+                        return;
+
+                    }
+
+                    document.getElementById(
+                        "incidentCatName"
+                    ).textContent =
+                        "Čo dnes spáchal/a " +
+                        cat.name +
+                        "?";
+
+                    updateIncidentDate();
+
+                    renderIncidentOptions();
+
+                    openScreen("incident");
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
    INCIDENT LIST
-===================================================== */
+========================================================= */
 
 function renderIncidentList(cat){
 
@@ -3819,12 +3894,11 @@ function renderIncidentList(cat){
             "incidentList"
         );
 
-
-    if(!cat.incidents || cat.incidents.length === 0){
+    if(!Array.isArray(cat.incidents) ||
+       cat.incidents.length === 0){
 
         container.innerHTML = `
-
-            <div class="incident-empty">
+            <div class="no-incidents">
 
                 Tento páchateľ zatiaľ nemá
                 žiadne evidované zločiny.
@@ -3834,24 +3908,18 @@ function renderIncidentList(cat){
                 To je podozrivé. 🐾
 
             </div>
-
         `;
 
         return;
-
     }
 
-
     const counts = {};
-
 
     cat.incidents.forEach(
         incident => {
 
             if(!counts[incident.type]){
-
                 counts[incident.type] = 0;
-
             }
 
             counts[incident.type]++;
@@ -3859,84 +3927,63 @@ function renderIncidentList(cat){
         }
     );
 
-
     container.innerHTML =
         Object.entries(counts)
-        .map(
-            ([type,count]) => {
+        .map(([type,count]) => {
 
-                const definition =
-                    incidentDefinitions.find(
-                        item =>
-                            item.id === type
-                    );
+            const definition =
+                incidents.find(
+                    item =>
+                        item.id === type
+                );
 
+            return `
+                <div class="incident-card">
 
-                const title =
-                    definition
-                    ? definition.title
-                    : type;
+                    <div class="incident-icon">
+                        ${
+                            definition
+                            ? definition.icon
+                            : "🐾"
+                        }
+                    </div>
 
+                    <div class="incident-text">
 
-                const description =
-                    definition
-                    ? definition.description
-                    : "Mačací incident";
+                        <strong>
+                            ${
+                                definition
+                                ? escapeHtml(definition.title)
+                                : escapeHtml(type)
+                            }
+                        </strong>
 
-
-                const icon =
-                    definition
-                    ? definition.icon
-                    : `
-                        <svg viewBox="0 0 60 60">
-                            <circle
-                            cx="30"
-                            cy="30"
-                            r="20"
-                            class="icon-blue"
-                            />
-                        </svg>
-                    `;
-
-
-                return `
-
-                    <div class="incident-card">
-
-                        <div class="incident-icon">
-                            ${icon}
-                        </div>
-
-                        <div class="incident-text">
-
-                            <strong>
-                                ${escapeHtml(title)}
-                            </strong>
-
-                            <span>
-                                ${escapeHtml(description)}
-                            </span>
-
-                        </div>
-
-                        <div class="incident-count">
-                            ${count}×
-                        </div>
+                        <span>
+                            ${
+                                definition
+                                ? escapeHtml(definition.description)
+                                : "Mačací incident"
+                            }
+                        </span>
 
                     </div>
 
-                `;
+                    <div class="incident-count">
+                        ${count}×
+                    </div>
 
-            }
-        )
+                </div>
+            `;
+
+        })
         .join("");
 
 }
 
 
-/* =====================================================
+/* =========================================================
    INCIDENT OPTIONS
-===================================================== */
+========================================================= */
 
 function renderIncidentOptions(){
 
@@ -3945,48 +3992,40 @@ function renderIncidentOptions(){
             "incidentOptions"
         );
 
-
     if(!container){
-
         return;
-
     }
 
-
     container.innerHTML =
-        incidentDefinitions
-        .map(
-            definition => {
+        incidents.map(
+            incident => {
 
-                const active =
+                const selected =
                     selectedIncidentType ===
-                    definition.id
-                    ? "active"
+                    incident.id
+                    ? "selected"
                     : "";
 
-
                 return `
-
                     <button
                         type="button"
-                        class="incident-option ${active}"
-                        onclick="selectIncident('${escapeHtml(definition.id)}')"
+                        class="incident-option ${selected}"
+                        onclick="selectIncident('${escapeAttribute(incident.id)}')"
                     >
 
-                        <div class="incident-option-icon">
-                            ${definition.icon}
+                        <div class="incident-art">
+                            ${incident.icon}
                         </div>
 
                         <strong>
-                            ${escapeHtml(definition.title)}
+                            ${escapeHtml(incident.title)}
                         </strong>
 
                         <span>
-                            ${escapeHtml(definition.description)}
+                            ${escapeHtml(incident.description)}
                         </span>
 
                     </button>
-
                 `;
 
             }
@@ -4001,15 +4040,14 @@ function selectIncident(type){
     selectedIncidentType =
         type;
 
-
     renderIncidentOptions();
 
 }
 
 
-/* =====================================================
+/* =========================================================
    INCIDENT DATE
-===================================================== */
+========================================================= */
 
 function updateIncidentDate(){
 
@@ -4018,17 +4056,12 @@ function updateIncidentDate(){
             "incidentDate"
         );
 
-
     if(!input){
-
         return;
-
     }
-
 
     const now =
         new Date();
-
 
     const date =
         now.toLocaleDateString(
@@ -4040,7 +4073,6 @@ function updateIncidentDate(){
             }
         );
 
-
     const time =
         now.toLocaleTimeString(
             "sk-SK",
@@ -4050,18 +4082,15 @@ function updateIncidentDate(){
             }
         );
 
-
     input.value =
-        date +
-        " " +
-        time;
+        date + " " + time;
 
 }
 
 
-/* =====================================================
+/* =========================================================
    REGISTER INCIDENT
-===================================================== */
+========================================================= */
 
 function registerIncident(){
 
@@ -4073,9 +4102,7 @@ function registerIncident(){
         );
 
         return;
-
     }
-
 
     const cat =
         cats.find(
@@ -4083,26 +4110,26 @@ function registerIncident(){
                 item.id === currentCatId
         );
 
-
     if(!cat){
 
         showError(
             "Profil sa nenašiel",
-            "Mačací profil už neexistuje."
+            "Tento profil už neexistuje."
         );
 
         return;
-
     }
 
+    if(!Array.isArray(cat.incidents)){
+        cat.incidents = [];
+    }
 
     const note =
         document.getElementById(
             "incidentNote"
         ).value.trim();
 
-
-    const incident = {
+    cat.incidents.push({
 
         id:
             "incident_" +
@@ -4117,49 +4144,30 @@ function registerIncident(){
         date:
             new Date().toISOString()
 
-    };
-
-
-    if(!Array.isArray(cat.incidents)){
-
-        cat.incidents = [];
-
-    }
-
-
-    cat.incidents.push(
-        incident
-    );
-
+    });
 
     saveDatabase();
-
 
     document.getElementById(
         "incidentNote"
     ).value = "";
 
-
     renderCurrentCat();
-
 
     openScreen("catFile");
 
 }
 
 
-/* =====================================================
+/* =========================================================
    DELETE CAT
-===================================================== */
+========================================================= */
 
 function deleteCurrentCat(){
 
     if(!currentCatId){
-
         return;
-
     }
-
 
     const cat =
         cats.find(
@@ -4167,28 +4175,20 @@ function deleteCurrentCat(){
                 item.id === currentCatId
         );
 
-
     if(!cat){
-
         return;
-
     }
 
-
-    const confirmed =
+    const ok =
         confirm(
-            "Naozaj chceš odstrániť páchateľa \"" +
+            'Naozaj chceš odstrániť páchateľa "' +
             cat.name +
-            "\" z registra?"
+            '"?'
         );
 
-
-    if(!confirmed){
-
+    if(!ok){
         return;
-
     }
-
 
     cats =
         cats.filter(
@@ -4196,13 +4196,9 @@ function deleteCurrentCat(){
                 item.id !== currentCatId
         );
 
-
     saveDatabase();
 
-
-    currentCatId =
-        null;
-
+    currentCatId = null;
 
     renderCatList();
 
@@ -4211,22 +4207,18 @@ function deleteCurrentCat(){
 }
 
 
-/* =====================================================
+/* =========================================================
    PHOTO TEST
-===================================================== */
+========================================================= */
 
 function loadTestImage(event){
 
     const file =
         event.target.files[0];
 
-
     if(!file){
-
         return;
-
     }
-
 
     if(!file.type.startsWith("image/")){
 
@@ -4236,13 +4228,10 @@ function loadTestImage(event){
         );
 
         return;
-
     }
-
 
     const reader =
         new FileReader();
-
 
     reader.onload =
         function(e){
@@ -4250,25 +4239,24 @@ function loadTestImage(event){
             testImageData =
                 e.target.result;
 
-
             document.getElementById(
                 "testPreview"
             ).innerHTML = `
 
                 <div style="
                     margin-top:15px;
-                    border-radius:18px;
                     overflow:hidden;
-                    border:1px solid #33436e;
+                    border-radius:19px;
+                    border:1px solid #34466f;
                 ">
 
                     <img
                         src="${e.target.result}"
+                        alt=""
                         style="
                             width:100%;
                             display:block;
                         "
-                        alt="Testovací obrázok"
                     >
 
                 </div>
@@ -4276,7 +4264,6 @@ function loadTestImage(event){
             `;
 
         };
-
 
     reader.readAsDataURL(file);
 
@@ -4293,49 +4280,7 @@ function runPhotoTest(){
         );
 
         return;
-
     }
-
-
-    openScreen("evidence");
-
-}
-
-
-/* =====================================================
-   EVIDENCE
-===================================================== */
-
-document.addEventListener(
-    "click",
-    function(event){
-
-        const evidence =
-            event.target.closest(
-                ".evidence"
-            );
-
-
-        if(!evidence){
-
-            return;
-
-        }
-
-
-        evidence.classList.toggle(
-            "selected"
-        );
-
-    }
-);
-
-
-/* =====================================================
-   IDENTIFICATION
-===================================================== */
-
-function identifyDemo(){
 
     if(cats.length === 0){
 
@@ -4345,48 +4290,22 @@ function identifyDemo(){
         );
 
         return;
-
     }
 
-
-    const cat =
-        cats[0];
-
-
-    currentCatId =
-        cat.id;
-
-
-    cat.lastMatch =
-        98;
-
-
-    saveDatabase();
-
-
-    document.getElementById(
-        "identifiedName"
-    ).textContent =
-        cat.name;
-
-
-    openScreen("identified");
+    identifyDemo();
 
 }
 
 
-/* =====================================================
+/* =========================================================
    DEMO SCAN
-===================================================== */
+========================================================= */
 
 function startDemoScan(){
 
     if(scanRunning){
-
         return;
-
     }
-
 
     if(cats.length === 0){
 
@@ -4396,38 +4315,31 @@ function startDemoScan(){
         );
 
         return;
-
     }
 
-
-    scanRunning =
-        true;
-
+    scanRunning = true;
 
     const meter =
         document.getElementById(
             "scanMeter"
         );
 
-
     const percent =
         document.getElementById(
             "scanPercent"
         );
-
 
     const message =
         document.getElementById(
             "scanMessage"
         );
 
-
     let value = 0;
-
 
     message.textContent =
         "Hľadám mačku / páchateľa...";
 
+    meter.style.width = "0%";
 
     const timer =
         setInterval(
@@ -4436,58 +4348,46 @@ function startDemoScan(){
                 value +=
                     Math.floor(
                         Math.random() * 9
-                    ) + 4;
-
+                    ) + 5;
 
                 if(value > 100){
-
                     value = 100;
-
                 }
-
 
                 meter.style.width =
                     value + "%";
 
-
                 percent.textContent =
                     value + " %";
-
 
                 if(value < 25){
 
                     message.textContent =
-                        "Pozerám sa veľmi podozrivo...";
-
-                }
-                else if(value < 50){
-
-                    message.textContent =
                         "Hľadám mačací nos...";
 
-                }
-                else if(value < 75){
+                }else if(value < 50){
 
                     message.textContent =
                         "Porovnávam páchateľov...";
 
-                }
-                else if(value < 100){
+                }else if(value < 80){
+
+                    message.textContent =
+                        "Vyhodnocujem dôkazy...";
+
+                }else if(value < 100){
 
                     message.textContent =
                         "Už ho skoro máme...";
 
                 }
 
-
                 if(value >= 100){
 
                     clearInterval(timer);
 
-
                     message.textContent =
                         "Mačka / páchateľ nájdený!";
-
 
                     setTimeout(
                         function(){
@@ -4504,31 +4404,99 @@ function startDemoScan(){
                 }
 
             },
-            280
+            250
         );
 
 }
 
 
-/* =====================================================
-   ESCAPE
-===================================================== */
+/* =========================================================
+   DEMO IDENTIFICATION
+========================================================= */
 
-function escapeHtml(value){
+function identifyDemo(){
 
-    return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    if(cats.length === 0){
+
+        showError(
+            "Databáza je prázdna",
+            "Najprv pridaj mačku."
+        );
+
+        return;
+    }
+
+    const cat =
+        cats[0];
+
+    currentCatId =
+        cat.id;
+
+    cat.lastMatch =
+        98;
+
+    saveDatabase();
+
+    document.getElementById(
+        "identifiedName"
+    ).textContent =
+        cat.name;
+
+    openScreen("identified");
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(title,text){
+
+    document.getElementById(
+        "errorTitle"
+    ).textContent =
+        title;
+
+    document.getElementById(
+        "errorText"
+    ).textContent =
+        text;
+
+    openScreen("error");
+
+}
+
+
+/* =========================================================
+   SECURITY HELPERS
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value)
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/"/g,"&quot;");
+
+}
+
+
+/* =========================================================
    INIT
-===================================================== */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",

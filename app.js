@@ -1,67 +1,108 @@
 /* =========================================================
    CAT NOSE ID
-   Prototype v0.6.0
-   Roboflow Cat Nose Detection
-   Local Cat Profiles + Prototype Identity Matching
+   v0.8.0
+   Roboflow RF-DETR Cat Face Detection
+   Local Household Cat Profiles
+   Automatic Reference Frame Selection
 ========================================================= */
+
 
 /* =========================================================
    ROBOFLOW CONFIGURATION
 ========================================================= */
 
-const ROBOFLOW_PUBLISHABLE_KEY =
-  "rf_JGgApuVxUWez8vuNZfsIqbojNwp1";
+const ROBOFLOW_WORKFLOW_URL =
+  "https://serverless.roboflow.com/miroslav-nemeth/workflows/cat-face-data-atoiv";
 
-const ROBOFLOW_MODEL =
-  "blanciagabrielli/cat-nose-detection";
+/*
+   IMPORTANT:
+   Do NOT publish a private API key in a public GitHub
+   repository in a production application.
 
-const ROBOFLOW_VERSION =
-  "1";
+   For the current prototype, paste your Roboflow Workflow
+   API key here locally.
 
-const ROBOFLOW_API_URL =
-  `https://detect.roboflow.com/${ROBOFLOW_MODEL}/${ROBOFLOW_VERSION}`;
+   Replace only the text between the quotes.
+*/
+const ROBOFLOW_API_KEY =
+  "PASTE_WORKFLOW_API_KEY_HERE";
 
+
+/* =========================================================
+   DETECTION / SCAN SETTINGS
+========================================================= */
+
+const MODEL_SCORE_THRESHOLD = 0.20;
+
+const CAPTURE_CONFIDENCE = 0.30;
+
+/*
+   Final number of reference images stored for one cat.
+*/
 const MAX_SAMPLES = 9;
+
+/*
+   Temporary candidate pool collected from the short
+   automatic camera scan.
+*/
 const MAX_CANDIDATES = 36;
 
+/*
+   Local browser storage.
+*/
 const PROFILE_STORAGE_KEY =
-  "catNoseIdProfiles_v1";
+  "catNoseIdProfiles_v2";
 
-const RECOGNITION_MIN_SCORE =
-  0.72;
+/*
+   Prototype similarity threshold.
 
-const MIN_SAMPLE_INTERVAL =
-  260;
+   This is NOT a scientifically validated biometric
+   threshold. It is simply the current prototype decision
+   boundary.
+*/
+const RECOGNITION_MIN_SCORE = 0.72;
 
-const MAX_SCAN_TIME =
-  8000;
+/*
+   Do not save almost identical consecutive frames.
+*/
+const MIN_SAMPLE_INTERVAL = 260;
+
+/*
+   Camera scan duration.
+*/
+const MAX_SCAN_TIME = 8000;
+
+/*
+   Cloud inference must be throttled.
+*/
+const INFERENCE_INTERVAL = 850;
 
 
 /* =========================================================
    GLOBAL STATE
 ========================================================= */
 
-let video = null;
-let canvas = null;
-let frameCanvas = null;
+let currentScreen = "home";
 
-let stream = null;
+let cameraStream = null;
 
-let detectorReady = false;
+let modelReady = false;
 
-let inferenceBusy = false;
+let modelLoading = false;
+
 let inferenceRunning = false;
 
+let inferenceBusy = false;
+
 let lastInferenceTime = 0;
-let lastAcceptedSampleTime = 0;
 
 let scanStartedAt = 0;
+
+let lastAcceptedSampleTime = 0;
 
 let samples = [];
 
 let recognitionCandidates = [];
-
-let recognitionResult = null;
 
 let bestDetection = null;
 
@@ -71,24 +112,29 @@ let scanMode = "enroll";
 
 let profileManagerInitialized = false;
 
-let currentScreen = "home";
-
 
 /* =========================================================
-   DOM REFERENCES
+   DOM
 ========================================================= */
 
-const cameraScreen =
-  document.getElementById("camera");
+const screens = [
+  "home",
+  "camera",
+  "videoTest",
+  "profile"
+];
 
-const homeScreen =
-  document.getElementById("home");
+const video =
+  document.getElementById("video");
 
-const profileScreen =
-  document.getElementById("profile");
+const detectionOverlay =
+  document.getElementById("detectionOverlay");
 
-const scanResult =
-  document.getElementById("scanResult");
+const frameCanvas =
+  document.getElementById("frameCanvas");
+
+const frameCounter =
+  document.getElementById("frameCounter");
 
 const qualityText =
   document.getElementById("qualityText");
@@ -96,156 +142,558 @@ const qualityText =
 const qualityBar =
   document.getElementById("qualityBar");
 
-const counter =
-  document.getElementById("counter");
-
 const instruction =
   document.getElementById("instruction");
 
-const statusText =
-  document.getElementById("status");
+const engineStatus =
+  document.getElementById("engineStatus");
+
+const scanResult =
+  document.getElementById("scanResult");
 
 const detectorNote =
   document.getElementById("detectorNote");
 
-const startCameraButton =
-  document.getElementById("startCamera");
+const mediaInput =
+  document.getElementById("mediaInput");
 
-const captureButton =
-  document.getElementById("captureButton");
+const sourceVideo =
+  document.getElementById("sourceVideo");
 
-const stopCameraButton =
-  document.getElementById("stopCamera");
+const videoCanvas =
+  document.getElementById("videoCanvas");
 
-const backButton =
-  document.getElementById("backButton");
+const videoQuality =
+  document.getElementById("videoQuality");
 
-const saveProfileButton =
-  document.getElementById("saveProfile");
+const videoQualityBar =
+  document.getElementById("videoQualityBar");
+
+const videoResult =
+  document.getElementById("videoResult");
+
+const videoSamples =
+  document.getElementById("videoSamples");
 
 
 /* =========================================================
-   BASIC UTILITIES
+   SCREEN CONTROL
 ========================================================= */
 
-function setStatus(
-  message
-) {
+function showScreen(name) {
 
-  if (statusText) {
-    statusText.textContent =
-      message;
-  }
+  screens.forEach(id => {
 
-}
+    const element =
+      document.getElementById(id);
 
+    if (!element) {
+      return;
+    }
 
-function setInstruction(
-  message
-) {
-
-  if (instruction) {
-    instruction.textContent =
-      message;
-  }
-
-}
-
-
-function escapeHtml(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
+    element.classList.toggle(
+      "active",
+      id === name
     );
 
+  });
+
+  currentScreen = name;
 }
 
 
 /* =========================================================
-   SCREEN MANAGEMENT
+   STATUS
 ========================================================= */
 
-function showScreen(
-  screen
+function setStatus(text) {
+
+  if (engineStatus) {
+    engineStatus.textContent = text;
+  }
+
+}
+
+
+function setInstruction(text) {
+
+  if (instruction) {
+    instruction.textContent = text;
+  }
+
+}
+
+
+/* =========================================================
+   ROBOFLOW INITIALIZATION
+========================================================= */
+
+async function initializeRoboflow() {
+
+  if (modelReady) {
+    return true;
+  }
+
+  if (modelLoading) {
+    return false;
+  }
+
+  modelLoading = true;
+
+  try {
+
+    setStatus(
+      "Roboflow AI sa pripravuje..."
+    );
+
+    if (
+      !ROBOFLOW_WORKFLOW_URL ||
+      !ROBOFLOW_WORKFLOW_URL.startsWith(
+        "https://serverless.roboflow.com/"
+      )
+    ) {
+      throw new Error(
+        "Neplatná Roboflow Workflow URL."
+      );
+    }
+
+    if (
+      !ROBOFLOW_API_KEY ||
+      ROBOFLOW_API_KEY ===
+        "PASTE_WORKFLOW_API_KEY_HERE"
+    ) {
+      throw new Error(
+        "Chýba Roboflow Workflow API key."
+      );
+    }
+
+    modelReady = true;
+
+    setStatus(
+      "Roboflow AI je pripravené"
+    );
+
+    if (detectorNote) {
+
+      detectorNote.textContent =
+        "Roboflow RF-DETR deteguje tvár mačky. Aplikácia potom automaticky vyberie najlepšie referenčné zábery a uloží ich lokálne.";
+
+    }
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "ROBOFLOW INITIALIZATION ERROR:",
+      error
+    );
+
+    modelReady = false;
+
+    setStatus(
+      "Roboflow AI sa nepodarilo pripraviť"
+    );
+
+    if (detectorNote) {
+
+      detectorNote.textContent =
+        error.message ||
+        "Roboflow AI sa nepodarilo pripraviť.";
+
+    }
+
+    return false;
+
+  } finally {
+
+    modelLoading = false;
+
+  }
+
+}
+
+
+/* =========================================================
+   ROBOFLOW WORKFLOW
+========================================================= */
+
+async function runRoboflowWorkflow(
+  dataUrl
 ) {
 
-  currentScreen =
-    screen;
+  if (!modelReady) {
 
-  const screens = [
-    homeScreen,
-    cameraScreen,
-    profileScreen
-  ];
+    const ready =
+      await initializeRoboflow();
 
-  screens.forEach(
-    element => {
+    if (!ready) {
+      throw new Error(
+        "Roboflow AI nie je pripravené."
+      );
+    }
 
-      if (!element) {
-        return;
+  }
+
+  if (!dataUrl) {
+    throw new Error(
+      "Chýba obrazový frame."
+    );
+  }
+
+  const base64 =
+    dataUrl.includes(",")
+      ? dataUrl.split(",")[1]
+      : dataUrl;
+
+  const response =
+    await fetch(
+      ROBOFLOW_WORKFLOW_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          api_key:
+            ROBOFLOW_API_KEY,
+
+          inputs: {
+
+            image: {
+
+              type: "base64",
+
+              value: base64
+
+            }
+
+          }
+
+        })
+
+      }
+    );
+
+  if (!response.ok) {
+
+    let details = "";
+
+    try {
+
+      details =
+        JSON.stringify(
+          await response.json()
+        );
+
+    } catch (_) {
+
+      details =
+        await response.text();
+
+    }
+
+    throw new Error(
+      `Roboflow HTTP ${response.status}: ${details}`
+    );
+
+  }
+
+  const result =
+    await response.json();
+
+  console.log(
+    "ROBOFLOW RESULT:",
+    result
+  );
+
+  return extractPredictions(
+    result
+  );
+
+}
+
+
+/* =========================================================
+   ROBofLOW RESPONSE PARSER
+========================================================= */
+
+function extractPredictions(
+  result
+) {
+
+  const visited =
+    new Set();
+
+  function search(value) {
+
+    if (
+      !value ||
+      typeof value !== "object"
+    ) {
+      return null;
+    }
+
+    if (visited.has(value)) {
+      return null;
+    }
+
+    visited.add(value);
+
+    if (Array.isArray(value)) {
+
+      const valid =
+        value.some(
+          item =>
+            item &&
+            typeof item === "object" &&
+            item.x !== undefined &&
+            item.y !== undefined &&
+            item.width !== undefined &&
+            item.height !== undefined &&
+            item.confidence !== undefined
+        );
+
+      if (valid) {
+        return value;
       }
 
-      element.classList.add(
-        "hidden"
+      for (
+        const item of value
+      ) {
+
+        const found =
+          search(item);
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+      return null;
+    }
+
+    for (
+      const key of Object.keys(value)
+    ) {
+
+      const found =
+        search(value[key]);
+
+      if (found) {
+        return found;
+      }
+
+    }
+
+    return null;
+  }
+
+  return search(result) || [];
+
+}
+
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+function canvasToDataUrl(
+  canvas,
+  quality = 0.72
+) {
+
+  if (!canvas) {
+    return null;
+  }
+
+  return canvas.toDataURL(
+    "image/jpeg",
+    quality
+  );
+
+}
+
+
+/* =========================================================
+   START CAMERA
+========================================================= */
+
+async function startCamera() {
+
+  try {
+
+    setStatus(
+      "Spúšťam kameru..."
+    );
+
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
+
+        video: {
+
+          facingMode: {
+            ideal: "environment"
+          },
+
+          width: {
+            ideal: 1280
+          },
+
+          height: {
+            ideal: 720
+          },
+
+          frameRate: {
+            ideal: 30,
+            max: 60
+          }
+
+        },
+
+        audio: false
+
+      });
+
+    video.srcObject =
+      cameraStream;
+
+    await video.play();
+
+    showScreen(
+      "camera"
+    );
+
+    resetScan();
+
+    setupOverlay();
+
+    if (
+      scanMode === "identify"
+    ) {
+
+      setInstruction(
+        "Hľadám uloženú mačku..."
+      );
+
+    } else {
+
+      setInstruction(
+        "Namier kameru na tvár mačky..."
       );
 
     }
+
+    setStatus(
+      "Kamera aktívna — načítavam AI"
+    );
+
+    const ready =
+      await initializeRoboflow();
+
+    if (!ready) {
+
+      setInstruction(
+        "Kamera funguje, ale AI sa nepodarilo pripraviť."
+      );
+
+      return;
+
+    }
+
+    setStatus(
+      "Kamera + Roboflow AI sú pripravené"
+    );
+
+    setInstruction(
+      scanMode === "identify"
+        ? "Hľadám mačku..."
+        : "Hľadám tvár mačky..."
+    );
+
+    inferenceRunning =
+      true;
+
+    scanFinished =
+      false;
+
+    scanStartedAt =
+      performance.now();
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+  } catch (error) {
+
+    console.error(
+      "CAMERA ERROR:",
+      error
+    );
+
+    setStatus(
+      "Kameru sa nepodarilo spustiť"
+    );
+
+    alert(
+      "Kameru sa nepodarilo spustiť.\n\nSkontroluj povolenie kamery v prehliadači."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+function stopCamera() {
+
+  inferenceRunning =
+    false;
+
+  scanFinished =
+    true;
+
+  if (cameraStream) {
+
+    cameraStream
+      .getTracks()
+      .forEach(track => {
+        track.stop();
+      });
+
+    cameraStream =
+      null;
+
+  }
+
+  if (video) {
+
+    video.pause();
+
+    video.srcObject =
+      null;
+
+  }
+
+  clearOverlay();
+
+  showScreen(
+    "home"
   );
 
-  if (
-    screen === "home" &&
-    homeScreen
-  ) {
+  refreshProfileManager();
 
-    homeScreen.classList.remove(
-      "hidden"
-    );
-
-  }
-
-  if (
-    screen === "camera" &&
-    cameraScreen
-  ) {
-
-    cameraScreen.classList.remove(
-      "hidden"
-    );
-
-  }
-
-  if (
-    screen === "profile" &&
-    profileScreen
-  ) {
-
-    profileScreen.classList.remove(
-      "hidden"
-    );
-
-  }
+  setStatus(
+    "Roboflow AI je pripravené"
+  );
 
 }
 
@@ -259,8 +707,6 @@ function resetScan() {
   samples = [];
 
   recognitionCandidates = [];
-
-  recognitionResult = null;
 
   bestDetection = null;
 
@@ -299,430 +745,601 @@ function resetScan() {
 
 
 /* =========================================================
-   CAMERA
+   OVERLAY
 ========================================================= */
 
-async function startCamera() {
+function setupOverlay() {
 
-  try {
-
-    resetScan();
-
-    showScreen(
-      "camera"
-    );
-
-    setStatus(
-      "Spúšťam kameru..."
-    );
-
-    setInstruction(
-      scanMode === "identify"
-        ? "Hľadám mačku..."
-        : "Načítavam detekciu nosa..."
-    );
-
-    if (stream) {
-
-      stream
-        .getTracks()
-        .forEach(
-          track =>
-            track.stop()
-        );
-
-    }
-
-    stream =
-      await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: {
-            ideal: "environment"
-          },
-          width: {
-            ideal: 1280
-          },
-          height: {
-            ideal: 720
-          }
-        },
-        audio: false
-      });
-
-    video =
-      document.getElementById(
-        "video"
-      );
-
-    if (!video) {
-      throw new Error(
-        "Video element not found."
-      );
-    }
-
-    video.srcObject =
-      stream;
-
-    await video.play();
-
-    frameCanvas =
-      document.createElement(
-        "canvas"
-      );
-
-    frameCanvas.width =
-      video.videoWidth;
-
-    frameCanvas.height =
-      video.videoHeight;
-
-    setStatus(
-      "Kamera je pripravená."
-    );
-
-    await initializeDetector();
-
-    scanStartedAt =
-      performance.now();
-
-    inferenceRunning =
-      true;
-
-    runInferenceLoop();
-
-  } catch (error) {
-
-    console.error(
-      "CAMERA ERROR:",
-      error
-    );
-
-    setStatus(
-      "Kameru sa nepodarilo spustiť."
-    );
-
-    setInstruction(
-      error.message ||
-      "Skontroluj povolenie kamery."
-    );
-
+  if (
+    !video ||
+    !video.videoWidth ||
+    !video.videoHeight
+  ) {
+    return;
   }
+
+  detectionOverlay.width =
+    video.videoWidth;
+
+  detectionOverlay.height =
+    video.videoHeight;
 
 }
 
 
-function stopCamera() {
+function clearOverlay() {
 
-  inferenceRunning =
-    false;
-
-  inferenceBusy =
-    false;
-
-  if (stream) {
-
-    stream
-      .getTracks()
-      .forEach(
-        track =>
-          track.stop()
-      );
-
+  if (!detectionOverlay) {
+    return;
   }
 
-  stream =
-    null;
+  const ctx =
+    detectionOverlay.getContext(
+      "2d"
+    );
 
-  if (video) {
-
-    video.srcObject =
-      null;
-
-  }
-
-  showScreen(
-    "home"
+  ctx.clearRect(
+    0,
+    0,
+    detectionOverlay.width,
+    detectionOverlay.height
   );
-
-  refreshProfileManager();
 
 }
 
 
 /* =========================================================
-   ROBOFLOW DETECTOR
+   INFERENCE LOOP
 ========================================================= */
 
-async function initializeDetector() {
+async function inferenceLoop(
+  timestamp
+) {
 
-  if (detectorReady) {
-    return;
-  }
-
-  if (detectorNote) {
-
-    detectorNote.textContent =
-      scanMode === "identify"
-        ? "Roboflow deteguje nos. Identita mačky sa následne porovná s lokálne uloženými profilmi."
-        : "Roboflow Cat Nose model je aktívny. Identita mačky sa pri ukladaní vytvorí z automaticky vybraných referenčných záberov.";
-
-  }
-
-  /*
-     The browser-side prototype calls the Roboflow
-     hosted model directly using the publishable key.
-  */
-
-  detectorReady =
-    true;
-
-}
-
-
-async function runInferenceLoop() {
-
-  if (!inferenceRunning) {
+  if (
+    !inferenceRunning ||
+    scanFinished
+  ) {
     return;
   }
 
   if (
-    performance.now() -
+    timestamp -
     scanStartedAt >
     MAX_SCAN_TIME
   ) {
 
     await finishAutomaticScan(
-      "Skenovanie dokončené."
+      "Automatické skenovanie dokončené."
     );
 
     return;
 
   }
 
+  if (inferenceBusy) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+    return;
+
+  }
+
+  if (
+    timestamp -
+    lastInferenceTime <
+    INFERENCE_INTERVAL
+  ) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+    return;
+
+  }
+
+  lastInferenceTime =
+    timestamp;
+
+  inferenceBusy =
+    true;
+
   try {
 
-    if (
-      !inferenceBusy &&
-      video &&
-      video.readyState >= 2
-    ) {
-
-      inferenceBusy =
-        true;
-
-      const detection =
-        await detectWithRoboflow();
-
-      inferenceBusy =
-        false;
-
-      if (detection) {
-
-        bestDetection =
-          detection;
-
-        drawDetection(
-          detection
-        );
-
-        updateQuality(
-          detection
-        );
-
-        await considerAutomaticCapture(
-          detection
-        );
-
-      } else {
-
-        clearOverlay();
-
-        setInstruction(
-          scanMode === "identify"
-            ? "Hľadám mačku..."
-            : "Hľadám nos mačky..."
-        );
-
-      }
-
-    }
+    await runCameraInference();
 
   } catch (error) {
-
-    inferenceBusy =
-      false;
 
     console.error(
       "INFERENCE ERROR:",
       error
     );
 
+  } finally {
+
+    inferenceBusy =
+      false;
+
   }
 
-  requestAnimationFrame(
-    runInferenceLoop
-  );
+  if (
+    inferenceRunning &&
+    !scanFinished
+  ) {
+
+    requestAnimationFrame(
+      inferenceLoop
+    );
+
+  }
 
 }
 
 
-async function detectWithRoboflow() {
+/* =========================================================
+   CAMERA INFERENCE
+========================================================= */
 
-  if (!video) {
-    return null;
-  }
+async function runCameraInference() {
 
   if (
-    performance.now() -
-    lastInferenceTime <
-    180
+    !modelReady ||
+    !video ||
+    video.readyState < 2
   ) {
-
-    return null;
-
+    return;
   }
 
-  lastInferenceTime =
-    performance.now();
+  if (!frameCanvas) {
+    return;
+  }
 
-  const tempCanvas =
-    document.createElement(
-      "canvas"
-    );
-
-  const width =
+  frameCanvas.width =
     video.videoWidth;
 
-  const height =
+  frameCanvas.height =
     video.videoHeight;
 
-  tempCanvas.width =
-    width;
-
-  tempCanvas.height =
-    height;
-
   const ctx =
-    tempCanvas.getContext(
-      "2d"
+    frameCanvas.getContext(
+      "2d",
+      {
+        willReadFrequently: true
+      }
     );
 
   ctx.drawImage(
     video,
     0,
     0,
-    width,
-    height
+    frameCanvas.width,
+    frameCanvas.height
   );
 
-  const imageData =
-    tempCanvas.toDataURL(
-      "image/jpeg",
-      0.82
+  const dataUrl =
+    canvasToDataUrl(
+      frameCanvas,
+      0.72
     );
 
-  const response =
-    await fetch(
-      ROBOFLOW_API_URL +
-      `?api_key=${encodeURIComponent(
-        ROBOFLOW_PUBLISHABLE_KEY
-      )}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/x-www-form-urlencoded"
-        },
-        body:
-          imageData
-      }
+  const predictions =
+    await runRoboflowWorkflow(
+      dataUrl
     );
 
-  if (!response.ok) {
-
-    throw new Error(
-      `Roboflow HTTP ${response.status}`
+  const detection =
+    selectBestDetection(
+      predictions
     );
+
+  drawDetection(
+    detection
+  );
+
+  if (!detection) {
+
+    if (qualityText) {
+      qualityText.textContent =
+        "Hľadám...";
+    }
+
+    if (qualityBar) {
+      qualityBar.style.width =
+        "5%";
+    }
+
+    setInstruction(
+      scanMode === "identify"
+        ? "Hľadám tvár mačky..."
+        : "Hľadám tvár mačky..."
+    );
+
+    return;
 
   }
 
-  const result =
-    await response.json();
+  const confidence =
+    detection.confidence;
+
+  const percentage =
+    Math.round(
+      confidence * 100
+    );
+
+  if (qualityText) {
+    qualityText.textContent =
+      `${percentage}%`;
+  }
+
+  if (qualityBar) {
+
+    qualityBar.style.width =
+      `${Math.max(
+        5,
+        Math.min(
+          100,
+          percentage
+        )
+      )}%`;
+
+  }
+
+  bestDetection =
+    detection;
+
+  setInstruction(
+    `Tvár mačky detegovaná — ${percentage}%`
+  );
 
   if (
-    !result.predictions ||
-    !result.predictions.length
+    confidence >=
+    CAPTURE_CONFIDENCE
   ) {
 
-    return null;
+    await considerAutomaticCapture(
+      detection
+    );
 
   }
 
-  const prediction =
-    [...result.predictions]
-      .sort(
-        (a, b) =>
-          b.confidence -
-          a.confidence
-      )[0];
+}
 
-  return normalizeDetection(
-    prediction,
-    width,
-    height
+
+/* =========================================================
+   SELECT BEST DETECTION
+========================================================= */
+
+function selectBestDetection(
+  predictions
+) {
+
+  if (
+    !Array.isArray(
+      predictions
+    ) ||
+    !predictions.length
+  ) {
+    return null;
+  }
+
+  let best =
+    null;
+
+  for (
+    const prediction
+    of predictions
+  ) {
+
+    if (!prediction) {
+      continue;
+    }
+
+    const confidence =
+      Number(
+        prediction.confidence ||
+        0
+      );
+
+    if (
+      confidence <
+      MODEL_SCORE_THRESHOLD
+    ) {
+      continue;
+    }
+
+    const bbox =
+      prediction.bbox;
+
+    if (
+      !bbox ||
+      confidence <= 0
+    ) {
+      continue;
+    }
+
+    const candidate = {
+
+      confidence,
+
+      className:
+        prediction.class ||
+        "cat-face",
+
+      bbox: {
+
+        x:
+          Number(
+            bbox.x
+          ),
+
+        y:
+          Number(
+            bbox.y
+          ),
+
+        width:
+          Number(
+            bbox.width
+          ),
+
+        height:
+          Number(
+            bbox.height
+          )
+
+      }
+
+    };
+
+    if (
+      !best ||
+      candidate.confidence >
+      best.confidence
+    ) {
+
+      best =
+        candidate;
+
+    }
+
+  }
+
+  return best;
+
+}
+
+
+/* =========================================================
+   DRAW DETECTION
+========================================================= */
+
+function drawDetection(
+  detection
+) {
+
+  if (!detectionOverlay) {
+    return;
+  }
+
+  const ctx =
+    detectionOverlay.getContext(
+      "2d"
+    );
+
+  ctx.clearRect(
+    0,
+    0,
+    detectionOverlay.width,
+    detectionOverlay.height
+  );
+
+  if (!detection) {
+    return;
+  }
+
+  const b =
+    detection.bbox;
+
+  const left =
+    b.x -
+    b.width / 2;
+
+  const top =
+    b.y -
+    b.height / 2;
+
+  ctx.lineWidth =
+    4;
+
+  ctx.strokeStyle =
+    "#00ff88";
+
+  ctx.strokeRect(
+    left,
+    top,
+    b.width,
+    b.height
+  );
+
+  ctx.font =
+    "bold 20px Arial";
+
+  ctx.fillStyle =
+    "#00ff88";
+
+  ctx.fillText(
+    `CAT FACE ${Math.round(
+      detection.confidence *
+      100
+    )}%`,
+    left,
+    Math.max(
+      25,
+      top - 8
+    )
   );
 
 }
 
 
-function normalizeDetection(
-  prediction,
-  imageWidth,
-  imageHeight
+/* =========================================================
+   CAPTURE QUALITY
+========================================================= */
+
+function calculateCaptureQuality(
+  detection
 ) {
 
-  const x =
-    prediction.x;
+  const b =
+    detection.bbox;
 
-  const y =
-    prediction.y;
+  const frameWidth =
+    video.videoWidth;
 
-  const width =
-    prediction.width;
+  const frameHeight =
+    video.videoHeight;
 
-  const height =
-    prediction.height;
+  if (
+    !b ||
+    !frameWidth ||
+    !frameHeight
+  ) {
+    return 0;
+  }
 
-  return {
+  const area =
+    b.width *
+    b.height;
 
-    confidence:
-      Number(
-        prediction.confidence ||
-        0
-      ),
+  const frameArea =
+    frameWidth *
+    frameHeight;
 
-    bbox: {
+  const areaRatio =
+    area /
+    frameArea;
 
-      x:
-        x -
-        width / 2,
+  const sizeScore =
+    Math.min(
+      100,
+      (
+        areaRatio /
+        0.003
+      ) * 100
+    );
 
-      y:
-        y -
-        height / 2,
+  const confidenceScore =
+    detection.confidence *
+    100;
 
-      width:
-        width,
+  const centerX =
+    b.x /
+    frameWidth;
 
-      height:
-        height
+  const centerY =
+    b.y /
+    frameHeight;
 
-    },
+  const distance =
+    Math.sqrt(
+      Math.pow(
+        centerX - 0.5,
+        2
+      ) +
+      Math.pow(
+        centerY - 0.5,
+        2
+      )
+    );
 
-    imageWidth,
-    imageHeight
+  const centerScore =
+    Math.max(
+      0,
+      100 -
+      distance * 140
+    );
 
-  };
+  return Math.round(
+
+    confidenceScore *
+    0.55 +
+
+    sizeScore *
+    0.25 +
+
+    centerScore *
+    0.20
+
+  );
+
+}
+
+
+/* =========================================================
+   DUPLICATE CHECK
+========================================================= */
+
+function isDuplicateSample(
+  detection
+) {
+
+  const list =
+    scanMode === "enroll"
+      ? samples
+      : recognitionCandidates;
+
+  if (!list.length) {
+    return false;
+  }
+
+  const current =
+    detection.bbox;
+
+  const previous =
+    list[list.length - 1].bbox;
+
+  if (
+    !current ||
+    !previous
+  ) {
+    return false;
+  }
+
+  const dx =
+    Math.abs(
+      current.x -
+      previous.x
+    );
+
+  const dy =
+    Math.abs(
+      current.y -
+      previous.y
+    );
+
+  const movement =
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
+
+  const sizeChange =
+    Math.abs(
+      current.width -
+      previous.width
+    ) /
+    Math.max(
+      1,
+      previous.width
+    );
+
+  return (
+    movement < 18 &&
+    sizeChange < 0.08
+  );
 
 }
 
@@ -747,9 +1364,7 @@ async function considerAutomaticCapture(
     lastAcceptedSampleTime <
     MIN_SAMPLE_INTERVAL
   ) {
-
     return;
-
   }
 
   const quality =
@@ -758,6 +1373,14 @@ async function considerAutomaticCapture(
     );
 
   if (quality < 30) {
+    return;
+  }
+
+  if (
+    isDuplicateSample(
+      detection
+    )
+  ) {
     return;
   }
 
@@ -770,16 +1393,6 @@ async function considerAutomaticCapture(
     return;
   }
 
-  if (
-    isDuplicateSample(
-      detection
-    )
-  ) {
-
-    return;
-
-  }
-
   const candidate = {
 
     image:
@@ -788,11 +1401,13 @@ async function considerAutomaticCapture(
     confidence:
       detection.confidence,
 
-    quality,
+    quality:
+      quality,
 
-    bbox: {
-      ...detection.bbox
-    },
+    bbox:
+      {
+        ...detection.bbox
+      },
 
     timestamp:
       Date.now()
@@ -800,8 +1415,7 @@ async function considerAutomaticCapture(
   };
 
   if (
-    scanMode ===
-    "enroll"
+    scanMode === "enroll"
   ) {
 
     samples.push(
@@ -836,7 +1450,7 @@ async function considerAutomaticCapture(
     updateCounter();
 
     setInstruction(
-      `Zachytávam referenčné zábery ${samples.length} / ${MAX_CANDIDATES}`
+      `Automaticky zbieram zábery ${samples.length}/${MAX_CANDIDATES}`
     );
 
   } else {
@@ -863,7 +1477,7 @@ async function considerAutomaticCapture(
     updateCounter();
 
     setInstruction(
-      `Analyzujem mačku — ${recognitionCandidates.length} kandidátov`
+      `Analyzujem mačku — ${recognitionCandidates.length} záberov`
     );
 
   }
@@ -875,11 +1489,11 @@ async function considerAutomaticCapture(
 
 
 /* =========================================================
-   FRAME CAPTURE
+   CAPTURE CURRENT FRAME
 ========================================================= */
 
 function captureCurrentFrame(
-  detection = null
+  detection
 ) {
 
   if (
@@ -888,9 +1502,7 @@ function captureCurrentFrame(
     !video.videoHeight ||
     !frameCanvas
   ) {
-
     return null;
-
   }
 
   frameCanvas.width =
@@ -901,11 +1513,7 @@ function captureCurrentFrame(
 
   const ctx =
     frameCanvas.getContext(
-      "2d",
-      {
-        willReadFrequently:
-          true
-      }
+      "2d"
     );
 
   ctx.drawImage(
@@ -916,12 +1524,6 @@ function captureCurrentFrame(
     frameCanvas.height
   );
 
-  /*
-     Store a compact face-region reference.
-     We use the Roboflow nose box as the center
-     and expand it to include eyes, muzzle and coat.
-  */
-
   if (
     detection &&
     detection.bbox
@@ -929,6 +1531,12 @@ function captureCurrentFrame(
 
     const b =
       detection.bbox;
+
+    /*
+       The detected face is the center.
+       Keep enough surrounding face area to include
+       eyes, muzzle, fur pattern and proportions.
+    */
 
     const side =
       Math.max(
@@ -1006,332 +1614,216 @@ function captureCurrentFrame(
 
 
 /* =========================================================
-   CAPTURE QUALITY
-========================================================= */
-
-function calculateCaptureQuality(
-  detection
-) {
-
-  if (
-    !detection ||
-    !detection.bbox
-  ) {
-
-    return 0;
-
-  }
-
-  const confidence =
-    detection.confidence;
-
-  const b =
-    detection.bbox;
-
-  const imageArea =
-    Math.max(
-      1,
-      detection.imageWidth *
-      detection.imageHeight
-    );
-
-  const boxArea =
-    Math.max(
-      1,
-      b.width *
-      b.height
-    );
-
-  const relativeSize =
-    boxArea /
-    imageArea;
-
-  const sizeScore =
-    Math.min(
-      100,
-      relativeSize *
-      10000
-    );
-
-  const confidenceScore =
-    confidence *
-    100;
-
-  const centerX =
-    b.x +
-    b.width / 2;
-
-  const centerY =
-    b.y +
-    b.height / 2;
-
-  const imageCenterX =
-    detection.imageWidth /
-    2;
-
-  const imageCenterY =
-    detection.imageHeight /
-    2;
-
-  const distance =
-    Math.sqrt(
-      Math.pow(
-        centerX -
-        imageCenterX,
-        2
-      ) +
-      Math.pow(
-        centerY -
-        imageCenterY,
-        2
-      )
-    );
-
-  const maxDistance =
-    Math.sqrt(
-      Math.pow(
-        detection.imageWidth / 2,
-        2
-      ) +
-      Math.pow(
-        detection.imageHeight / 2,
-        2
-      )
-    );
-
-  const centerScore =
-    Math.max(
-      0,
-      100 -
-      (
-        distance /
-        Math.max(
-          1,
-          maxDistance
-        )
-      ) *
-      100
-    );
-
-  return (
-    confidenceScore *
-      0.60 +
-    sizeScore *
-      0.25 +
-    centerScore *
-      0.15
-  );
-
-}
-
-
-function updateQuality(
-  detection
-) {
-
-  const quality =
-    calculateCaptureQuality(
-      detection
-    );
-
-  if (qualityText) {
-
-    qualityText.textContent =
-      `${Math.round(
-        quality
-      )}%`;
-
-  }
-
-  if (qualityBar) {
-
-    qualityBar.style.width =
-      `${Math.max(
-        0,
-        Math.min(
-          100,
-          quality
-        )
-      )}%`;
-
-  }
-
-}
-
-
-/* =========================================================
-   DUPLICATE DETECTION
-========================================================= */
-
-function isDuplicateSample(
-  detection
-) {
-
-  const list =
-    scanMode === "enroll"
-      ? samples
-      : recognitionCandidates;
-
-  if (!list.length) {
-    return false;
-  }
-
-  const current =
-    detection.bbox;
-
-  const previous =
-    list[
-      list.length - 1
-    ].bbox;
-
-  if (
-    !current ||
-    !previous
-  ) {
-
-    return false;
-
-  }
-
-  const dx =
-    Math.abs(
-      current.x -
-      previous.x
-    );
-
-  const dy =
-    Math.abs(
-      current.y -
-      previous.y
-    );
-
-  const movement =
-    Math.sqrt(
-      dx * dx +
-      dy * dy
-    );
-
-  const sizeChange =
-    Math.abs(
-      current.width -
-      previous.width
-    ) /
-    Math.max(
-      1,
-      previous.width
-    );
-
-  return (
-    movement < 18 &&
-    sizeChange < 0.08
-  );
-
-}
-
-
-/* =========================================================
    COUNTER
 ========================================================= */
 
 function updateCounter() {
 
-  if (!counter) {
+  if (!frameCounter) {
     return;
   }
 
-  counter.textContent =
-    `${samples.length}`;
+  frameCounter.textContent =
+    `${samples.length} / ${MAX_SAMPLES}`;
 
 }
 
 
 /* =========================================================
-   OVERLAY
+   SELECT BEST REFERENCES
 ========================================================= */
 
-function clearOverlay() {
+function selectBestReferenceSamples(
+  candidates,
+  limit
+) {
 
-  const overlay =
-    document.getElementById(
-      "overlay"
-    );
-
-  if (!overlay) {
-    return;
+  if (
+    !Array.isArray(candidates) ||
+    !candidates.length
+  ) {
+    return [];
   }
 
-  const ctx =
-    overlay.getContext(
-      "2d"
+  const ranked =
+    [...candidates].sort(
+      (a, b) =>
+        (
+          b.quality +
+          b.confidence * 100
+        ) -
+        (
+          a.quality +
+          a.confidence * 100
+        )
     );
 
-  ctx.clearRect(
-    0,
-    0,
-    overlay.width,
-    overlay.height
+  return selectDiverseCandidates(
+    ranked,
+    limit
   );
 
 }
 
 
-function drawDetection(
-  detection
+function selectDiverseCandidates(
+  candidates,
+  limit
 ) {
 
-  const overlay =
-    document.getElementById(
-      "overlay"
-    );
-
   if (
-    !overlay ||
-    !video
+    candidates.length <= limit
+  ) {
+    return candidates;
+  }
+
+  const selected = [];
+
+  selected.push(
+    candidates[0]
+  );
+
+  while (
+    selected.length <
+    limit
   ) {
 
-    return;
+    let bestCandidate =
+      null;
+
+    let bestScore =
+      -Infinity;
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      if (
+        selected.includes(
+          candidate
+        )
+      ) {
+        continue;
+      }
+
+      let minDistance =
+        Infinity;
+
+      for (
+        const chosen
+        of selected
+      ) {
+
+        const a =
+          candidate.bbox;
+
+        const b =
+          chosen.bbox;
+
+        if (!a || !b) {
+          continue;
+        }
+
+        const dx =
+          (
+            a.x -
+            b.x
+          ) /
+          Math.max(
+            1,
+            video.videoWidth ||
+            1000
+          );
+
+        const dy =
+          (
+            a.y -
+            b.y
+          ) /
+          Math.max(
+            1,
+            video.videoHeight ||
+            1000
+          );
+
+        const scale =
+          Math.abs(
+            Math.log(
+              Math.max(
+                1,
+                a.width
+              ) /
+              Math.max(
+                1,
+                b.width
+              )
+            )
+          );
+
+        const distance =
+          Math.sqrt(
+            dx * dx +
+            dy * dy
+          ) +
+          scale * 0.25;
+
+        minDistance =
+          Math.min(
+            minDistance,
+            distance
+          );
+
+      }
+
+      const qualityScore =
+        (
+          candidate.quality +
+          candidate.confidence * 100
+        ) / 2;
+
+      const diversityScore =
+        Math.min(
+          1,
+          minDistance * 6
+        ) * 100;
+
+      const score =
+        qualityScore * 0.70 +
+        diversityScore * 0.30;
+
+      if (
+        score >
+        bestScore
+      ) {
+
+        bestScore =
+          score;
+
+        bestCandidate =
+          candidate;
+
+      }
+
+    }
+
+    if (!bestCandidate) {
+      break;
+    }
+
+    selected.push(
+      bestCandidate
+    );
 
   }
 
-  overlay.width =
-    video.videoWidth;
-
-  overlay.height =
-    video.videoHeight;
-
-  const ctx =
-    overlay.getContext(
-      "2d"
-    );
-
-  ctx.clearRect(
-    0,
-    0,
-    overlay.width,
-    overlay.height
-  );
-
-  const b =
-    detection.bbox;
-
-  ctx.lineWidth =
-    3;
-
-  ctx.strokeStyle =
-    "#00ff66";
-
-  ctx.strokeRect(
-    b.x,
-    b.y,
-    b.width,
-    b.height
-  );
+  return selected;
 
 }
 
 
 /* =========================================================
-   FINISH AUTOMATIC SCAN
+   FINISH SCAN
 ========================================================= */
 
 async function finishAutomaticScan(
@@ -1349,8 +1841,7 @@ async function finishAutomaticScan(
     false;
 
   if (
-    scanMode ===
-    "enroll"
+    scanMode === "enroll"
   ) {
 
     samples =
@@ -1359,15 +1850,13 @@ async function finishAutomaticScan(
         MAX_SAMPLES
       );
 
-    setInstruction(
-      samples.length
-        ? `${samples.length} referenčných záberov vybraných`
-        : message
-    );
+    updateCounter();
 
-    if (
-      samples.length > 0
-    ) {
+    if (samples.length) {
+
+      setInstruction(
+        `${samples.length} najlepších záberov vybraných automaticky`
+      );
 
       showScanResult();
 
@@ -1382,8 +1871,7 @@ async function finishAutomaticScan(
   }
 
   if (
-    scanMode ===
-    "identify"
+    scanMode === "identify"
   ) {
 
     const candidates =
@@ -1398,29 +1886,25 @@ async function finishAutomaticScan(
     samples =
       candidates;
 
+    updateCounter();
+
     await identifyCurrentCat();
 
     return;
 
   }
 
-  if (
-    samples.length > 0
-  ) {
-
+  if (samples.length) {
     showScanResult();
-
   } else {
-
     showScanFailure();
-
   }
 
 }
 
 
 /* =========================================================
-   SUCCESS
+   SCAN RESULT
 ========================================================= */
 
 function showScanResult() {
@@ -1445,7 +1929,7 @@ function showScanResult() {
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      Aplikácia vybrala najkvalitnejšie a navzájom dostatočne odlišné zábery.
+      Aplikácia vybrala najkvalitnejšie a dostatočne odlišné zábery.
     </p>
 
   `;
@@ -1479,7 +1963,7 @@ function showScanResult() {
 
 
 /* =========================================================
-   FAILURE
+   SCAN FAILURE
 ========================================================= */
 
 function showScanFailure() {
@@ -1495,231 +1979,18 @@ function showScanFailure() {
   scanResult.innerHTML = `
 
     <p style="margin:0;font-weight:700;">
-      NEPODARILO SA ZACHYTIŤ MAČKU
+      TVÁR MAČKY NEBOLA DETEGOVANÁ
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      Skús kameru nasmerovať bližšie na tvár mačky.
+      Počas skenovania sa nepodarilo získať vhodný záber tváre mačky.
     </p>
 
   `;
 
-}
-
-
-/* =========================================================
-   PROFILE SAVE
-========================================================= */
-
-async function saveProfile() {
-
-  const nameElement =
-    document.getElementById(
-      "catName"
-    );
-
-  const nicknameElement =
-    document.getElementById(
-      "catNickname"
-    );
-
-  const savedInfo =
-    document.getElementById(
-      "savedInfo"
-    );
-
-  const name =
-    nameElement
-      ? nameElement.value.trim()
-      : "";
-
-  const nickname =
-    nicknameElement
-      ? nicknameElement.value.trim()
-      : "";
-
-  if (!samples.length) {
-
-    if (savedInfo) {
-
-      savedInfo.classList.remove(
-        "hidden"
-      );
-
-      savedInfo.innerHTML = `
-        <p style="margin:0;font-weight:700;">
-          NO SAMPLE AVAILABLE
-        </p>
-      `;
-
-    }
-
-    return;
-
-  }
-
-  const catName =
-    name ||
-    "Unnamed cat";
-
-  try {
-
-    const profiles =
-      loadCatProfiles();
-
-    const now =
-      Date.now();
-
-    const profile = {
-
-      id:
-        "cat_" +
-        now +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2, 8),
-
-      name:
-        catName,
-
-      nickname:
-        nickname,
-
-      createdAt:
-        now,
-
-      samples:
-        []
-
-    };
-
-    for (
-      const sample
-      of samples
-    ) {
-
-      const fingerprint =
-        await createVisualFingerprint(
-          sample.image
-        );
-
-      if (!fingerprint) {
-        continue;
-      }
-
-      profile.samples.push({
-
-        image:
-          sample.image,
-
-        fingerprint,
-
-        confidence:
-          sample.confidence,
-
-        quality:
-          sample.quality,
-
-        timestamp:
-          sample.timestamp
-
-      });
-
-    }
-
-    if (
-      !profile.samples.length
-    ) {
-
-      throw new Error(
-        "Nepodarilo sa vytvoriť referenčné vzorky."
-      );
-
-    }
-
-    profiles.push(
-      profile
-    );
-
-    saveCatProfiles(
-      profiles
-    );
-
-    if (savedInfo) {
-
-      savedInfo.classList.remove(
-        "hidden"
-      );
-
-      savedInfo.innerHTML = `
-
-        <p style="margin:0;font-weight:700;">
-          MAČKA ULOŽENÁ
-        </p>
-
-        <p style="margin:8px 0 0;">
-          ${escapeHtml(
-            catName
-          )}
-        </p>
-
-        ${
-          nickname
-            ? `
-              <p style="margin:4px 0 0;opacity:.75;">
-                ${escapeHtml(
-                  nickname
-                )}
-              </p>
-            `
-            : ""
-        }
-
-        <p style="margin:8px 0 0;opacity:.75;">
-          ${profile.samples.length} referenčných záberov.
-        </p>
-
-        <p style="margin:8px 0 0;opacity:.65;">
-          Profil je uložený v tomto zariadení.
-        </p>
-
-      `;
-
-    }
-
-    refreshProfileManager();
-
-  } catch (
-    error
-  ) {
-
-    console.error(
-      "PROFILE SAVE ERROR:",
-      error
-    );
-
-    if (savedInfo) {
-
-      savedInfo.classList.remove(
-        "hidden"
-      );
-
-      savedInfo.innerHTML = `
-        <p style="margin:0;font-weight:700;">
-          PROFIL SA NEPODARILO ULOŽIŤ
-        </p>
-        <p style="margin:8px 0 0;opacity:.75;">
-          ${escapeHtml(
-            error.message ||
-            "Neznáma chyba"
-          )}
-        </p>
-      `;
-
-    }
-
-  }
+  setInstruction(
+    "Tvár mačky sa nepodarilo spoľahlivo detegovať."
+  );
 
 }
 
@@ -1752,9 +2023,7 @@ function loadCatProfiles() {
       ? parsed
       : [];
 
-  } catch (
-    error
-  ) {
+  } catch (error) {
 
     console.error(
       "PROFILE LOAD ERROR:",
@@ -1889,14 +2158,10 @@ async function createVisualFingerprint(
               pixels[i];
 
             const g =
-              pixels[
-                i + 1
-              ];
+              pixels[i + 1];
 
             const b =
-              pixels[
-                i + 2
-              ];
+              pixels[i + 2];
 
             const luminance =
               0.299 * r +
@@ -1925,10 +2190,7 @@ async function createVisualFingerprint(
 
         const mean =
           gray.reduce(
-            (
-              sum,
-              value
-            ) =>
+            (sum, value) =>
               sum + value,
             0
           ) /
@@ -1936,10 +2198,7 @@ async function createVisualFingerprint(
 
         const variance =
           gray.reduce(
-            (
-              sum,
-              value
-            ) =>
+            (sum, value) =>
               sum +
               Math.pow(
                 value -
@@ -1965,13 +2224,13 @@ async function createVisualFingerprint(
                   (
                     value -
                     mean
-                  ) / std
+                  ) /
+                  std
                 )
               )
           );
 
-        const smallGray =
-          [];
+        const smallGray = [];
 
         for (
           let y = 0;
@@ -1982,9 +2241,7 @@ async function createVisualFingerprint(
           const yy =
             Math.min(
               23,
-              Math.floor(
-                y
-              )
+              Math.floor(y)
             );
 
           for (
@@ -1996,9 +2253,7 @@ async function createVisualFingerprint(
             const xx =
               Math.min(
                 23,
-                Math.floor(
-                  x
-                )
+                Math.floor(x)
               );
 
             smallGray.push(
@@ -2061,19 +2316,14 @@ function vectorSimilarity(
       b.length ||
     !a.length
   ) {
-
     return 0;
-
   }
 
-  let dot =
-    0;
+  let dot = 0;
 
-  let normA =
-    0;
+  let normA = 0;
 
-  let normB =
-    0;
+  let normB = 0;
 
   for (
     let i = 0;
@@ -2106,9 +2356,7 @@ function vectorSimilarity(
     !normA ||
     !normB
   ) {
-
     return 0;
-
   }
 
   return (
@@ -2126,18 +2374,17 @@ function vectorSimilarity(
 }
 
 
+/* =========================================================
+   COMPARE FINGERPRINTS
+========================================================= */
+
 function compareFingerprints(
   a,
   b
 ) {
 
-  if (
-    !a ||
-    !b
-  ) {
-
+  if (!a || !b) {
     return 0;
-
   }
 
   const grayScore =
@@ -2153,238 +2400,15 @@ function compareFingerprints(
     );
 
   return (
-    grayScore *
-      0.72 +
-    rgbScore *
-      0.28
+    grayScore * 0.72 +
+    rgbScore * 0.28
   );
 
 }
 
 
 /* =========================================================
-   REFERENCE SELECTION
-========================================================= */
-
-function selectBestReferenceSamples(
-  candidates,
-  limit
-) {
-
-  if (
-    !Array.isArray(
-      candidates
-    ) ||
-    !candidates.length
-  ) {
-
-    return [];
-
-  }
-
-  const ranked =
-    [...candidates].sort(
-      (a, b) =>
-        (
-          b.quality +
-          b.confidence *
-            100
-        ) -
-        (
-          a.quality +
-          a.confidence *
-            100
-        )
-    );
-
-  return selectDiverseCandidates(
-    ranked,
-    limit
-  );
-
-}
-
-
-function selectDiverseCandidates(
-  candidates,
-  limit
-) {
-
-  if (
-    candidates.length <=
-    limit
-  ) {
-
-    return candidates;
-
-  }
-
-  const selected =
-    [];
-
-  selected.push(
-    candidates[0]
-  );
-
-  while (
-    selected.length <
-    limit
-  ) {
-
-    let bestCandidate =
-      null;
-
-    let bestScore =
-      -Infinity;
-
-    for (
-      const candidate
-      of candidates
-    ) {
-
-      if (
-        selected.includes(
-          candidate
-        )
-      ) {
-
-        continue;
-
-      }
-
-      let minDistance =
-        Infinity;
-
-      for (
-        const chosen
-        of selected
-      ) {
-
-        const a =
-          candidate.bbox;
-
-        const b =
-          chosen.bbox;
-
-        if (
-          !a ||
-          !b
-        ) {
-
-          continue;
-
-        }
-
-        const dx =
-          (
-            a.x -
-            b.x
-          ) /
-          Math.max(
-            1,
-            video?.videoWidth ||
-              1000
-          );
-
-        const dy =
-          (
-            a.y -
-            b.y
-          ) /
-          Math.max(
-            1,
-            video?.videoHeight ||
-              1000
-          );
-
-        const scale =
-          Math.abs(
-            Math.log(
-              Math.max(
-                1,
-                a.width
-              ) /
-              Math.max(
-                1,
-                b.width
-              )
-            )
-          );
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-            dy * dy
-          ) +
-          scale *
-            0.25;
-
-        minDistance =
-          Math.min(
-            minDistance,
-            distance
-          );
-
-      }
-
-      const qualityScore =
-        (
-          candidate.quality +
-          candidate.confidence *
-            100
-        ) /
-        2;
-
-      const diversityScore =
-        Math.min(
-          1,
-          minDistance *
-            6
-        ) *
-        100;
-
-      const score =
-        qualityScore *
-          0.70 +
-        diversityScore *
-          0.30;
-
-      if (
-        score >
-        bestScore
-      ) {
-
-        bestScore =
-          score;
-
-        bestCandidate =
-          candidate;
-
-      }
-
-    }
-
-    if (
-      !bestCandidate
-    ) {
-
-      break;
-
-    }
-
-    selected.push(
-      bestCandidate
-    );
-
-  }
-
-  return selected;
-
-}
-
-
-/* =========================================================
-   CAT IDENTIFICATION
+   IDENTIFY CURRENT CAT
 ========================================================= */
 
 async function identifyCurrentCat() {
@@ -2392,32 +2416,32 @@ async function identifyCurrentCat() {
   const profiles =
     loadCatProfiles();
 
-  if (
-    !profiles.length
-  ) {
+  if (!profiles.length) {
 
     showIdentificationResult({
+
       type:
         "empty",
 
       message:
         "Zatiaľ nemáš uloženú žiadnu mačku."
+
     });
 
     return;
 
   }
 
-  if (
-    !samples.length
-  ) {
+  if (!samples.length) {
 
     showIdentificationResult({
+
       type:
         "empty",
 
       message:
         "Nepodarilo sa zachytiť vhodný záber."
+
     });
 
     return;
@@ -2432,8 +2456,7 @@ async function identifyCurrentCat() {
     [];
 
   for (
-    const sample
-    of samples
+    const sample of samples
   ) {
 
     const fp =
@@ -2442,11 +2465,9 @@ async function identifyCurrentCat() {
       );
 
     if (fp) {
-
       candidateFingerprints.push(
         fp
       );
-
     }
 
   }
@@ -2456,19 +2477,20 @@ async function identifyCurrentCat() {
   ) {
 
     showIdentificationResult({
+
       type:
         "empty",
 
       message:
         "Nepodarilo sa vytvoriť vizuálny podpis."
+
     });
 
     return;
 
   }
 
-  const results =
-    [];
+  const results = [];
 
   for (
     const profile
@@ -2480,16 +2502,16 @@ async function identifyCurrentCat() {
 
     for (
       const reference
-      of profile.samples ||
-      []
+      of (
+        profile.samples ||
+        []
+      )
     ) {
 
       if (
         !reference.fingerprint
       ) {
-
         continue;
-
       }
 
       for (
@@ -2498,10 +2520,12 @@ async function identifyCurrentCat() {
       ) {
 
         profileScores.push(
+
           compareFingerprints(
             candidateFp,
             reference.fingerprint
           )
+
         );
 
       }
@@ -2511,18 +2535,18 @@ async function identifyCurrentCat() {
     if (
       !profileScores.length
     ) {
-
       continue;
-
     }
 
     profileScores.sort(
-      (
-        a,
-        b
-      ) =>
+      (a, b) =>
         b - a
     );
+
+    /*
+       Use several strongest comparisons rather than
+       trusting one single frame.
+    */
 
     const top =
       profileScores.slice(
@@ -2535,10 +2559,7 @@ async function identifyCurrentCat() {
 
     const score =
       top.reduce(
-        (
-          sum,
-          value
-        ) =>
+        (sum, value) =>
           sum + value,
         0
       ) /
@@ -2546,19 +2567,18 @@ async function identifyCurrentCat() {
 
     results.push({
 
-      profile,
+      profile:
+        profile,
 
-      score
+      score:
+        score
 
     });
 
   }
 
   results.sort(
-    (
-      a,
-      b
-    ) =>
+    (a, b) =>
       b.score -
       a.score
   );
@@ -2574,8 +2594,10 @@ async function identifyCurrentCat() {
   const margin =
     winner &&
     runnerUp
+
       ? winner.score -
         runnerUp.score
+
       : 1;
 
   const accepted =
@@ -2585,9 +2607,7 @@ async function identifyCurrentCat() {
     margin >=
       0.035;
 
-  if (
-    !accepted
-  ) {
+  if (!accepted) {
 
     showIdentificationResult({
 
@@ -2602,11 +2622,6 @@ async function identifyCurrentCat() {
       winner:
         winner
           ? winner.profile
-          : null,
-
-      runnerUp:
-        runnerUp
-          ? runnerUp.profile
           : null
 
     });
@@ -2624,12 +2639,7 @@ async function identifyCurrentCat() {
       winner.score,
 
     winner:
-      winner.profile,
-
-    runnerUp:
-      runnerUp
-        ? runnerUp.profile
-        : null
+      winner.profile
 
   });
 
@@ -2658,6 +2668,7 @@ function showIdentificationResult(
   ) {
 
     scanResult.innerHTML = `
+
       <p style="margin:0;font-weight:700;">
         ŽIADNA MAČKA
       </p>
@@ -2667,6 +2678,7 @@ function showIdentificationResult(
           result.message
         )}
       </p>
+
     `;
 
     return;
@@ -2709,7 +2721,7 @@ function showIdentificationResult(
       }
 
       <p style="margin:8px 0 0;opacity:.65;">
-        Toto je konzervatívny výsledok prototypu, nie biometrická istota.
+        Výsledok je založený na lokálnom porovnaní uložených referencií.
       </p>
 
     `;
@@ -2727,10 +2739,10 @@ function showIdentificationResult(
   scanResult.innerHTML = `
 
     <p style="margin:0;font-weight:700;">
-      MAČKA ROZPOZNANÁ
+      🐱 MAČKA ROZPOZNANÁ
     </p>
 
-    <p style="margin:10px 0 0;font-size:1.2em;">
+    <p style="margin:10px 0 0;font-size:1.25em;font-weight:700;">
       ${escapeHtml(
         result.winner.name
       )}
@@ -2754,10 +2766,236 @@ function showIdentificationResult(
     </p>
 
     <p style="margin:8px 0 0;opacity:.65;">
-      Výsledok je založený na lokálnom porovnaní referenčných záberov.
+      Porovnanie prebehlo iba s mačkami uloženými v tomto zariadení.
     </p>
 
   `;
+
+}
+
+
+/* =========================================================
+   SAVE CAT PROFILE
+========================================================= */
+
+async function saveProfile() {
+
+  const nameElement =
+    document.getElementById(
+      "catName"
+    );
+
+  const nicknameElement =
+    document.getElementById(
+      "catNickname"
+    );
+
+  const savedInfo =
+    document.getElementById(
+      "savedInfo"
+    );
+
+  const name =
+    nameElement
+      ? nameElement.value.trim()
+      : "";
+
+  const nickname =
+    nicknameElement
+      ? nicknameElement.value.trim()
+      : "";
+
+  if (!samples.length) {
+
+    if (savedInfo) {
+
+      savedInfo.classList.remove(
+        "hidden"
+      );
+
+      savedInfo.innerHTML = `
+
+        <p style="margin:0;font-weight:700;">
+          NO SAMPLE AVAILABLE
+        </p>
+
+      `;
+
+    }
+
+    return;
+
+  }
+
+  const catName =
+    name ||
+    "Unnamed cat";
+
+  try {
+
+    const profiles =
+      loadCatProfiles();
+
+    const now =
+      Date.now();
+
+    const profile = {
+
+      id:
+        "cat_" +
+        now +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2, 8),
+
+      name:
+        catName,
+
+      nickname:
+        nickname,
+
+      createdAt:
+        now,
+
+      samples:
+        []
+
+    };
+
+    /*
+       Create local fingerprints for the selected
+       reference images.
+    */
+
+    for (
+      const sample of samples
+    ) {
+
+      const fingerprint =
+        await createVisualFingerprint(
+          sample.image
+        );
+
+      if (!fingerprint) {
+        continue;
+      }
+
+      profile.samples.push({
+
+        image:
+          sample.image,
+
+        fingerprint:
+          fingerprint,
+
+        confidence:
+          sample.confidence,
+
+        quality:
+          sample.quality,
+
+        timestamp:
+          sample.timestamp
+
+      });
+
+    }
+
+    if (
+      !profile.samples.length
+    ) {
+
+      throw new Error(
+        "Nepodarilo sa vytvoriť referenčné vzorky."
+      );
+
+    }
+
+    profiles.push(
+      profile
+    );
+
+    saveCatProfiles(
+      profiles
+    );
+
+    if (savedInfo) {
+
+      savedInfo.classList.remove(
+        "hidden"
+      );
+
+      savedInfo.innerHTML = `
+
+        <p style="margin:0;font-weight:700;">
+          🐱 MAČKA ULOŽENÁ
+        </p>
+
+        <p style="margin:8px 0 0;">
+          ${escapeHtml(
+            catName
+          )}
+        </p>
+
+        ${
+          nickname
+            ? `
+              <p style="margin:4px 0 0;opacity:.75;">
+                ${escapeHtml(
+                  nickname
+                )}
+              </p>
+            `
+            : ""
+        }
+
+        <p style="margin:8px 0 0;opacity:.75;">
+          ${profile.samples.length}
+          referenčných záberov.
+        </p>
+
+        <p style="margin:8px 0 0;opacity:.65;">
+          Profil je uložený lokálne v tomto zariadení.
+        </p>
+
+      `;
+
+    }
+
+    refreshProfileManager();
+
+  } catch (error) {
+
+    console.error(
+      "PROFILE SAVE ERROR:",
+      error
+    );
+
+    if (savedInfo) {
+
+      savedInfo.classList.remove(
+        "hidden"
+      );
+
+      savedInfo.innerHTML = `
+
+        <p style="margin:0;font-weight:700;">
+          PROFIL SA NEPODARILO ULOŽIŤ
+        </p>
+
+        <p style="margin:8px 0 0;opacity:.75;">
+          ${escapeHtml(
+            error.message ||
+            "Neznáma chyba"
+          )}
+        </p>
+
+      `;
+
+    }
+
+  }
 
 }
 
@@ -2771,9 +3009,7 @@ function createProfileManagerUI() {
   if (
     profileManagerInitialized
   ) {
-
     return;
-
   }
 
   profileManagerInitialized =
@@ -2787,12 +3023,22 @@ function createProfileManagerUI() {
   style.textContent = `
 
     #catProfilePanel {
+
       margin:18px auto;
+
       max-width:720px;
+
       padding:16px;
-      border:1px solid rgba(255,255,255,.12);
+
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
       border-radius:16px;
-      background:rgba(0,0,0,.08);
+
+      background:
+        rgba(0,0,0,.08);
+
     }
 
     #catProfilePanel h3 {
@@ -2800,12 +3046,21 @@ function createProfileManagerUI() {
     }
 
     .cat-profile-row {
+
       display:flex;
+
       align-items:center;
+
       justify-content:space-between;
+
       gap:12px;
+
       padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.08);
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
     }
 
     .cat-profile-row:last-child {
@@ -2825,25 +3080,41 @@ function createProfileManagerUI() {
     }
 
     .cat-profile-action {
+
       border:0;
+
       border-radius:10px;
+
       padding:7px 10px;
+
       cursor:pointer;
+
     }
 
     #catIdentityControls {
+
       display:flex;
+
       gap:10px;
+
       flex-wrap:wrap;
+
       margin-top:14px;
+
     }
 
     #catIdentityControls button {
+
       cursor:pointer;
+
       border:0;
+
       border-radius:12px;
+
       padding:10px 14px;
+
       font-weight:700;
+
     }
 
   `;
@@ -2872,7 +3143,7 @@ function createProfileManagerUI() {
   panel.innerHTML = `
 
     <h3>
-      Moje mačky
+      🐱 Moje mačky
     </h3>
 
     <div id="catProfileList">
@@ -2920,10 +3191,6 @@ function createProfileManagerUI() {
         scanMode =
           "enroll";
 
-        showScreen(
-          "camera"
-        );
-
         startCamera();
 
       }
@@ -2938,8 +3205,8 @@ function createProfileManagerUI() {
       () => {
 
         if (
-          loadCatProfiles()
-            .length === 0
+          loadCatProfiles().length ===
+          0
         ) {
 
           alert(
@@ -2953,10 +3220,6 @@ function createProfileManagerUI() {
         scanMode =
           "identify";
 
-        showScreen(
-          "camera"
-        );
-
         startCamera();
 
       }
@@ -2968,6 +3231,10 @@ function createProfileManagerUI() {
 
 }
 
+
+/* =========================================================
+   REFRESH PROFILE LIST
+========================================================= */
 
 function refreshProfileManager() {
 
@@ -2983,9 +3250,7 @@ function refreshProfileManager() {
   const profiles =
     loadCatProfiles();
 
-  if (
-    !profiles.length
-  ) {
+  if (!profiles.length) {
 
     list.innerHTML = `
 
@@ -3091,31 +3356,602 @@ function refreshProfileManager() {
 
 
 /* =========================================================
-   START CAMERA IN MODE
+   ESCAPE HTML
 ========================================================= */
 
-function startCameraInMode(
-  mode
+function escapeHtml(
+  value
 ) {
 
-  scanMode =
-    mode ===
-    "identify"
-      ? "identify"
-      : "enroll";
-
-  return startCamera();
+  return String(
+    value
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
 /* =========================================================
-   BUTTON EVENTS
+   IMAGE / VIDEO TEST
 ========================================================= */
 
-if (
-  startCameraButton
+if (mediaInput) {
+
+  mediaInput.addEventListener(
+    "change",
+    async event => {
+
+      const file =
+        event.target.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      if (
+        file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        await analyzeImageFile(
+          file
+        );
+
+        return;
+
+      }
+
+      if (
+        file.type.startsWith(
+          "video/"
+        )
+      ) {
+
+        const url =
+          URL.createObjectURL(
+            file
+          );
+
+        sourceVideo.src =
+          url;
+
+        showScreen(
+          "videoTest"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   IMAGE ANALYSIS
+========================================================= */
+
+async function analyzeImageFile(
+  file
 ) {
+
+  const ready =
+    await initializeRoboflow();
+
+  if (!ready) {
+    return;
+  }
+
+  const url =
+    URL.createObjectURL(
+      file
+    );
+
+  const image =
+    new Image();
+
+  image.onload =
+    async () => {
+
+      videoCanvas.width =
+        image.naturalWidth;
+
+      videoCanvas.height =
+        image.naturalHeight;
+
+      const ctx =
+        videoCanvas.getContext(
+          "2d"
+        );
+
+      ctx.drawImage(
+        image,
+        0,
+        0
+      );
+
+      const dataUrl =
+        canvasToDataUrl(
+          videoCanvas,
+          0.72
+        );
+
+      try {
+
+        const predictions =
+          await runRoboflowWorkflow(
+            dataUrl
+          );
+
+        const detection =
+          selectBestDetection(
+            predictions
+          );
+
+        videoResult.classList.remove(
+          "hidden"
+        );
+
+        if (detection) {
+
+          videoResult.innerHTML = `
+
+            <p style="margin:0;font-weight:700;">
+              CAT FACE DETECTED
+            </p>
+
+            <p style="margin:8px 0 0;">
+              Confidence:
+              ${Math.round(
+                detection.confidence *
+                100
+              )}%
+            </p>
+
+          `;
+
+        } else {
+
+          videoResult.innerHTML = `
+
+            <p style="margin:0;font-weight:700;">
+              NO CAT FACE DETECTED
+            </p>
+
+          `;
+
+        }
+
+      } catch (error) {
+
+        videoResult.classList.remove(
+          "hidden"
+        );
+
+        videoResult.innerHTML = `
+
+          <p style="margin:0;font-weight:700;">
+            AI ERROR
+          </p>
+
+          <p style="margin:8px 0 0;">
+            ${escapeHtml(
+              error.message
+            )}
+          </p>
+
+        `;
+
+      }
+
+      showScreen(
+        "videoTest"
+      );
+
+    };
+
+  image.src =
+    url;
+
+}
+
+
+/* =========================================================
+   VIDEO ANALYSIS
+========================================================= */
+
+const analyzeVideoButton =
+  document.getElementById(
+    "analyzeVideo"
+  );
+
+if (analyzeVideoButton) {
+
+  analyzeVideoButton.addEventListener(
+    "click",
+    analyzeUploadedVideo
+  );
+
+}
+
+
+async function analyzeUploadedVideo() {
+
+  if (
+    !sourceVideo ||
+    !sourceVideo.src
+  ) {
+    return;
+  }
+
+  const ready =
+    await initializeRoboflow();
+
+  if (!ready) {
+    return;
+  }
+
+  videoSamples.innerHTML =
+    "";
+
+  videoResult.classList.remove(
+    "hidden"
+  );
+
+  videoResult.innerHTML = `
+
+    <p style="margin:0;font-weight:700;">
+      ANALYZING VIDEO...
+    </p>
+
+  `;
+
+  const duration =
+    sourceVideo.duration;
+
+  if (
+    !Number.isFinite(
+      duration
+    ) ||
+    duration <= 0
+  ) {
+
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        VIDEO NOT READY
+      </p>
+
+    `;
+
+    return;
+
+  }
+
+  const results = [];
+
+  const frameCount =
+    Math.min(
+      30,
+      Math.max(
+        10,
+        Math.floor(
+          duration * 8
+        )
+      )
+    );
+
+  for (
+    let i = 0;
+    i < frameCount;
+    i++
+  ) {
+
+    const time =
+      duration *
+      (
+        i /
+        Math.max(
+          1,
+          frameCount - 1
+        )
+      );
+
+    await seekVideo(
+      sourceVideo,
+      time
+    );
+
+    videoCanvas.width =
+      sourceVideo.videoWidth;
+
+    videoCanvas.height =
+      sourceVideo.videoHeight;
+
+    const ctx =
+      videoCanvas.getContext(
+        "2d"
+      );
+
+    ctx.drawImage(
+      sourceVideo,
+      0,
+      0,
+      videoCanvas.width,
+      videoCanvas.height
+    );
+
+    const dataUrl =
+      canvasToDataUrl(
+        videoCanvas,
+        0.72
+      );
+
+    try {
+
+      const predictions =
+        await runRoboflowWorkflow(
+          dataUrl
+        );
+
+      const detection =
+        selectBestDetection(
+          predictions
+        );
+
+      if (detection) {
+
+        results.push({
+
+          time:
+            time,
+
+          confidence:
+            detection.confidence,
+
+          quality:
+            calculateStaticImageQuality(
+              videoCanvas,
+              detection
+            ),
+
+          data:
+            videoCanvas.toDataURL(
+              "image/jpeg",
+              0.88
+            )
+
+        });
+
+      }
+
+    } catch (error) {
+
+      console.warn(
+        "VIDEO FRAME ERROR:",
+        error
+      );
+
+    }
+
+  }
+
+  results.sort(
+    (a, b) =>
+      (
+        b.quality +
+        b.confidence * 100
+      ) -
+      (
+        a.quality +
+        a.confidence * 100
+      )
+  );
+
+  const best =
+    results.slice(
+      0,
+      9
+    );
+
+  best.forEach(
+    sample => {
+
+      const img =
+        document.createElement(
+          "img"
+        );
+
+      img.src =
+        sample.data;
+
+      img.style.width =
+        "100%";
+
+      img.style.borderRadius =
+        "12px";
+
+      videoSamples.appendChild(
+        img
+      );
+
+    }
+  );
+
+  if (best.length) {
+
+    videoQuality.textContent =
+      `${Math.round(
+        best[0].confidence *
+        100
+      )}%`;
+
+    videoQualityBar.style.width =
+      `${Math.round(
+        best[0].confidence *
+        100
+      )}%`;
+
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        CAT FACE DETECTIONS FOUND
+      </p>
+
+      <p style="margin:8px 0 0;">
+        Vybraných záberov:
+        ${best.length}
+      </p>
+
+      <p style="margin:8px 0 0;">
+        Najlepší AI výsledok:
+        ${Math.round(
+          best[0].confidence *
+          100
+        )}%
+      </p>
+
+    `;
+
+  } else {
+
+    videoResult.innerHTML = `
+
+      <p style="margin:0;font-weight:700;">
+        NO CAT FACE DETECTION
+      </p>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   STATIC IMAGE QUALITY
+========================================================= */
+
+function calculateStaticImageQuality(
+  canvas,
+  detection
+) {
+
+  if (
+    !canvas ||
+    !detection
+  ) {
+    return 0;
+  }
+
+  const width =
+    canvas.width;
+
+  const height =
+    canvas.height;
+
+  const b =
+    detection.bbox;
+
+  const areaRatio =
+    (
+      b.width *
+      b.height
+    ) /
+    (
+      width *
+      height
+    );
+
+  const sizeScore =
+    Math.min(
+      100,
+      (
+        areaRatio /
+        0.003
+      ) *
+      100
+    );
+
+  return Math.round(
+    detection.confidence *
+    100 *
+    0.7 +
+    sizeScore *
+    0.3
+  );
+
+}
+
+
+/* =========================================================
+   VIDEO SEEK
+========================================================= */
+
+function seekVideo(
+  videoElement,
+  time
+) {
+
+  return new Promise(
+    resolve => {
+
+      const handler =
+        () => {
+
+          videoElement.removeEventListener(
+            "seeked",
+            handler
+          );
+
+          resolve();
+
+        };
+
+      videoElement.addEventListener(
+        "seeked",
+        handler
+      );
+
+      videoElement.currentTime =
+        time;
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+const startCameraButton =
+  document.getElementById(
+    "startCamera"
+  );
+
+if (startCameraButton) {
 
   startCameraButton.addEventListener(
     "click",
@@ -3132,33 +3968,12 @@ if (
 }
 
 
-if (
-  captureButton
-) {
-
-  captureButton.addEventListener(
-    "click",
-    () => {
-
-      if (
-        bestDetection
-      ) {
-
-        considerAutomaticCapture(
-          bestDetection
-        );
-
-      }
-
-    }
+const stopCameraButton =
+  document.getElementById(
+    "stopCamera"
   );
 
-}
-
-
-if (
-  stopCameraButton
-) {
+if (stopCameraButton) {
 
   stopCameraButton.addEventListener(
     "click",
@@ -3168,11 +3983,35 @@ if (
 }
 
 
-if (
-  backButton
-) {
+const backHomeButton =
+  document.getElementById(
+    "backHome"
+  );
 
-  backButton.addEventListener(
+if (backHomeButton) {
+
+  backHomeButton.addEventListener(
+    "click",
+    () => {
+
+      showScreen(
+        "home"
+      );
+
+    }
+  );
+
+}
+
+
+const profileBackButton =
+  document.getElementById(
+    "profileBack"
+  );
+
+if (profileBackButton) {
+
+  profileBackButton.addEventListener(
     "click",
     () => {
 
@@ -3189,9 +4028,12 @@ if (
 }
 
 
-if (
-  saveProfileButton
-) {
+const saveProfileButton =
+  document.getElementById(
+    "saveProfile"
+  );
+
+if (saveProfileButton) {
 
   saveProfileButton.addEventListener(
     "click",
@@ -3202,20 +4044,120 @@ if (
 
 
 /* =========================================================
+   MANUAL CAPTURE BUTTON
+========================================================= */
+
+const captureNowButton =
+  document.getElementById(
+    "captureNow"
+  );
+
+if (captureNowButton) {
+
+  captureNowButton.addEventListener(
+    "click",
+    async () => {
+
+      if (
+        !bestDetection ||
+        !video.videoWidth
+      ) {
+
+        alert(
+          "Najprv namier kameru na tvár mačky."
+        );
+
+        return;
+
+      }
+
+      const image =
+        captureCurrentFrame(
+          bestDetection
+        );
+
+      if (!image) {
+        return;
+      }
+
+      const candidate = {
+
+        image:
+          image,
+
+        confidence:
+          bestDetection.confidence,
+
+        quality:
+          calculateCaptureQuality(
+            bestDetection
+          ),
+
+        bbox:
+          {
+            ...bestDetection.bbox
+          },
+
+        timestamp:
+          Date.now()
+
+      };
+
+      samples.push(
+        candidate
+      );
+
+      updateCounter();
+
+      setInstruction(
+        "Záber bol pridaný."
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   FINISH BUTTON
+========================================================= */
+
+const finishScanButton =
+  document.getElementById(
+    "finishScan"
+  );
+
+if (finishScanButton) {
+
+  finishScanButton.addEventListener(
+    "click",
+    () => {
+
+      finishAutomaticScan(
+        "Skenovanie ukončené."
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
    INITIALIZATION
 ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+showScreen(
+  "home"
+);
 
-    createProfileManagerUI();
-
-    setStatus(
-      "Capture engine ready"
-    );
-
-  }
+setStatus(
+  "Capture engine ready"
 );
 
 createProfileManagerUI();
+
+refreshProfileManager();
+
+updateCounter();

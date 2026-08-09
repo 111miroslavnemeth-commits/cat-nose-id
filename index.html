@@ -1,478 +1,729 @@
 <!doctype html>
-<html lang="en">
+<html lang="sk">
 
 <head>
+  <meta charset="utf-8">
 
-<meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta
+    name="theme-color"
+    content="#0b0d12"
+  >
 
-<meta
-  name="theme-color"
-  content="#0b0d12">
+  <title>CAT NOSE ID — Najzbytočnejší biometrický skener na planéte</title>
 
-<title>
-CAT NOSE ID — Prototype v0.5.0
-</title>
-
-<link
-  rel="stylesheet"
-  href="styles.css">
-
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
 </head>
-
 
 <body>
 
 <main class="app">
 
+  <!-- =====================================================
+       BRAND
+  ====================================================== -->
 
-<header class="brand">
+  <header class="brand">
 
-  <div class="logo">
-    🐱
-  </div>
+    <div class="logo" aria-label="CAT NOSE ID">
 
-  <div>
+      <svg
+        viewBox="0 0 64 64"
+        width="34"
+        height="34"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M18 25
+             L15 13
+             L26 18
+             C30 16 34 16 38 18
+             L49 13
+             L46 25
+             C49 29 50 34 49 39
+             C48 48 40 54 32 54
+             C24 54 16 48 15 39
+             C14 34 15 29 18 25Z"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
 
-    <div class="eyebrow">
-      TECHNICAL PROTOTYPE v0.5.0
+        <path
+          d="M24 34
+             C24 31 26 29 28 29"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M40 34
+             C40 31 38 29 36 29"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M29 41
+             C31 43 33 43 35 41"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+
+      </svg>
+
     </div>
-
-    <h1>
-      CAT NOSE ID
-    </h1>
-
-    <p>
-      The world's most unnecessary biometric system.
-    </p>
-
-  </div>
-
-</header>
-
-
-<!-- =====================================================
-     HOME
-===================================================== -->
-
-<section
-  id="home"
-  class="screen active">
-
-  <div class="hero-card">
-
-    <div class="nose">
-      🐽
-    </div>
-
-    <h2>
-      Let's scan a suspect.
-    </h2>
-
-    <p>
-      This prototype automatically detects the cat nose and selects suitable frames. It does <b>not</b> yet claim to identify a cat.
-    </p>
-
-    <button
-      class="primary"
-      id="startCamera">
-
-      SCAN WITH CAMERA
-
-    </button>
-
-
-    <label class="secondary file-btn">
-
-      TEST WITH VIDEO / PHOTO
-
-      <input
-        id="mediaInput"
-        type="file"
-        accept="video/*,image/*"
-        hidden>
-
-    </label>
-
-  </div>
-
-
-  <div class="status-box">
-
-    <span class="dot"></span>
-
-    <span id="engineStatus">
-      Capture engine ready
-    </span>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     CAMERA
-===================================================== -->
-
-<section
-  id="camera"
-  class="screen">
-
-
-  <div class="topbar">
-
-    <button
-      class="icon-btn"
-      id="stopCamera">
-
-      ✕
-
-    </button>
-
 
     <div>
 
       <div class="eyebrow">
-        LIVE SCANNER
+        TECHNICKÝ PROTOTYP v0.5.0
       </div>
 
-      <strong>
-        SCANNING
-      </strong>
+      <h1>
+        CAT NOSE ID
+      </h1>
+
+      <p>
+        Najzbytočnejší biometrický systém na planéte.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       HOME
+  ====================================================== -->
+
+  <section
+    id="home"
+    class="screen active"
+  >
+
+    <div class="hero-card">
+
+      <div
+        class="nose"
+        aria-hidden="true"
+      >
+        🐽
+      </div>
+
+      <h2>
+        Naskenujeme podozrivého.
+      </h2>
+
+      <p>
+        Aplikácia automaticky nájde tvár mačky,
+        vyberie najlepšie zábery a pokúsi sa zistiť,
+        či ide o jedného z registrovaných páchateľov.
+      </p>
+
+      <p style="margin-top:10px;opacity:.72;">
+        Áno, je to úplne zbytočné.
+        A práve preto sme to vytvorili.
+      </p>
+
+
+      <button
+        class="primary"
+        id="startCamera"
+      >
+        🐾 SKENOVAŤ PODOZRIVÉHO
+      </button>
+
+
+      <label class="secondary file-btn">
+
+        🐾 TEST S VIDEOM / FOTOGRAFIOU
+
+        <input
+          id="mediaInput"
+          type="file"
+          accept="video/*,image/*"
+          hidden
+        >
+
+      </label>
+
+
+      <div
+        style="
+          margin-top:18px;
+          padding:14px 15px;
+          border-radius:15px;
+          background:rgba(255,255,255,.035);
+          border:1px solid rgba(255,255,255,.07);
+          text-align:left;
+        "
+      >
+
+        <p
+          style="
+            margin:0;
+            font-size:12px;
+            line-height:1.55;
+          "
+        >
+          <strong>
+            Prečo táto aplikácia existuje?
+          </strong>
+        </p>
+
+        <p
+          style="
+            margin:7px 0 0;
+            font-size:11px;
+            line-height:1.55;
+            opacity:.72;
+          "
+        >
+          Pre zábavu. Bez reklamných bannerov.
+          Bez platieb. Bez predplatného.
+          A nikdy nebude obsahovať platobnú funkciu.
+          Jednoducho najzbytočnejší biometrický skener,
+          aký bol kedy vytvorený.
+        </p>
+
+      </div>
 
     </div>
 
 
-    <div
-      class="pill"
-      id="frameCounter">
+    <!-- ENGINE STATUS -->
 
-      0 / 5
+    <div class="status-box">
+
+      <span class="dot"></span>
+
+      <span id="engineStatus">
+        MAČACÍ NOS ID pripravené
+      </span>
 
     </div>
 
-  </div>
+
+    <!-- =================================================
+         DYNAMIC CAT PROFILE MANAGER
+
+         app.js sem automaticky vloží:
+         - Moje mačky / CAT FILES
+         - Pridať mačku
+         - Identifikovať mačku
+    ================================================== -->
 
 
-  <div class="camera-wrap">
-
-    <video
-      id="video"
-      playsinline
-      muted
-      autoplay>
-    </video>
+  </section>
 
 
-    <canvas
-      id="detectionOverlay">
-    </canvas>
+  <!-- =====================================================
+       CAMERA
+  ====================================================== -->
+
+  <section
+    id="camera"
+    class="screen"
+  >
+
+    <div class="topbar">
+
+      <button
+        class="icon-btn"
+        id="stopCamera"
+        aria-label="Zavrieť skenovanie"
+      >
+        ✕
+      </button>
 
 
-    <div class="scan-overlay">
+      <div>
 
-      <div class="target">
+        <div class="eyebrow">
+          ŽIVÝ SKENER
+        </div>
 
-        <div class="target-label">
-          🐽 NOSE ZONE
+        <strong>
+          SKENOVANIE
+        </strong>
+
+      </div>
+
+
+      <div
+        class="pill"
+        id="frameCounter"
+      >
+        0 / 9
+      </div>
+
+    </div>
+
+
+    <!-- CAMERA -->
+
+    <div class="camera-wrap">
+
+      <video
+        id="video"
+        playsinline
+        muted
+        autoplay
+      ></video>
+
+
+      <canvas
+        id="detectionOverlay"
+      ></canvas>
+
+
+      <div class="scan-overlay">
+
+        <div class="target">
+
+          <div class="target-label">
+            🐾 ZÓNA NOSA
+          </div>
+
+        </div>
+
+
+        <div
+          class="instruction"
+          id="instruction"
+        >
+          Hľadám tvár mačky...
         </div>
 
       </div>
 
 
-      <div
-        class="instruction"
-        id="instruction">
+      <canvas
+        id="frameCanvas"
+        hidden
+      ></canvas>
 
-        Looking for the nose...
+    </div>
+
+
+    <!-- DETECTION -->
+
+    <div class="meter">
+
+      <div class="meter-label">
+
+        <span>
+          DETEKCIA NOSA
+        </span>
+
+        <b id="qualityText">
+          —
+        </b>
+
+      </div>
+
+
+      <div class="bar">
+
+        <div
+          id="qualityBar"
+        ></div>
 
       </div>
 
     </div>
+
+
+    <!-- AUTOMATIC SCAN -->
+
+    <div
+      class="result-card"
+      style="
+        margin-top:14px;
+        text-align:center;
+      "
+    >
+
+      <p
+        style="
+          margin:0;
+          font-weight:800;
+          font-size:15px;
+        "
+      >
+        AUTOMATICKÉ SKENOVANIE
+      </p>
+
+
+      <p
+        style="
+          margin:8px 0 0;
+          opacity:.75;
+        "
+      >
+        Aplikácia sama hľadá mačku,
+        vyberá najlepšie zábery a rozhodne,
+        ktoré sa oplatí uložiť.
+        Ty nemusíš stlačiť vôbec nič.
+      </p>
+
+
+      <p
+        style="
+          margin:12px 0 0;
+          font-size:12px;
+          opacity:.55;
+        "
+      >
+        🐾 Drž podozrivého čo najstabilnejšie.
+        Mačka spolupracovať nemusí.
+      </p>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+      id="scanResult"
+      class="result-card hidden"
+      style="
+        margin-top:14px;
+        text-align:center;
+      "
+    ></div>
+
+
+    <!-- TECHNICAL NOTE -->
+
+    <p
+      class="tiny"
+      id="detectorNote"
+    >
+      Roboflow RF-DETR pripravuje detekciu tváre mačky.
+    </p>
+
+
+    <!-- Hidden compatibility controls.
+         app.js ich môže použiť, ale používateľ
+         ich pri automatickom skenovaní nepotrebuje. -->
+
+    <div
+      class="hidden"
+      aria-hidden="true"
+    >
+
+      <button id="captureNow">
+        Zachytiť
+      </button>
+
+      <button id="finishScan">
+        Dokončiť
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       VIDEO / PHOTO TEST
+  ====================================================== -->
+
+  <section
+    id="videoTest"
+    class="screen"
+  >
+
+    <div class="topbar">
+
+      <button
+        class="icon-btn"
+        id="backHome"
+        aria-label="Späť"
+      >
+        ✕
+      </button>
+
+
+      <div>
+
+        <div class="eyebrow">
+          TESTOVACÍ REŽIM
+        </div>
+
+        <strong>
+          FOTO / VIDEO
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="result-card"
+      style="
+        margin-bottom:12px;
+        text-align:center;
+      "
+    >
+
+      <p
+        style="
+          margin:0;
+          font-weight:800;
+        "
+      >
+        🐾 HĽADÁME PODOZRIVÉHO
+      </p>
+
+      <p
+        style="
+          margin:7px 0 0;
+          opacity:.7;
+        "
+      >
+        AI preverí obrázok alebo video
+        rovnakým spôsobom ako živú kameru.
+      </p>
+
+    </div>
+
+
+    <video
+      id="sourceVideo"
+      playsinline
+      controls
+    ></video>
 
 
     <canvas
-      id="frameCanvas"
-      hidden>
-    </canvas>
-
-  </div>
+      id="videoCanvas"
+      hidden
+    ></canvas>
 
 
-  <div class="meter">
+    <div class="meter">
 
-    <div class="meter-label">
+      <div class="meter-label">
 
-      <span>
-        NOSE DETECTION
-      </span>
+        <span>
+          NAJLEPŠIA DETEKCIA
+        </span>
 
-      <b id="qualityText">
-        —
-      </b>
+        <b id="videoQuality">
+          —
+        </b>
 
-    </div>
+      </div>
 
 
-    <div class="bar">
+      <div class="bar">
 
-      <div
-        id="qualityBar">
+        <div
+          id="videoQualityBar"
+        ></div>
+
       </div>
 
     </div>
-
-  </div>
-
-
-  <div
-    class="result-card"
-    style="margin-top:14px;text-align:center;">
-
-    <p
-      style="margin:0;font-weight:700;">
-
-      AUTOMATIC SCAN
-
-    </p>
-
-    <p
-      style="margin:6px 0 0;opacity:.75;">
-
-      The app automatically detects the nose and selects up to five suitable frames. No button is required.
-
-    </p>
-
-  </div>
-
-
-  <div
-    id="scanResult"
-    class="result-card hidden"
-    style="margin-top:14px;text-align:center;">
-  </div>
-
-
-  <p
-    class="tiny"
-    id="detectorNote">
-
-    Roboflow cat-nose detection model is loading...
-
-  </p>
-
-
-</section>
-
-
-<!-- =====================================================
-     VIDEO TEST
-===================================================== -->
-
-<section
-  id="videoTest"
-  class="screen">
-
-
-  <div class="topbar">
-
-    <button
-      class="icon-btn"
-      id="backHome">
-
-      ✕
-
-    </button>
-
-
-    <div>
-
-      <div class="eyebrow">
-        VIDEO TEST
-      </div>
-
-      <strong>
-        FRAME SAMPLER
-      </strong>
-
-    </div>
-
-  </div>
-
-
-  <video
-    id="sourceVideo"
-    playsinline
-    controls>
-  </video>
-
-
-  <canvas
-    id="videoCanvas"
-    hidden>
-  </canvas>
-
-
-  <div class="meter">
-
-    <div class="meter-label">
-
-      <span>
-        BEST NOSE DETECTION
-      </span>
-
-      <b id="videoQuality">
-        —
-      </b>
-
-    </div>
-
-
-    <div class="bar">
-
-      <div
-        id="videoQualityBar">
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <button
-    class="primary"
-    id="analyzeVideo">
-
-    ANALYZE VIDEO
-
-  </button>
-
-
-  <div
-    id="videoResult"
-    class="result-card hidden">
-  </div>
-
-
-  <div
-    id="videoSamples"
-    class="sample-grid">
-  </div>
-
-
-</section>
-
-
-<!-- =====================================================
-     PROFILE / RESULT
-===================================================== -->
-
-<section
-  id="profile"
-  class="screen">
-
-
-  <div class="topbar">
-
-    <button
-      class="icon-btn"
-      id="profileBack">
-
-      ←
-
-    </button>
-
-
-    <div>
-
-      <div class="eyebrow">
-        CAT PROFILE
-      </div>
-
-      <strong>
-        NEW CAT
-      </strong>
-
-    </div>
-
-  </div>
-
-
-  <div class="profile-card">
-
-
-    <div class="avatar">
-      🐱
-    </div>
-
-
-    <label>
-
-      Cat name
-
-      <input
-        id="catName"
-        placeholder="Mica">
-
-    </label>
-
-
-    <label>
-
-      Nickname (optional)
-
-      <input
-        id="catNickname"
-        placeholder="Micinka">
-
-    </label>
 
 
     <button
       class="primary"
-      id="saveProfile">
-
-      SAVE NOSE SAMPLE
-
+      id="analyzeVideo"
+    >
+      🐾 PREHĽADAŤ VIDEO
     </button>
 
 
-  </div>
+    <div
+      id="videoResult"
+      class="result-card hidden"
+    ></div>
 
 
-  <div
-    id="savedInfo"
-    class="result-card hidden">
-  </div>
+    <div
+      id="videoSamples"
+      class="sample-grid"
+    ></div>
+
+  </section>
 
 
-</section>
+  <!-- =====================================================
+       CAT PROFILE / CAT FILE
+  ====================================================== -->
 
+  <section
+    id="profile"
+    class="screen"
+  >
+
+    <div class="topbar">
+
+      <button
+        class="icon-btn"
+        id="profileBack"
+        aria-label="Späť"
+      >
+        ←
+      </button>
+
+
+      <div>
+
+        <div class="eyebrow">
+          CAT FILE
+        </div>
+
+        <strong>
+          NOVÝ PÁCHATEĽ
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="profile-card">
+
+      <div
+        class="avatar"
+        style="
+          width:82px;
+          height:82px;
+          margin:0 auto 18px;
+          border-radius:24px;
+          background:#171b25;
+          border:1px solid #303847;
+          display:grid;
+          place-items:center;
+          font-size:42px;
+        "
+      >
+        🐱
+      </div>
+
+
+      <p
+        style="
+          text-align:center;
+          margin:0 0 20px;
+          font-size:13px;
+        "
+      >
+        Vytvoríme osobný spis mačky /
+        páchateľa.
+      </p>
+
+
+      <label>
+
+        MENO MAČKY / PÁCHATEĽA
+
+        <input
+          id="catName"
+          placeholder="napr. Mica"
+          autocomplete="off"
+        >
+
+      </label>
+
+
+      <label>
+
+        PREZÝVKA
+        <span
+          style="
+            opacity:.5;
+            font-weight:400;
+          "
+        >
+          (voliteľné)
+        </span>
+
+        <input
+          id="catNickname"
+          placeholder="napr. Micinka"
+          autocomplete="off"
+        >
+
+      </label>
+
+
+      <div
+        style="
+          margin-top:14px;
+          padding:13px;
+          border-radius:14px;
+          background:rgba(255,255,255,.035);
+          border:1px solid rgba(255,255,255,.07);
+        "
+      >
+
+        <p
+          style="
+            margin:0;
+            font-size:11px;
+            opacity:.7;
+          "
+        >
+          🐾 Referenčné zábery vyberie aplikácia
+          automaticky zo skenovania.
+        </p>
+
+      </div>
+
+
+      <button
+        class="primary"
+        id="saveProfile"
+      >
+        🐾 ULOŽIŤ CAT FILE
+      </button>
+
+
+      <div
+        id="savedInfo"
+        class="result-card hidden"
+        style="margin-top:14px;"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/inferencejs"
+  ></script>
+
+
+  <script
+    src="app.js"
+  ></script>
 
 </main>
 
-
-<!-- =====================================================
-     ROBOFLOW INFERENCE.JS
-===================================================== -->
-
-<script
-  src="https://cdn.jsdelivr.net/npm/inferencejs">
-</script>
-
-
-<!-- =====================================================
-     APPLICATION
-===================================================== -->
-
-<script
-  src="app.js">
-</script>
-
-
 </body>
-
 </html>

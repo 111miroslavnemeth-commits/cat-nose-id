@@ -67,7 +67,6 @@ button{
     }
 }
 
-
 /* =========================
    BRAND
 ========================= */
@@ -129,7 +128,6 @@ button{
     font-weight:700;
 }
 
-
 /* =========================
    CARDS
 ========================= */
@@ -155,7 +153,6 @@ button{
 h1,h2,h3{
     font-family:"Baloo 2",sans-serif;
 }
-
 
 /* =========================
    ONE-LINE CAT
@@ -184,7 +181,6 @@ h1,h2,h3{
 .line-cat .blue{
     stroke:#39baff;
 }
-
 
 /* =========================
    HOME
@@ -238,9 +234,8 @@ h1,h2,h3{
     color:#fff;
 }
 
-
 /* =========================
-   DECORATIVE FULL CATS
+   DECORATIVE CATS
 ========================= */
 
 .peek-cat{
@@ -284,73 +279,60 @@ h1,h2,h3{
     transform:rotate(8deg);
 }
 
-
 /* =========================
-   ONE PIECE PAW BUTTON
+   NORMAL BUTTONS
 ========================= */
 
-.paw-button{
-    position:relative;
-    display:block;
+.action-button{
     width:100%;
-    min-height:170px;
-    margin:12px auto;
-    padding:0;
-    border:0;
-    background:none;
+    min-height:58px;
+    margin-top:12px;
+    padding:16px 20px;
+    border:1px solid #40547f;
+    border-radius:18px;
+    background:linear-gradient(135deg,#ff4baa,#df167f);
     color:#fff;
-    transition:transform .12s ease;
+    font-family:"Baloo 2",sans-serif;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.05;
+    box-shadow:0 12px 25px rgba(0,0,0,.25);
+    transition:
+        transform .12s ease,
+        filter .12s ease;
 }
 
-.paw-button:active{
+.action-button:hover{
+    filter:brightness(1.08);
+}
+
+.action-button:active{
     transform:scale(.985);
 }
 
-.paw-shape{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    overflow:visible;
-    filter:drop-shadow(0 12px 20px rgba(0,0,0,.35));
+.action-button.blue{
+    background:linear-gradient(135deg,#319eff,#1647b8);
+    border-color:#47c5ff;
 }
 
-.paw-shape path{
-    fill:url(#pawGradientPink);
-    stroke:#ff6abd;
-    stroke-width:2;
-    stroke-linejoin:round;
+.action-button.secondary{
+    background:#11172e;
+    border-color:#30446e;
 }
 
-.paw-button.blue .paw-shape path{
-    fill:url(#pawGradientBlue);
-    stroke:#47c5ff;
+.action-button.danger{
+    background:linear-gradient(135deg,#c73570,#781536);
+    border-color:#e65c91;
 }
 
-.paw-text{
-    position:absolute;
-    z-index:2;
-    left:21%;
-    right:21%;
-    top:43%;
-    transform:translateY(-50%);
-    text-align:center;
-    font-family:"Baloo 2",sans-serif;
-    font-size:24px;
-    line-height:.95;
-    font-weight:800;
-}
-
-.paw-text small{
+.action-button small{
     display:block;
-    margin-top:7px;
+    margin-top:5px;
     font-family:"Nunito",sans-serif;
     font-size:10px;
-    line-height:1.25;
-    font-weight:800;
+    line-height:1.3;
     color:rgba(255,255,255,.78);
 }
-
 
 /* =========================
    INFO
@@ -399,7 +381,6 @@ h1,h2,h3{
     box-shadow:0 0 12px rgba(75,240,146,.7);
 }
 
-
 /* =========================
    NAV
 ========================= */
@@ -432,7 +413,6 @@ h1,h2,h3{
     color:#7584a4;
     font-size:10px;
 }
-
 
 /* =========================
    FORMS
@@ -474,7 +454,6 @@ h1,h2,h3{
 .field textarea:focus{
     border-color:#35baff;
 }
-
 
 /* =========================
    CAT LIST
@@ -551,7 +530,6 @@ h1,h2,h3{
     font-size:27px;
 }
 
-
 /* =========================
    PHOTO
 ========================= */
@@ -586,7 +564,6 @@ h1,h2,h3{
 .file-input{
     display:none;
 }
-
 
 /* =========================
    SCAN
@@ -701,7 +678,6 @@ h1,h2,h3{
     transition:width .2s;
 }
 
-
 /* =========================
    INCIDENTS
 ========================= */
@@ -778,7 +754,6 @@ h1,h2,h3{
     font-size:9px;
     line-height:1.35;
 }
-
 
 /* =========================
    CAT FILE
@@ -946,7 +921,6 @@ h1,h2,h3{
     text-align:center;
 }
 
-
 /* =========================
    RESULT / ERROR
 ========================= */
@@ -984,7 +958,6 @@ h1,h2,h3{
     font-size:50px;
 }
 
-
 /* =========================
    FOOTER
 ========================= */
@@ -999,7 +972,6 @@ h1,h2,h3{
 .footer strong{
     color:#8290ad;
 }
-
 
 /* =========================
    DESKTOP
@@ -1027,15 +999,10 @@ h1,h2,h3{
         font-size:16px;
     }
 
-    .paw-button{
+    .action-button{
         max-width:760px;
-        min-height:185px;
-    }
-
-    .paw-text{
-        font-size:27px;
-        left:22%;
-        right:22%;
+        margin-left:auto;
+        margin-right:auto;
     }
 
     .peek-left{
@@ -1060,7 +1027,6 @@ h1,h2,h3{
         min-height:160px;
     }
 }
-
 
 /* =========================
    MOBILE
@@ -1094,19 +1060,9 @@ h1,h2,h3{
         font-size:31px;
     }
 
-    .paw-button{
-        min-height:135px;
-    }
-
-    .paw-text{
-        top:45%;
-        left:20%;
-        right:20%;
+    .action-button{
+        min-height:56px;
         font-size:18px;
-    }
-
-    .paw-text small{
-        font-size:8px;
     }
 
     .peek-left{
@@ -1146,18 +1102,7 @@ h1,h2,h3{
     }
 }
 
-
 @media(max-width:370px){
-
-    .paw-button{
-        min-height:125px;
-    }
-
-    .paw-text{
-        font-size:16px;
-        left:18%;
-        right:18%;
-    }
 
     .incident-grid{
         grid-template-columns:1fr;
@@ -1170,29 +1115,6 @@ h1,h2,h3{
 <body>
 
 <div class="app">
-
-
-<!-- SVG DEFINITIONS -->
-
-<svg width="0" height="0" style="position:absolute">
-
-<defs>
-
-<linearGradient id="pawGradientPink" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#ff62bb"/>
-    <stop offset="100%" stop-color="#df167f"/>
-</linearGradient>
-
-<linearGradient id="pawGradientBlue" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#319eff"/>
-    <stop offset="100%" stop-color="#1647b8"/>
-</linearGradient>
-
-</defs>
-</svg>
-
-
-<!-- BRAND -->
 
 <header class="brand">
 
@@ -1240,14 +1162,11 @@ Najzbytočnejší biometrický skener na planéte.
 </header>
 
 
-<!-- =====================================================
-HOME
-===================================================== -->
+<!-- HOME -->
 
 <section id="home" class="screen active">
 
 <div class="card home">
-
 
 <div class="peek-cat peek-left">
 
@@ -1292,14 +1211,6 @@ d="M133 163 Q138 170 144 163"/>
 <path d="
 M113 178
 Q138 192 164 178
-"/>
-
-<path class="pink"
-d="
-M93 167 L51 158
-M94 178 L50 179
-M181 167 L221 158
-M181 178 L224 179
 "/>
 
 </svg>
@@ -1452,105 +1363,24 @@ nemá predplatné a nemá prakticky žiadny rozumný účel.
 </div>
 
 
-<button class="paw-button" onclick="openScreen('scan')">
+<button class="action-button" onclick="navigateTo('scan')">
 
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
-
-IDENTIFIKOVAŤ
-MAČKU / PÁCHATEĽA
+IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
 
 <small>
 Nasmeruj kameru a začni vyšetrovanie.
 </small>
 
-</div>
-
 </button>
 
 
-<button class="paw-button blue" onclick="openScreen('photoTest')">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button blue" onclick="navigateTo('photoTest')">
 
 TESTOVAŤ FOTOGRAFIU
 
 <small>
 Nemáš živého páchateľa? Použi fotografiu.
 </small>
-
-</div>
 
 </button>
 
@@ -1592,47 +1422,9 @@ Registrovaní mačací páchatelia a ich CAT FILE.
 <div id="catList" class="cat-list"></div>
 
 
-<button class="paw-button" onclick="openScreen('newCat')">
+<button class="action-button" onclick="navigateTo('newCat')">
 
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
 PRIDAŤ MAČKU / PÁCHATEĽA
-</div>
 
 </button>
 
@@ -1641,9 +1433,7 @@ PRIDAŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-NEW CAT
-===================================================== -->
+<!-- NEW CAT -->
 
 <section id="newCat" class="screen">
 
@@ -1746,50 +1536,11 @@ onchange="previewCatPhoto(event)"
 >
 
 <button
-class="paw-button blue"
+class="action-button blue"
+type="button"
 onclick="document.getElementById('catPhoto').click()"
 >
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
 PRIDAŤ FOTOGRAFIU
-</div>
-
 </button>
 
 </div>
@@ -1797,48 +1548,12 @@ PRIDAŤ FOTOGRAFIU
 </div>
 
 
-<button class="paw-button" onclick="saveCat()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button
+class="action-button"
+type="button"
+onclick="saveCat()"
+>
 ULOŽIŤ MAČKU / PÁCHATEĽA
-</div>
-
 </button>
 
 </div>
@@ -1846,9 +1561,7 @@ ULOŽIŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-SCAN
-===================================================== -->
+<!-- SCAN -->
 
 <section id="scan" class="screen">
 
@@ -1979,48 +1692,8 @@ s registrovanými profilmi.
 </p>
 
 
-<button class="paw-button" onclick="startDemoScan()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button" onclick="startDemoScan()">
 SPUSTIŤ SKENOVANIE
-</div>
-
 </button>
 
 </div>
@@ -2028,9 +1701,7 @@ SPUSTIŤ SKENOVANIE
 </section>
 
 
-<!-- =====================================================
-PHOTO TEST
-===================================================== -->
+<!-- PHOTO TEST -->
 
 <section id="photoTest" class="screen">
 
@@ -2110,49 +1781,12 @@ onchange="loadTestImage(event)"
 >
 
 
-<button class="paw-button blue"
-onclick="document.getElementById('testImage').click()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button
+class="action-button blue"
+type="button"
+onclick="document.getElementById('testImage').click()"
+>
 VYBRAŤ FOTOGRAFIU
-</div>
-
 </button>
 
 
@@ -2161,48 +1795,8 @@ VYBRAŤ FOTOGRAFIU
 </div>
 
 
-<button class="paw-button" onclick="runPhotoTest()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button" onclick="runPhotoTest()">
 ROZPOZNAŤ MAČKU / PÁCHATEĽA
-</div>
-
 </button>
 
 </div>
@@ -2210,9 +1804,7 @@ ROZPOZNAŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-CAT FILE
-===================================================== -->
+<!-- CAT FILE -->
 
 <section id="catFile" class="screen">
 
@@ -2333,95 +1925,19 @@ CAT FILE
 
 <button
 id="addIncidentButton"
-class="paw-button"
+class="action-button"
 type="button"
 >
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
 PRIDAŤ NOVÝ INCIDENT
-</div>
-
 </button>
 
 
-<button class="paw-button blue" onclick="deleteCurrentCat()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button
+class="action-button danger"
+type="button"
+onclick="deleteCurrentCat()"
+>
 ODSTRÁNIŤ PÁCHATEĽA
-</div>
-
 </button>
 
 </div>
@@ -2429,9 +1945,7 @@ ODSTRÁNIŤ PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-INCIDENT
-===================================================== -->
+<!-- INCIDENT -->
 
 <section id="incident" class="screen">
 
@@ -2538,48 +2052,8 @@ placeholder="Čokoľvek, čo by mal vyšetrovateľ vedieť..."
 </div>
 
 
-<button class="paw-button" onclick="registerIncident()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button" onclick="registerIncident()">
 ZAREGISTROVAŤ ZLOČIN
-</div>
-
 </button>
 
 </div>
@@ -2587,9 +2061,7 @@ ZAREGISTROVAŤ ZLOČIN
 </section>
 
 
-<!-- =====================================================
-IDENTIFIED
-===================================================== -->
+<!-- IDENTIFIED -->
 
 <section id="identified" class="screen">
 
@@ -2676,48 +2148,8 @@ identifikovaná medzi registrovanými profilmi.
 </p>
 
 
-<button class="paw-button" onclick="openCurrentCatFile()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button" onclick="openCurrentCatFile()">
 OTVORIŤ CAT FILE
-</div>
-
 </button>
 
 </div>
@@ -2725,9 +2157,7 @@ OTVORIŤ CAT FILE
 </section>
 
 
-<!-- =====================================================
-ERROR
-===================================================== -->
+<!-- ERROR -->
 
 <section id="error" class="screen">
 
@@ -2764,48 +2194,8 @@ Niečo sa pokazilo.
 Skús to ešte raz.
 </p>
 
-<button class="paw-button" onclick="goBack()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 190"
-preserveAspectRatio="none">
-
-<path d="
-M160 72
-C143 67 128 55 126 39
-C124 22 136 12 151 13
-C168 14 177 28 181 43
-C185 55 191 58 201 54
-C211 50 215 38 215 26
-C215 10 227 1 242 4
-C257 7 262 22 260 38
-C259 51 265 57 276 56
-C288 55 292 43 293 29
-C294 13 306 3 321 6
-C336 9 341 24 338 40
-C336 54 342 61 353 61
-C365 61 371 49 373 37
-C376 22 389 14 403 19
-C417 24 420 39 415 53
-C410 67 416 76 430 79
-C455 84 475 72 489 85
-C504 99 498 123 480 134
-C462 145 439 139 417 135
-C392 131 374 137 355 151
-C331 169 268 169 244 151
-C225 137 207 131 183 135
-C159 139 136 145 118 134
-C99 123 95 99 109 85
-C122 72 138 78 160 72
-Z
-"/>
-
-</svg>
-
-<div class="paw-text">
+<button class="action-button" onclick="goBack()">
 SPÄŤ
-</div>
-
 </button>
 
 </div>
@@ -2814,13 +2204,9 @@ SPÄŤ
 
 
 <div class="footer">
-
 <strong>CAT NOSE ID</strong>
-
 <br>
-
 Vytvorené pre zábavu. Žiadne reklamy. Žiadne platby.
-
 </div>
 
 </div>
@@ -2832,7 +2218,7 @@ Vytvorené pre zábavu. Žiadne reklamy. Žiadne platby.
 DATABASE
 ===================================================== */
 
-const STORAGE_KEY="catNoseDatabaseV4";
+const STORAGE_KEY="catNoseDatabaseV5";
 
 let cats=[];
 let currentCatId=null;
@@ -2843,107 +2229,87 @@ let selectedIncidentType="ukradla jedlo";
 
 
 /* =====================================================
-NAVIGATION
+NAVIGATION HISTORY
 ===================================================== */
 
 /*
- * Aktuálna obrazovka.
- */
-let currentScreen="home";
+    Toto je hlavná oprava.
+
+    historyStack obsahuje skutočnú cestu používateľa
+    medzi obrazovkami.
+
+    Príklad:
+
+    home
+      ↓
+    catFile
+      ↓
+    incident
+      ↓
+    catFile
+
+    goBack() potom vráti používateľa presne
+    na predchádzajúcu obrazovku.
+*/
+
+let historyStack=["home"];
+
+let isNavigatingBack=false;
 
 
-/*
- * História navštívených obrazoviek.
- *
- * Príklad:
- *
- * home
- *  ↓
- * scan
- *  ↓
- * identified
- *  ↓
- * catFile
- *
- * Pri späť:
- *
- * catFile → identified
- * identified → scan
- * scan → home
- */
-let screenHistory=[];
+/* =====================================================
+NAVIGATE FORWARD
+===================================================== */
+
+function navigateTo(id){
+
+    const target=document.getElementById(id);
+
+    if(!target)return;
+
+    const current=
+        document.querySelector(".screen.active");
+
+    const currentId=
+        current ? current.id : "home";
+
+    if(currentId===id)return;
+
+    if(!isNavigatingBack){
+
+        historyStack.push(id);
+
+    }
+
+    showScreen(id);
+
+}
 
 
-/*
- * Pomocná premenná.
- *
- * Keď používame goBack(),
- * nechceme, aby openScreen()
- * znova pridala obrazovku do histórie.
- */
-let isGoingBack=false;
+/* =====================================================
+SHOW SCREEN
+===================================================== */
 
-
-/*
- * Otvorenie obrazovky.
- */
-function openScreen(id){
+function showScreen(id){
 
     const target=
         document.getElementById(id);
 
     if(!target)return;
 
-
-    /*
-     * Ak používateľ ide dopredu,
-     * uložíme aktuálnu obrazovku.
-     */
-    if(
-        !isGoingBack &&
-        currentScreen &&
-        currentScreen!==id
-    ){
-
-        screenHistory.push(currentScreen);
-
-    }
-
-
-    /*
-     * Nastavíme aktuálnu obrazovku.
-     */
-    currentScreen=id;
-
-
-    /*
-     * Skryjeme všetky obrazovky.
-     */
     document
         .querySelectorAll(".screen")
-        .forEach(
-            s=>s.classList.remove("active")
-        );
+        .forEach(screen=>{
+            screen.classList.remove("active");
+        });
 
-
-    /*
-     * Zobrazíme novú.
-     */
     target.classList.add("active");
 
-
-    /*
-     * Vždy začneme hore.
-     */
     window.scrollTo({
         top:0,
         behavior:"instant"
     });
 
-
-    /*
-     * Obnovenie dát obrazovky.
-     */
 
     if(id==="home"){
         renderCatList();
@@ -2965,68 +2331,563 @@ function openScreen(id){
 }
 
 
-/*
- * Tlačidlo SPÄŤ.
- *
- * Vráti sa presne na poslednú
- * navštívenú obrazovku.
- */
+/* =====================================================
+GO BACK
+===================================================== */
+
 function goBack(){
 
-    /*
-     * Ak už nemáme kam ísť,
-     * nič nerobíme.
-     */
-    if(screenHistory.length===0){
+    if(historyStack.length<=1){
+
+        showScreen("home");
+
+        historyStack=["home"];
+
         return;
+
     }
 
 
     /*
-     * Vyberieme poslednú obrazovku.
-     */
-    const previousScreen=
-        screenHistory.pop();
+       Odstránime aktuálnu obrazovku
+       a vezmeme predchádzajúcu.
+    */
+
+    historyStack.pop();
+
+    const previous=
+        historyStack[historyStack.length-1];
 
 
-    /*
-     * Povieme openScreen(),
-     * že ide o spätnú navigáciu.
-     */
-    isGoingBack=true;
+    isNavigatingBack=true;
 
+    showScreen(previous);
 
-    /*
-     * Otvoríme predchádzajúcu obrazovku.
-     */
-    openScreen(previousScreen);
-
-
-    /*
-     * Opäť povolíme normálnu navigáciu.
-     */
-    isGoingBack=false;
+    isNavigatingBack=false;
 
 }
 
 
-/*
- * Vyčistenie histórie a návrat
- * na hlavnú obrazovku.
- *
- * Používa sa iba v situáciách,
- * kde používateľ skutočne ukončí
- * aktuálny pracovný tok.
- */
-function goHome(){
+/* =====================================================
+RESET NAVIGATION
+Používa sa iba vtedy, keď chceme zámerne
+začať novú cestu od hlavnej obrazovky.
+===================================================== */
 
-    screenHistory=[];
+function resetNavigation(id){
 
-    isGoingBack=true;
+    historyStack=[id];
 
-    openScreen("home");
+    showScreen(id);
 
-    isGoingBack=false;
+}
+
+
+/* =====================================================
+DATABASE
+===================================================== */
+
+function loadDatabase(){
+
+    try{
+
+        const saved=
+            localStorage.getItem(STORAGE_KEY);
+
+        cats=saved?
+            JSON.parse(saved):
+            [];
+
+        if(!Array.isArray(cats)){
+            cats=[];
+        }
+
+    }catch(e){
+
+        cats=[];
+
+    }
+
+}
+
+
+function saveDatabase(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(cats)
+    );
+
+}
+
+
+/* =====================================================
+CAT LIST
+===================================================== */
+
+function renderCatList(){
+
+    const container=
+        document.getElementById("catList");
+
+    if(!container)return;
+
+
+    if(cats.length===0){
+
+        container.innerHTML=`
+        <div class="cat-empty">
+
+        Zatiaľ nemáš registrovaného
+        žiadneho mačacieho páchateľa.
+
+        <br><br>
+
+        Pridaj prvého.
+
+        </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML=
+        cats.map(cat=>{
+
+            const count=
+                Array.isArray(cat.incidents)?
+                cat.incidents.length:
+                0;
+
+
+            return `
+            <button
+                class="cat-item"
+                type="button"
+                onclick="openCatFile('${cat.id}')"
+            >
+
+                <div class="cat-photo">
+
+                ${
+                    cat.photo?
+                    `<img src="${cat.photo}">`:
+                    `🐱`
+                }
+
+                </div>
+
+                <div class="cat-info">
+
+                    <strong>
+                    ${escapeHtml(cat.name)}
+                    </strong>
+
+                    <span>
+                    ${count}
+                    registrovaných incidentov
+                    </span>
+
+                </div>
+
+                <div class="cat-arrow">
+                ›
+                </div>
+
+            </button>`;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+ADD CAT
+===================================================== */
+
+function previewCatPhoto(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file)return;
+
+
+    const reader=
+        new FileReader();
+
+
+    reader.onload=e=>{
+
+        catPhotoData=e.target.result;
+
+
+        document.getElementById(
+            "photoPreview"
+        ).innerHTML=
+            `<img src="${e.target.result}">`;
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+function saveCat(){
+
+    const name=
+        document
+        .getElementById("catName")
+        .value
+        .trim();
+
+
+    if(!name){
+
+        showError(
+            "Chýba meno",
+            "Najprv zadaj meno mačky / páchateľa."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        cats.some(
+            cat=>
+                cat.name.toLowerCase()===
+                name.toLowerCase()
+        )
+    ){
+
+        showError(
+            "Páchateľ už existuje",
+            "V registri už máme mačku s týmto menom."
+        );
+
+        return;
+
+    }
+
+
+    const cat={
+
+        id:
+            "cat_"+Date.now(),
+
+        name,
+
+        photo:
+            catPhotoData,
+
+        createdAt:
+            new Date().toISOString(),
+
+        lastMatch:null,
+
+        incidents:[]
+
+    };
+
+
+    cats.push(cat);
+
+    saveDatabase();
+
+    currentCatId=cat.id;
+
+
+    document.getElementById("catName").value="";
+    document.getElementById("catPhoto").value="";
+    document.getElementById("photoPreview").innerHTML="🐱";
+
+    catPhotoData="";
+
+
+    /*
+       Po uložení ideme do CAT FILE
+       ako novú obrazovku v aktuálnej ceste.
+    */
+
+    navigateTo("catFile");
+
+}
+
+
+/* =====================================================
+CAT FILE
+===================================================== */
+
+function openCatFile(id){
+
+    if(!cats.some(cat=>cat.id===id)){
+
+        showError(
+            "Profil sa nenašiel",
+            "Tento profil už neexistuje."
+        );
+
+        return;
+
+    }
+
+
+    currentCatId=id;
+
+    renderCurrentCat();
+
+    navigateTo("catFile");
+
+}
+
+
+function openCurrentCatFile(){
+
+    if(!currentCatId){
+
+        if(cats.length){
+
+            currentCatId=cats[0].id;
+
+        }else{
+
+            navigateTo("newCat");
+
+            return;
+
+        }
+
+    }
+
+
+    renderCurrentCat();
+
+    navigateTo("catFile");
+
+}
+
+
+function renderCurrentCat(){
+
+    if(!currentCatId)return;
+
+
+    const cat=
+        cats.find(
+            c=>c.id===currentCatId
+        );
+
+
+    if(!cat){
+
+        resetNavigation("home");
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent=cat.name;
+
+
+    document.getElementById(
+        "incidentCatName"
+    ).textContent=
+        "Čo dnes spáchal/a "+cat.name+"?";
+
+
+    const photo=
+        document.getElementById(
+            "profilePhoto"
+        );
+
+
+    photo.innerHTML=
+        cat.photo?
+        `<img src="${cat.photo}">`:
+        "🐱";
+
+
+    document.getElementById(
+        "totalIncidents"
+    ).textContent=
+        cat.incidents.length;
+
+
+    document.getElementById(
+        "confidenceValue"
+    ).textContent=
+        cat.lastMatch?
+        cat.lastMatch+"%":
+        "—";
+
+
+    renderIncidentList(cat);
+
+}
+
+
+/* =====================================================
+INCIDENT BUTTON
+===================================================== */
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    const button=
+        document.getElementById(
+            "addIncidentButton"
+        );
+
+
+    if(button){
+
+        button.addEventListener(
+            "click",
+            ()=>{
+
+                if(!currentCatId){
+
+                    showError(
+                        "Nie je vybraná mačka",
+                        "Najprv otvor konkrétny CAT FILE."
+                    );
+
+                    return;
+
+                }
+
+
+                const cat=
+                    cats.find(
+                        c=>c.id===currentCatId
+                    );
+
+
+                if(!cat)return;
+
+
+                document.getElementById(
+                    "incidentCatName"
+                ).textContent=
+                    "Čo dnes spáchal/a "+
+                    cat.name+"?";
+
+
+                renderIncidentOptions();
+
+                updateIncidentDate();
+
+                navigateTo("incident");
+
+            }
+        );
+
+    }
+
+});
+
+
+/* =====================================================
+INCIDENT LIST
+===================================================== */
+
+function renderIncidentList(cat){
+
+    const container=
+        document.getElementById(
+            "incidentList"
+        );
+
+
+    if(!cat.incidents.length){
+
+        container.innerHTML=`
+        <div class="no-incidents">
+
+        Tento páchateľ zatiaľ nemá
+        žiadne evidované zločiny.
+
+        <br><br>
+
+        To je podozrivé.
+
+        </div>`;
+
+        return;
+
+    }
+
+
+    const counts={};
+
+
+    cat.incidents.forEach(i=>{
+
+        counts[i.type]=
+            (counts[i.type]||0)+1;
+
+    });
+
+
+    container.innerHTML=
+        Object.entries(counts)
+        .map(([type,count])=>{
+
+            const item=
+                incidents.find(
+                    i=>i.id===type
+                );
+
+
+            return `
+            <div class="incident-card">
+
+                <div class="incident-icon">
+
+                ${
+                    item?
+                    item.icon:
+                    ""
+                }
+
+                </div>
+
+                <div class="incident-text">
+
+                    <strong>
+                    ${
+                        item?
+                        escapeHtml(item.title):
+                        escapeHtml(type)
+                    }
+                    </strong>
+
+                    <span>
+                    ${
+                        item?
+                        escapeHtml(item.description):
+                        "Mačací incident"
+                    }
+                    </span>
+
+                </div>
+
+                <div class="incident-count">
+                ${count}×
+                </div>
+
+            </div>`;
+
+        }).join("");
 
 }
 
@@ -3077,7 +2938,9 @@ L28 46
 "/>
 
 <path class="blue"
-d="M18 52 L52 52"/>
+d="
+M18 52 L52 52
+"/>
 
 </svg>`
 },
@@ -3259,465 +3122,6 @@ M35 46 L35 47
 
 
 /* =====================================================
-DATABASE
-===================================================== */
-
-function loadDatabase(){
-
-    try{
-
-        const saved=
-            localStorage.getItem(STORAGE_KEY);
-
-        cats=saved?
-            JSON.parse(saved):
-            [];
-
-        if(!Array.isArray(cats)){
-            cats=[];
-        }
-
-    }catch(e){
-
-        cats=[];
-
-    }
-
-}
-
-
-function saveDatabase(){
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(cats)
-    );
-
-}
-
-
-/* =====================================================
-CAT LIST
-===================================================== */
-
-function renderCatList(){
-
-    const container=
-        document.getElementById("catList");
-
-    if(!container)return;
-
-    if(cats.length===0){
-
-        container.innerHTML=`
-        <div class="cat-empty">
-
-        Zatiaľ nemáš registrovaného
-        žiadneho mačacieho páchateľa.
-
-        <br><br>
-
-        Pridaj prvého.
-
-        </div>`;
-
-        return;
-
-    }
-
-    container.innerHTML=
-        cats.map(cat=>{
-
-            const count=
-                Array.isArray(cat.incidents)?
-                cat.incidents.length:
-                0;
-
-            return `
-            <button
-                class="cat-item"
-                onclick="openCatFile('${cat.id}')"
-            >
-
-                <div class="cat-photo">
-
-                ${
-                    cat.photo?
-                    `<img src="${cat.photo}">`:
-                    `🐱`
-                }
-
-                </div>
-
-                <div class="cat-info">
-
-                    <strong>
-                    ${escapeHtml(cat.name)}
-                    </strong>
-
-                    <span>
-                    ${count}
-                    registrovaných incidentov
-                    </span>
-
-                </div>
-
-                <div class="cat-arrow">
-                ›
-                </div>
-
-            </button>`;
-
-        }).join("");
-
-}
-
-
-/* =====================================================
-ADD CAT
-===================================================== */
-
-function previewCatPhoto(event){
-
-    const file=
-        event.target.files[0];
-
-    if(!file)return;
-
-    const reader=
-        new FileReader();
-
-    reader.onload=e=>{
-
-        catPhotoData=e.target.result;
-
-        document.getElementById(
-            "photoPreview"
-        ).innerHTML=
-            `<img src="${e.target.result}">`;
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-
-function saveCat(){
-
-    const name=
-        document
-        .getElementById("catName")
-        .value
-        .trim();
-
-    if(!name){
-
-        showError(
-            "Chýba meno",
-            "Najprv zadaj meno mačky / páchateľa."
-        );
-
-        return;
-    }
-
-    if(
-        cats.some(
-            cat=>
-                cat.name.toLowerCase()===
-                name.toLowerCase()
-        )
-    ){
-
-        showError(
-            "Páchateľ už existuje",
-            "V registri už máme mačku s týmto menom."
-        );
-
-        return;
-    }
-
-    const cat={
-
-        id:
-            "cat_"+Date.now(),
-
-        name,
-
-        photo:
-            catPhotoData,
-
-        createdAt:
-            new Date().toISOString(),
-
-        lastMatch:null,
-
-        incidents:[]
-
-    };
-
-    cats.push(cat);
-
-    saveDatabase();
-
-    currentCatId=cat.id;
-
-    document.getElementById("catName").value="";
-    document.getElementById("catPhoto").value="";
-    document.getElementById("photoPreview").innerHTML="🐱";
-
-    catPhotoData="";
-
-    renderCurrentCat();
-
-    openScreen("catFile");
-
-}
-
-
-/* =====================================================
-CAT FILE
-===================================================== */
-
-function openCatFile(id){
-
-    if(!cats.some(cat=>cat.id===id)){
-
-        showError(
-            "Profil sa nenašiel",
-            "Tento profil už neexistuje."
-        );
-
-        return;
-    }
-
-    currentCatId=id;
-
-    renderCurrentCat();
-
-    openScreen("catFile");
-
-}
-
-
-function openCurrentCatFile(){
-
-    if(!currentCatId){
-
-        if(cats.length){
-            currentCatId=cats[0].id;
-        }else{
-            openScreen("newCat");
-            return;
-        }
-
-    }
-
-    renderCurrentCat();
-
-    openScreen("catFile");
-
-}
-
-
-function renderCurrentCat(){
-
-    if(!currentCatId)return;
-
-    const cat=
-        cats.find(
-            c=>c.id===currentCatId
-        );
-
-    if(!cat){
-
-        goHome();
-
-        return;
-    }
-
-    document.getElementById(
-        "profileName"
-    ).textContent=cat.name;
-
-    document.getElementById(
-        "incidentCatName"
-    ).textContent=
-        "Čo dnes spáchal/a "+cat.name+"?";
-
-    const photo=
-        document.getElementById(
-            "profilePhoto"
-        );
-
-    photo.innerHTML=
-        cat.photo?
-        `<img src="${cat.photo}">`:
-        "🐱";
-
-    document.getElementById(
-        "totalIncidents"
-    ).textContent=
-        cat.incidents.length;
-
-    document.getElementById(
-        "confidenceValue"
-    ).textContent=
-        cat.lastMatch?
-        cat.lastMatch+"%":
-        "—";
-
-    renderIncidentList(cat);
-
-}
-
-
-/* =====================================================
-INCIDENT BUTTON
-===================================================== */
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-    const button=
-        document.getElementById(
-            "addIncidentButton"
-        );
-
-    if(button){
-
-        button.addEventListener(
-            "click",
-            ()=>{
-
-                if(!currentCatId){
-
-                    showError(
-                        "Nie je vybraná mačka",
-                        "Najprv otvor konkrétny CAT FILE."
-                    );
-
-                    return;
-                }
-
-                const cat=
-                    cats.find(
-                        c=>c.id===currentCatId
-                    );
-
-                if(!cat)return;
-
-                document.getElementById(
-                    "incidentCatName"
-                ).textContent=
-                    "Čo dnes spáchal/a "+
-                    cat.name+"?";
-
-                renderIncidentOptions();
-                updateIncidentDate();
-
-                openScreen("incident");
-
-            }
-        );
-
-    }
-
-});
-
-
-/* =====================================================
-INCIDENT LIST
-===================================================== */
-
-function renderIncidentList(cat){
-
-    const container=
-        document.getElementById(
-            "incidentList"
-        );
-
-    if(!cat.incidents.length){
-
-        container.innerHTML=`
-        <div class="no-incidents">
-
-        Tento páchateľ zatiaľ nemá
-        žiadne evidované zločiny.
-
-        <br><br>
-
-        To je podozrivé.
-
-        </div>`;
-
-        return;
-    }
-
-    const counts={};
-
-    cat.incidents.forEach(i=>{
-
-        counts[i.type]=
-            (counts[i.type]||0)+1;
-
-    });
-
-    container.innerHTML=
-        Object.entries(counts)
-        .map(([type,count])=>{
-
-            const item=
-                incidents.find(
-                    i=>i.id===type
-                );
-
-            return `
-            <div class="incident-card">
-
-                <div class="incident-icon">
-
-                ${
-                    item?
-                    item.icon:
-                    ""
-                }
-
-                </div>
-
-                <div class="incident-text">
-
-                    <strong>
-                    ${
-                        item?
-                        escapeHtml(item.title):
-                        escapeHtml(type)
-                    }
-                    </strong>
-
-                    <span>
-                    ${
-                        item?
-                        escapeHtml(item.description):
-                        "Mačací incident"
-                    }
-                    </span>
-
-                </div>
-
-                <div class="incident-count">
-                ${count}×
-                </div>
-
-            </div>`;
-
-        }).join("");
-
-}
-
-
-/* =====================================================
 INCIDENT OPTIONS
 ===================================================== */
 
@@ -3728,7 +3132,9 @@ function renderIncidentOptions(){
             "incidentOptions"
         );
 
+
     if(!container)return;
+
 
     container.innerHTML=
         incidents.map(i=>{
@@ -3737,6 +3143,7 @@ function renderIncidentOptions(){
                 selectedIncidentType===i.id?
                 "selected":
                 "";
+
 
             return `
             <button
@@ -3784,9 +3191,12 @@ function updateIncidentDate(){
             "incidentDate"
         );
 
+
     if(!input)return;
 
+
     const now=new Date();
+
 
     input.value=
         now.toLocaleDateString(
@@ -3815,6 +3225,7 @@ function registerIncident(){
             c=>c.id===currentCatId
         );
 
+
     if(!cat){
 
         showError(
@@ -3823,13 +3234,16 @@ function registerIncident(){
         );
 
         return;
+
     }
+
 
     const note=
         document
         .getElementById("incidentNote")
         .value
         .trim();
+
 
     cat.incidents.push({
 
@@ -3844,23 +3258,18 @@ function registerIncident(){
 
     });
 
+
     saveDatabase();
+
 
     document.getElementById(
         "incidentNote"
     ).value="";
 
+
     renderCurrentCat();
 
-    /*
-     * Po uložení incidentu ideme späť
-     * na CAT FILE.
-     *
-     * Tu nepoužívame goBack(),
-     * pretože chceme jednoznačne
-     * dokončiť pracovný tok.
-     */
-    openScreen("catFile");
+    navigateTo("catFile");
 
 }
 
@@ -3876,7 +3285,9 @@ function deleteCurrentCat(){
             c=>c.id===currentCatId
         );
 
+
     if(!cat)return;
+
 
     if(
         !confirm(
@@ -3890,16 +3301,25 @@ function deleteCurrentCat(){
 
     }
 
+
     cats=
         cats.filter(
             c=>c.id!==currentCatId
         );
 
+
     saveDatabase();
+
 
     currentCatId=null;
 
-    goHome();
+
+    /*
+       Po vymazaní je správne začať
+       novú navigačnú cestu na HOME.
+    */
+
+    resetNavigation("home");
 
 }
 
@@ -3913,14 +3333,18 @@ function loadTestImage(event){
     const file=
         event.target.files[0];
 
+
     if(!file)return;
+
 
     const reader=
         new FileReader();
 
+
     reader.onload=e=>{
 
         testImageData=e.target.result;
+
 
         document.getElementById(
             "testPreview"
@@ -3939,6 +3363,7 @@ function loadTestImage(event){
 
     };
 
+
     reader.readAsDataURL(file);
 
 }
@@ -3954,7 +3379,9 @@ function runPhotoTest(){
         );
 
         return;
+
     }
+
 
     if(!cats.length){
 
@@ -3964,7 +3391,9 @@ function runPhotoTest(){
         );
 
         return;
+
     }
+
 
     identifyDemo();
 
@@ -3979,6 +3408,7 @@ function startDemoScan(){
 
     if(scanRunning)return;
 
+
     if(!cats.length){
 
         showError(
@@ -3987,26 +3417,33 @@ function startDemoScan(){
         );
 
         return;
+
     }
 
+
     scanRunning=true;
+
 
     const meter=
         document.getElementById(
             "scanMeter"
         );
 
+
     const percent=
         document.getElementById(
             "scanPercent"
         );
+
 
     const message=
         document.getElementById(
             "scanMessage"
         );
 
+
     let value=0;
+
 
     const timer=
         setInterval(()=>{
@@ -4016,50 +3453,50 @@ function startDemoScan(){
                     Math.random()*9
                 )+5;
 
+
             if(value>100)value=100;
+
 
             meter.style.width=
                 value+"%";
+
 
             percent.textContent=
                 value+" %";
 
 
-            if(value<25){
+            if(value<25)
 
                 message.textContent=
                     "Hľadám mačací nos...";
 
-            }
 
-            else if(value<50){
+            else if(value<50)
 
                 message.textContent=
                     "Porovnávam páchateľov...";
 
-            }
 
-            else if(value<80){
+            else if(value<80)
 
                 message.textContent=
                     "Vyhodnocujem dôkazy...";
 
-            }
 
-            else if(value<100){
+            else if(value<100)
 
                 message.textContent=
                     "Už ho skoro máme...";
-
-            }
 
 
             if(value>=100){
 
                 clearInterval(timer);
 
+
                 message.textContent=
                     "Mačka / páchateľ nájdený!";
+
 
                 setTimeout(()=>{
 
@@ -4080,19 +3517,25 @@ function identifyDemo(){
 
     if(!cats.length)return;
 
+
     const cat=cats[0];
+
 
     currentCatId=cat.id;
 
+
     cat.lastMatch=98;
 
+
     saveDatabase();
+
 
     document.getElementById(
         "identifiedName"
     ).textContent=cat.name;
 
-    openScreen("identified");
+
+    navigateTo("identified");
 
 }
 
@@ -4107,11 +3550,13 @@ function showError(title,text){
         "errorTitle"
     ).textContent=title;
 
+
     document.getElementById(
         "errorText"
     ).textContent=text;
 
-    openScreen("error");
+
+    navigateTo("error");
 
 }
 
@@ -4139,14 +3584,6 @@ INIT
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
-
-    /*
-     * Na začiatku je používateľ
-     * na hlavnej obrazovke.
-     */
-    currentScreen="home";
-
-    screenHistory=[];
 
     loadDatabase();
 

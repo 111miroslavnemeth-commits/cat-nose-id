@@ -1,7 +1,7 @@
 /* =========================================================
    CAT NOSE ID
-   Roboflow Cat Nose Detection
    Prototype v0.5.0
+   Roboflow Cat Nose Detection
 ========================================================= */
 
 
@@ -11,18 +11,6 @@
 
 const ROBOFLOW_PUBLISHABLE_KEY =
   "rf_JGgApuVxUWez8vuNZfsIqbojNwp1";
-
-
-/*
-   IMPORTANT:
-   The complete Roboflow project slug is required.
-
-   NOT:
-   cat-nose
-
-   CORRECT:
-   blanciagabriel/cat-nose
-*/
 
 const ROBOFLOW_MODEL =
   "blanciagabriel/cat-nose";
@@ -45,7 +33,7 @@ const MIN_SAMPLE_INTERVAL = 450;
 
 const MAX_SCAN_TIME = 10000;
 
-const INFERENCE_INTERVAL = 120;
+const INFERENCE_INTERVAL = 150;
 
 
 /* =========================================================
@@ -82,7 +70,7 @@ let scanFinished = false;
 
 
 /* =========================================================
-   DOM
+   DOM ELEMENTS
 ========================================================= */
 
 const screens = [
@@ -178,8 +166,10 @@ function showScreen(name) {
 function setStatus(text) {
 
   if (engineStatus) {
+
     engineStatus.textContent =
       text;
+
   }
 
 }
@@ -188,21 +178,25 @@ function setStatus(text) {
 function setInstruction(text) {
 
   if (instruction) {
+
     instruction.textContent =
       text;
+
   }
 
 }
 
 
 /* =========================================================
-   ROBOFLOW INITIALIZATION
+   ROBOFLOW MODEL INITIALIZATION
 ========================================================= */
 
 async function initializeRoboflow() {
 
   if (modelReady) {
+
     return true;
+
   }
 
 
@@ -223,20 +217,24 @@ async function initializeRoboflow() {
     );
 
 
+    /*
+       Check that inferencejs exists.
+    */
+
     if (
       typeof inferencejs ===
       "undefined"
     ) {
 
       throw new Error(
-        "Knižnica inferencejs sa nenačítala."
+        "inferencejs sa v prehliadači nenačítalo."
       );
 
     }
 
 
     /*
-       Create Roboflow inference engine.
+       Create inference engine.
     */
 
     inferEngine =
@@ -244,30 +242,47 @@ async function initializeRoboflow() {
 
 
     /*
-       Load the actual public model.
+       Load Roboflow model.
 
-       IMPORTANT:
+       Project:
        blanciagabriel/cat-nose
-       version 1
+
+       Version:
+       1
     */
 
     modelWorkerId =
       await inferEngine.startWorker(
+
         ROBOFLOW_MODEL,
+
         ROBOFLOW_VERSION,
-        ROBOFLOW_PUBLISHABLE_KEY
+
+        ROBOFLOW_PUBLISHABLE_KEY,
+
+        {
+          scoreThreshold:
+            MODEL_SCORE_THRESHOLD,
+
+          iouThreshold:
+            0.50,
+
+          maxNumBoxes:
+            5
+        }
+
       );
 
 
     if (
       modelWorkerId ===
-      undefined ||
+      null ||
       modelWorkerId ===
-      null
+      undefined
     ) {
 
       throw new Error(
-        "Roboflow nevrátil ID modelu."
+        "Roboflow nevrátil worker ID."
       );
 
     }
@@ -284,7 +299,7 @@ async function initializeRoboflow() {
     if (detectorNote) {
 
       detectorNote.textContent =
-        "Roboflow model na detekciu nosa je aktívny.";
+        "Roboflow Cat Nose model je aktívny. Detekcia nosa je experimentálna.";
 
     }
 
@@ -295,59 +310,67 @@ async function initializeRoboflow() {
   } catch (error) {
 
     console.error(
-      "ROBOFLOW ERROR:",
+      "================================"
+    );
+
+    console.error(
+      "ROBOFLOW MODEL ERROR"
+    );
+
+    console.error(
+      "Model:",
+      ROBOFLOW_MODEL
+    );
+
+    console.error(
+      "Version:",
+      ROBOFLOW_VERSION
+    );
+
+    console.error(
+      "Error:",
       error
+    );
+
+    console.error(
+      "================================"
     );
 
 
     modelReady = false;
 
 
-    const message =
+    let errorText =
+      "Neznáma chyba";
+
+
+    if (
       error &&
       error.message
-        ? error.message
-        : String(error);
+    ) {
+
+      errorText =
+        error.message;
+
+    }
 
 
     setStatus(
-      "Načítanie AI modelu zlyhalo"
+      "AI model sa nepodarilo načítať"
     );
 
 
     if (detectorNote) {
 
       detectorNote.textContent =
-        "AI model sa nepodarilo načítať.";
+        "AI model sa nepodarilo načítať: " +
+        errorText;
 
     }
 
 
-    /*
-       IMPORTANT:
-       Instead of hiding the real problem,
-       show the actual error.
-    */
-
-    console.error(
-      "Roboflow model:",
-      ROBOFLOW_MODEL
-    );
-
-    console.error(
-      "Roboflow version:",
-      ROBOFLOW_VERSION
-    );
-
-    console.error(
-      "Roboflow error message:",
-      message
-    );
-
-
-    modelLoading = false;
-
     return false;
+
 
   } finally {
 
@@ -364,31 +387,19 @@ async function initializeRoboflow() {
 
 async function startCamera() {
 
-  setStatus(
-    "Pripravujem skener..."
-  );
-
-
   /*
-     Load AI first.
+     IMPORTANT:
+     Camera starts FIRST.
+     AI loads AFTER camera is visible.
   */
-
-  const ready =
-    await initializeRoboflow();
-
-
-  if (!ready) {
-
-    alert(
-      "AI model nosa sa nepodarilo načítať.\n\nModel: blanciagabriel/cat-nose/1\n\nSkontrolujeme presnú chybu v ďalšom kroku."
-    );
-
-    return;
-
-  }
 
 
   try {
+
+    setStatus(
+      "Spúšťam kameru..."
+    );
+
 
     /*
        Request camera.
@@ -423,6 +434,10 @@ async function startCamera() {
       });
 
 
+    /*
+       Connect camera to video.
+    */
+
     video.srcObject =
       cameraStream;
 
@@ -430,19 +445,69 @@ async function startCamera() {
     await video.play();
 
 
-    setupOverlay();
-
-
-    resetScan();
-
+    /*
+       Show camera immediately.
+    */
 
     showScreen(
       "camera"
     );
 
 
+    /*
+       Prepare scan.
+    */
+
+    resetScan();
+
+
+    setupOverlay();
+
+
+    setInstruction(
+      "Načítavam detekciu nosa..."
+    );
+
+
     setStatus(
-      "Kamera aktívna — hľadám nos"
+      "Kamera aktívna — načítavam AI"
+    );
+
+
+    /*
+       Load AI model now.
+    */
+
+    const ready =
+      await initializeRoboflow();
+
+
+    if (!ready) {
+
+      /*
+         IMPORTANT:
+         Keep camera open.
+
+         This allows us to clearly see that
+         camera itself is working.
+      */
+
+      setInstruction(
+        "Kamera funguje, ale AI model sa nenačítal."
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+       AI ready.
+    */
+
+    setStatus(
+      "Kamera + AI sú pripravené"
     );
 
 
@@ -453,6 +518,10 @@ async function startCamera() {
 
     inferenceRunning =
       true;
+
+
+    scanFinished =
+      false;
 
 
     scanStartedAt =
@@ -478,7 +547,7 @@ async function startCamera() {
 
 
     alert(
-      "Kamera sa nepodarilo spustiť.\n\nSkontrolujte povolenie kamery v prehliadači."
+      "Kameru sa nepodarilo spustiť.\n\nSkontrolujte povolenie kamery v prehliadači."
     );
 
   }
@@ -495,6 +564,7 @@ function stopCamera() {
   inferenceRunning =
     false;
 
+
   scanFinished =
     true;
 
@@ -503,10 +573,12 @@ function stopCamera() {
 
     cameraStream
       .getTracks()
-      .forEach(
-        track =>
-          track.stop()
-      );
+      .forEach(track => {
+
+        track.stop();
+
+      });
+
 
     cameraStream =
       null;
@@ -532,11 +604,19 @@ function stopCamera() {
   );
 
 
-  setStatus(
-    modelReady
-      ? "AI model nosa je pripravený"
-      : "Capture engine ready"
-  );
+  if (modelReady) {
+
+    setStatus(
+      "AI model nosa je pripravený"
+    );
+
+  } else {
+
+    setStatus(
+      "Capture engine ready"
+    );
+
+  }
 
 }
 
@@ -597,12 +677,13 @@ function resetScan() {
 
 
 /* =========================================================
-   OVERLAY
+   OVERLAY SETUP
 ========================================================= */
 
 function setupOverlay() {
 
   if (
+    !video ||
     !video.videoWidth ||
     !video.videoHeight
   ) {
@@ -621,10 +702,16 @@ function setupOverlay() {
 }
 
 
+/* =========================================================
+   CLEAR OVERLAY
+========================================================= */
+
 function clearOverlay() {
 
   if (!detectionOverlay) {
+
     return;
+
   }
 
 
@@ -663,7 +750,7 @@ async function inferenceLoop(
 
 
   /*
-     Scan timeout.
+     Maximum scan duration.
   */
 
   if (
@@ -682,8 +769,7 @@ async function inferenceLoop(
 
 
   /*
-     Prevent multiple AI requests
-     from running simultaneously.
+     Don't overlap inference calls.
   */
 
   if (
@@ -760,7 +846,7 @@ async function inferenceLoop(
 
 
 /* =========================================================
-   CAMERA INFERENCE
+   RUN CAMERA INFERENCE
 ========================================================= */
 
 async function runCameraInference() {
@@ -778,8 +864,7 @@ async function runCameraInference() {
 
 
   /*
-     Roboflow officially supports
-     CVImage(HTMLVideoElement).
+     Official inferencejs supports HTMLVideoElement.
   */
 
   const image =
@@ -821,6 +906,10 @@ async function runCameraInference() {
   );
 
 
+  /*
+     Nothing detected.
+  */
+
   if (!detection) {
 
     if (qualityText) {
@@ -848,6 +937,10 @@ async function runCameraInference() {
 
   }
 
+
+  /*
+     Detection found.
+  */
 
   const confidence =
     detection.confidence;
@@ -891,7 +984,7 @@ async function runCameraInference() {
 
 
   /*
-     Automatically capture suitable frame.
+     Automatic capture.
   */
 
   if (
@@ -946,7 +1039,9 @@ function selectBestDetection(
   ) {
 
     if (!prediction) {
+
       continue;
+
     }
 
 
@@ -1026,7 +1121,7 @@ function selectBestDetection(
 
 
 /* =========================================================
-   DRAW DETECTION
+   DRAW NOSE DETECTION
 ========================================================= */
 
 function drawDetection(
@@ -1034,7 +1129,9 @@ function drawDetection(
 ) {
 
   if (!detectionOverlay) {
+
     return;
+
   }
 
 
@@ -1062,6 +1159,11 @@ function drawDetection(
   const b =
     detection.bbox;
 
+
+  /*
+     Roboflow bbox coordinates are
+     center X / center Y / width / height.
+  */
 
   const left =
     b.x -
@@ -1158,6 +1260,12 @@ async function considerAutomaticCapture(
   }
 
 
+  /*
+     Capture-quality score.
+
+     This is NOT biometric identification.
+  */
+
   const quality =
     calculateCaptureQuality(
       detection
@@ -1165,8 +1273,7 @@ async function considerAutomaticCapture(
 
 
   /*
-     We intentionally use a
-     relatively permissive quality threshold.
+     Keep threshold permissive during testing.
   */
 
   if (
@@ -1188,6 +1295,10 @@ async function considerAutomaticCapture(
 
   }
 
+
+  /*
+     Avoid five almost identical frames.
+  */
 
   if (
     isDuplicateSample(
@@ -1405,7 +1516,7 @@ function calculateCaptureQuality(
 
 
 /* =========================================================
-   DUPLICATE DETECTION
+   DUPLICATE SAMPLE CHECK
 ========================================================= */
 
 function isDuplicateSample(
@@ -1529,13 +1640,15 @@ function finishAutomaticScan(
 
 
 /* =========================================================
-   SUCCESS RESULT
+   SUCCESS
 ========================================================= */
 
 function showScanResult() {
 
   if (!scanResult) {
+
     return;
+
   }
 
 
@@ -1584,13 +1697,15 @@ function showScanResult() {
 
 
 /* =========================================================
-   FAILURE RESULT
+   FAILURE
 ========================================================= */
 
 function showScanFailure() {
 
   if (!scanResult) {
+
     return;
+
   }
 
 
@@ -1606,7 +1721,7 @@ function showScanFailure() {
     </p>
 
     <p style="margin:8px 0 0;opacity:.75;">
-      AI model počas skenovania nenašiel dostatočne spoľahlivý záber nosa.
+      Počas skenovania nebol nájdený dostatočne spoľahlivý záber nosa.
     </p>
 
   `;
@@ -1746,7 +1861,7 @@ function escapeHtml(
 
 
 /* =========================================================
-   VIDEO / PHOTO
+   IMAGE / VIDEO UPLOAD
 ========================================================= */
 
 if (mediaInput) {
@@ -1760,7 +1875,9 @@ if (mediaInput) {
 
 
       if (!file) {
+
         return;
+
       }
 
 
@@ -1879,7 +1996,9 @@ async function analyzeImageFile(
     } finally {
 
       try {
+
         image.dispose();
+
       } catch (_) {}
 
     }
@@ -1940,7 +2059,7 @@ async function analyzeImageFile(
   } catch (error) {
 
     console.error(
-      "Image analysis error:",
+      "IMAGE ERROR:",
       error
     );
 
@@ -2114,7 +2233,9 @@ async function analyzeUploadedVideo() {
     } finally {
 
       try {
+
         image.dispose();
+
       } catch (_) {}
 
     }
@@ -2367,17 +2488,6 @@ if (saveProfileButton) {
 /* =========================================================
    INITIALIZATION
 ========================================================= */
-
-/*
-   IMPORTANT:
-   Do NOT load the AI model automatically when the
-   page opens.
-
-   The model will load when the user presses
-   SCAN WITH CAMERA.
-
-   This makes troubleshooting much easier.
-*/
 
 showScreen(
   "home"

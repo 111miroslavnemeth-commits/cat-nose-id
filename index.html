@@ -152,7 +152,6 @@ h1,h2,h3{
 
 /* =========================
    ONE-LINE CAT
-   PÔVODNÁ GRAFIKA
 ========================= */
 
 .line-cat{
@@ -235,7 +234,6 @@ h1,h2,h3{
 
 /* =========================
    DECORATIVE FULL CATS
-   PÔVODNÉ MAČKY
 ========================= */
 
 .peek-cat{
@@ -281,82 +279,67 @@ h1,h2,h3{
 
 
 /* =========================
-   PAW BUTTON
-   JEDNA SÚVISLÁ LABKA
+   CLASSIC BUTTONS
 ========================= */
 
 .paw-button{
     position:relative;
-    display:block;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     width:100%;
-    min-height:174px;
-    margin:12px auto;
-    padding:0;
-    border:0;
-    background:none;
+    min-height:78px;
+    margin:14px auto;
+    padding:16px 24px;
+    border:1px solid #ff6abd;
+    border-radius:20px;
+    background:linear-gradient(135deg,#ff62bb,#df167f);
     color:#fff;
-    transition:transform .12s ease,filter .12s ease;
+    box-shadow:0 10px 25px rgba(0,0,0,.28);
+    transition:
+        transform .12s ease,
+        filter .12s ease,
+        box-shadow .12s ease;
 }
 
 .paw-button:hover{
-    filter:brightness(1.06);
+    filter:brightness(1.08);
+    box-shadow:0 13px 30px rgba(0,0,0,.34);
 }
 
 .paw-button:active{
     transform:scale(.985);
 }
 
+.paw-button.blue{
+    border-color:#47c5ff;
+    background:linear-gradient(135deg,#319eff,#1647b8);
+}
+
 .paw-shape{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    overflow:visible;
-    filter:drop-shadow(0 12px 20px rgba(0,0,0,.35));
-}
-
-/*
-   Jedna súvislá silueta mačacej labky.
-   Štyri prsty + veľký centrálny vankúš.
-*/
-
-.paw-shape path{
-    fill:url(#pawGradientPink);
-    stroke:#ff75c5;
-    stroke-width:2.5;
-    stroke-linejoin:round;
-}
-
-.paw-button.blue .paw-shape path{
-    fill:url(#pawGradientBlue);
-    stroke:#4bc7ff;
+    display:none;
 }
 
 .paw-text{
-    position:absolute;
+    position:relative;
     z-index:2;
-    left:23%;
-    right:23%;
-    top:54%;
-    transform:translateY(-50%);
+    width:100%;
     text-align:center;
     font-family:"Baloo 2",sans-serif;
-    font-size:25px;
-    line-height:.92;
+    font-size:23px;
+    line-height:1.08;
     font-weight:800;
-    letter-spacing:-.02em;
-    text-shadow:0 2px 3px rgba(0,0,0,.16);
+    letter-spacing:.01em;
 }
 
 .paw-text small{
     display:block;
-    margin-top:8px;
+    margin-top:6px;
     font-family:"Nunito",sans-serif;
-    font-size:10px;
-    line-height:1.25;
+    font-size:11px;
+    line-height:1.3;
     font-weight:800;
-    color:rgba(255,255,255,.82);
-    text-shadow:none;
+    color:rgba(255,255,255,.80);
 }
 
 
@@ -722,19 +705,13 @@ h1,h2,h3{
 }
 
 .incident-option{
-    min-height:154px;
+    min-height:142px;
     padding:13px;
     border-radius:22px;
     border:1px solid #30456f;
     background:#0b1228;
     color:#fff;
-    text-align:center;
-    transition:.12s ease;
-}
-
-.incident-option:hover{
-    transform:translateY(-2px);
-    border-color:#536b9c;
+    text-align:left;
 }
 
 .incident-option.selected{
@@ -744,26 +721,21 @@ h1,h2,h3{
 }
 
 .incident-art{
-    width:74px;
-    height:64px;
-    margin:0 auto 8px;
-    display:grid;
-    place-items:center;
+    width:64px;
+    height:58px;
+    margin-bottom:6px;
 }
 
 .incident-art svg{
     width:100%;
     height:100%;
-    display:block;
-    overflow:visible;
 }
 
 .incident-art path,
 .incident-art circle,
 .incident-art line,
 .incident-art rect,
-.incident-art ellipse,
-.incident-art polygon{
+.incident-art ellipse{
     fill:none;
     stroke:#fff;
     stroke-width:3.5;
@@ -917,15 +889,13 @@ h1,h2,h3{
 .incident-icon svg{
     width:45px;
     height:45px;
-    display:block;
 }
 
 .incident-icon path,
 .incident-icon circle,
 .incident-icon line,
 .incident-icon rect,
-.incident-icon ellipse,
-.incident-icon polygon{
+.incident-icon ellipse{
     fill:none;
     stroke:#fff;
     stroke-width:3.5;
@@ -1050,13 +1020,11 @@ h1,h2,h3{
 
     .paw-button{
         max-width:760px;
-        min-height:185px;
+        min-height:82px;
     }
 
     .paw-text{
-        font-size:27px;
-        left:22%;
-        right:22%;
+        font-size:26px;
     }
 
     .peek-left{
@@ -1078,7 +1046,7 @@ h1,h2,h3{
     }
 
     .incident-option{
-        min-height:170px;
+        min-height:160px;
     }
 }
 
@@ -1116,18 +1084,17 @@ h1,h2,h3{
     }
 
     .paw-button{
-        min-height:145px;
+        min-height:70px;
+        padding:14px 18px;
+        border-radius:18px;
     }
 
     .paw-text{
-        top:55%;
-        left:19%;
-        right:19%;
         font-size:18px;
     }
 
     .paw-text small{
-        font-size:8px;
+        font-size:9px;
     }
 
     .peek-left{
@@ -1149,12 +1116,12 @@ h1,h2,h3{
     }
 
     .incident-option{
-        min-height:145px;
+        min-height:135px;
     }
 
     .incident-art{
-        width:60px;
-        height:56px;
+        width:55px;
+        height:52px;
     }
 
     .incident-card{
@@ -1171,13 +1138,11 @@ h1,h2,h3{
 @media(max-width:370px){
 
     .paw-button{
-        min-height:135px;
+        min-height:66px;
     }
 
     .paw-text{
         font-size:16px;
-        left:17%;
-        right:17%;
     }
 
     .incident-grid{
@@ -1191,7 +1156,6 @@ h1,h2,h3{
 <body>
 
 <div class="app">
-
 
 <!-- SVG DEFINITIONS -->
 
@@ -1261,9 +1225,7 @@ Najzbytočnejší biometrický skener na planéte.
 </header>
 
 
-<!-- =====================================================
-HOME
-===================================================== -->
+<!-- HOME -->
 
 <section id="home" class="screen active">
 
@@ -1382,7 +1344,7 @@ Q138 192 164 178
 </div>
 
 
-<!-- MAIN FULL CAT -->
+<!-- MAIN CAT -->
 
 <div class="home-cat">
 
@@ -1479,64 +1441,7 @@ nemá predplatné a nemá prakticky žiadny rozumný účel.
 </div>
 
 
-<!-- PAW BUTTON -->
-
 <button class="paw-button" onclick="openScreen('scan')">
-
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<!-- JEDNA SÚVISLÁ MAČACIA LABKA -->
-
-<path d="
-M158 76
-
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-
-C400 141 382 144 367 156
-
-C350 170 329 180 300 180
-
-C271 180 250 170 233 156
-
-C218 144 200 141 180 146
-
-C161 151 141 158 123 149
-
-C104 140 93 119 103 99
-
-C111 83 129 75 145 78
-
-C150 79 154 78 158 76
-
-Z
-"/>
-
-</svg>
 
 <div class="paw-text">
 
@@ -1553,45 +1458,6 @@ Nasmeruj kameru a začni vyšetrovanie.
 
 
 <button class="paw-button blue" onclick="openScreen('photoTest')">
-
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
 
 <div class="paw-text">
 
@@ -1647,45 +1513,6 @@ Registrovaní mačací páchatelia a ich CAT FILE.
 
 <button class="paw-button" onclick="openScreen('newCat')">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 PRIDAŤ MAČKU / PÁCHATEĽA
 </div>
@@ -1697,9 +1524,7 @@ PRIDAŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-NEW CAT
-===================================================== -->
+<!-- NEW CAT -->
 
 <section id="newCat" class="screen">
 
@@ -1806,45 +1631,6 @@ class="paw-button blue"
 onclick="document.getElementById('catPhoto').click()"
 >
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 PRIDAŤ FOTOGRAFIU
 </div>
@@ -1858,45 +1644,6 @@ PRIDAŤ FOTOGRAFIU
 
 <button class="paw-button" onclick="saveCat()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 ULOŽIŤ MAČKU / PÁCHATEĽA
 </div>
@@ -1908,9 +1655,7 @@ ULOŽIŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-SCAN
-===================================================== -->
+<!-- SCAN -->
 
 <section id="scan" class="screen">
 
@@ -2043,45 +1788,6 @@ s registrovanými profilmi.
 
 <button class="paw-button" onclick="startDemoScan()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 SPUSTIŤ SKENOVANIE
 </div>
@@ -2093,9 +1799,7 @@ SPUSTIŤ SKENOVANIE
 </section>
 
 
-<!-- =====================================================
-PHOTO TEST
-===================================================== -->
+<!-- PHOTO TEST -->
 
 <section id="photoTest" class="screen">
 
@@ -2178,45 +1882,6 @@ onchange="loadTestImage(event)"
 <button class="paw-button blue"
 onclick="document.getElementById('testImage').click()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 VYBRAŤ FOTOGRAFIU
 </div>
@@ -2231,45 +1896,6 @@ VYBRAŤ FOTOGRAFIU
 
 <button class="paw-button" onclick="runPhotoTest()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 ROZPOZNAŤ MAČKU / PÁCHATEĽA
 </div>
@@ -2281,9 +1907,7 @@ ROZPOZNAŤ MAČKU / PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-CAT FILE
-===================================================== -->
+<!-- CAT FILE -->
 
 <section id="catFile" class="screen">
 
@@ -2408,45 +2032,6 @@ class="paw-button"
 type="button"
 >
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 PRIDAŤ NOVÝ INCIDENT
 </div>
@@ -2455,45 +2040,6 @@ PRIDAŤ NOVÝ INCIDENT
 
 
 <button class="paw-button blue" onclick="deleteCurrentCat()">
-
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
 
 <div class="paw-text">
 ODSTRÁNIŤ PÁCHATEĽA
@@ -2506,9 +2052,7 @@ ODSTRÁNIŤ PÁCHATEĽA
 </section>
 
 
-<!-- =====================================================
-INCIDENT
-===================================================== -->
+<!-- INCIDENT -->
 
 <section id="incident" class="screen">
 
@@ -2617,45 +2161,6 @@ placeholder="Čokoľvek, čo by mal vyšetrovateľ vedieť..."
 
 <button class="paw-button" onclick="registerIncident()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 ZAREGISTROVAŤ ZLOČIN
 </div>
@@ -2667,9 +2172,7 @@ ZAREGISTROVAŤ ZLOČIN
 </section>
 
 
-<!-- =====================================================
-IDENTIFIED
-===================================================== -->
+<!-- IDENTIFIED -->
 
 <section id="identified" class="screen">
 
@@ -2758,45 +2261,6 @@ identifikovaná medzi registrovanými profilmi.
 
 <button class="paw-button" onclick="openCurrentCatFile()">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 OTVORIŤ CAT FILE
 </div>
@@ -2847,45 +2311,6 @@ Skús to ešte raz.
 
 <button class="paw-button" onclick="openScreen('home')">
 
-<svg class="paw-shape"
-viewBox="0 0 600 220"
-preserveAspectRatio="none">
-
-<path d="
-M158 76
-C143 73 132 61 132 46
-C132 31 142 20 155 20
-C169 20 178 31 180 46
-C181 54 185 59 191 59
-C197 59 201 53 202 45
-C204 29 214 18 228 18
-C243 18 252 30 251 45
-C250 55 254 61 261 62
-C268 63 273 58 274 48
-C275 32 286 21 300 21
-C315 21 324 33 323 48
-C322 58 326 64 333 65
-C340 66 346 61 347 51
-C348 36 359 27 373 29
-C388 31 395 43 392 57
-C390 67 394 74 403 78
-C416 84 432 80 448 77
-C470 73 489 82 497 99
-C507 119 496 140 477 149
-C459 158 439 151 420 146
-C400 141 382 144 367 156
-C350 170 329 180 300 180
-C271 180 250 170 233 156
-C218 144 200 141 180 146
-C161 151 141 158 123 149
-C104 140 93 119 103 99
-C111 83 129 75 145 78
-C150 79 154 78 158 76
-Z
-"/>
-
-</svg>
-
 <div class="paw-text">
 SPÄŤ NA HLAVNÚ
 </div>
@@ -2923,7 +2348,7 @@ let selectedIncidentType="ukradla jedlo";
 
 
 /* =====================================================
-INCIDENTS — KRESLENÉ ILUSTRÁCIE
+INCIDENTS
 ===================================================== */
 
 const incidents=[
@@ -2933,47 +2358,21 @@ id:"ukradla jedlo",
 title:"Ukradla jedlo",
 description:"Neoprávnené získanie cudzej potravy",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- tanier -->
-<ellipse
-cx="40"
-cy="49"
-rx="27"
-ry="7"
-class="blue"
-/>
+<path d="M12 42 Q35 49 58 42"/>
 
-<!-- jedlo -->
-<path
-class="yellow"
-d="
-M19 43
-Q40 27 61 43
-Q40 53 19 43Z
-"
-/>
+<path class="yellow"
+d="M17 38 Q35 23 53 38 Q35 48 17 38Z"/>
 
-<!-- labka smerujúca k jedlu -->
-<path
-class="pink"
-d="
-M31 30
-Q31 21 37 18
-Q42 16 45 21
-L47 27
-Q49 19 54 20
-Q60 21 58 28
-L56 34
-"
-/>
+<path d="M27 34 Q35 27 43 34"/>
 
-<path
-d="
-M27 37
-Q40 31 53 37
-"
-/>
+<path class="pink"
+d="M35 23 L35 15"/>
+
+<path d="
+M26 15 Q35 5 44 15
+"/>
 
 </svg>`
 },
@@ -2983,44 +2382,23 @@ id:"poškodila zariadenie",
 title:"Poškodila zariadenie",
 description:"Útok na majetok domácnosti",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- zariadenie -->
-<rect
-x="13"
-y="9"
-width="54"
-height="40"
-rx="5"
-/>
+<rect x="12" y="11" width="46" height="37" rx="5"/>
 
-<!-- prasklina -->
-<path
-class="pink"
+<path class="pink"
 d="
-M42 10
-L34 25
-L42 27
-L31 48
-"
-/>
-
-<!-- malé iskry -->
-<path
-class="yellow"
-d="
-M20 19 L16 15
-M61 20 L65 16
-"
-/>
+M38 12
+L29 27
+L37 28
+L28 46
+"/>
 
 <path
 class="blue"
 d="
-M18 55
-L62 55
-"
-/>
+M18 52 L52 52
+"/>
 
 </svg>`
 },
@@ -3030,39 +2408,24 @@ id:"poškriabala ma",
 title:"Poškrabala ma",
 description:"Neoprávnené použitie pazúrov",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- škrabance -->
-<path
-class="pink"
+<path class="pink"
 d="
-M20 11
-L14 45
+M20 12 L14 43
+M33 10 L29 43
+M46 12 L44 43
+"/>
 
-M35 9
-L30 45
-
-M50 11
-L46 45
-"
-/>
-
-<!-- ruka / obeť -->
-<path
-d="
-M12 50
-Q26 38 40 48
-Q53 56 68 47
-"
-/>
+<path d="
+M12 47 Q35 31 58 47
+"/>
 
 <path
 class="blue"
 d="
-M22 56
-Q40 48 58 56
-"
-/>
+M19 52 Q35 45 51 52
+"/>
 
 </svg>`
 },
@@ -3072,44 +2435,23 @@ id:"uhryzla ma",
 title:"Uhryzla ma",
 description:"Neautorizovaný zubný útok",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- otvorená papuľa -->
 <path
 d="
-M12 28
-Q40 8 68 28
-Q40 53 12 28
+M10 28
+Q35 8 60 28
+Q35 50 10 28
 Z
-"
-/>
+"/>
 
-<!-- zuby -->
-<path
-class="pink"
+<path class="pink"
 d="
-M23 23
-L25 38
-
-M34 18
-L36 40
-
-M46 18
-L44 40
-
-M57 23
-L54 38
-"
-/>
-
-<!-- uhryznutie -->
-<path
-class="blue"
-d="
-M17 48
-Q40 56 63 48
-"
-/>
+M20 25 L23 37
+M30 20 L32 38
+M40 20 L39 38
+M50 25 L47 37
+"/>
 
 </svg>`
 },
@@ -3119,49 +2461,34 @@ id:"obsadila cudziu posteľ",
 title:"Obsadila cudziu posteľ",
 description:"Neoprávnené zabratie lôžka",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- posteľ -->
-<path
-d="
-M10 39
-L70 39
-L70 51
-L10 51
+<path d="
+M10 38
+L60 38
+L60 50
+L10 50
 Z
-"
-/>
+"/>
 
-<!-- vankúš -->
 <path
 d="
 M14 38
-L14 28
-Q23 18 34 28
-L34 38
-"
-/>
+L14 27
+Q22 17 33 27
+L33 38
+"/>
 
-<!-- mačka na posteli -->
-<path
-class="pink"
+<path class="pink"
 d="
-M39 31
-Q43 21 50 25
-L56 21
-L61 29
-Q61 37 51 37
-Q42 37 39 31
-"
-/>
+M39 27 Q48 17 58 27
+"/>
 
 <path
 class="blue"
 d="
-M10 55
-L70 55
-"
-/>
+M10 52 L60 52
+"/>
 
 </svg>`
 },
@@ -3171,51 +2498,28 @@ id:"netrafila sa do záchoda",
 title:"Netrafila sa do záchoda",
 description:"Incident s nejasným motívom",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- záchod -->
 <path
 d="
-M16 24
-Q40 17 64 24
-L60 46
-Q40 55 20 46
+M14 23
+Q35 17 56 23
+L53 45
+Q35 53 17 45
 Z
-"
-/>
+"/>
 
-<ellipse
-cx="40"
-cy="28"
-rx="18"
-ry="6"
-/>
-
-<!-- nešťastná trajektória -->
-<path
-class="pink"
+<path class="blue"
 d="
-M40 8
-L40 17
+M23 31 Q35 38 47 31
+"/>
 
-M34 12
-L40 18
-
-M46 12
-L40 18
-"
-/>
-
-<!-- cieľ mimo -->
-<path
-class="blue"
+<path class="pink"
 d="
-M65 47
-L70 52
-M70 47
-L65 52
-"
-/>
+M35 11 L35 18
+M29 15 L35 21
+M41 15 L35 21
+"/>
 
 </svg>`
 },
@@ -3225,42 +2529,23 @@ id:"rozbila predmet",
 title:"Rozbila predmet",
 description:"Poškodenie cudzieho majetku",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
-<!-- rozbitý predmet -->
 <path
 d="
-M13 12
-L33 29
-L25 38
-L44 53
+M14 12
+L56 48
+M56 12
+L14 48
+"/>
 
-M67 12
-L47 29
-L55 38
-L36 53
-"
-/>
-
-<!-- výrazná prasklina -->
-<path
-class="pink"
+<path class="pink"
 d="
-M40 7
-L34 23
-L43 25
-L33 43
-"
-/>
-
-<!-- kúsky -->
-<path
-class="yellow"
-d="
-M17 54 L23 59
-M63 54 L57 59
-"
-/>
+M35 5
+L29 22
+L38 24
+L30 42
+"/>
 
 </svg>`
 },
@@ -3270,31 +2555,24 @@ id:"neznámy mačací zločin",
 title:"Neznámy zločin",
 description:"Vyšetrovanie stále prebieha",
 icon:`
-<svg viewBox="0 0 80 65">
+<svg viewBox="0 0 70 60">
 
 <circle
 class="blue"
-cx="40"
-cy="32"
-r="24"
+cx="35"
+cy="30"
+r="23"
 />
 
 <path
 class="pink"
 d="
-M32 25
-Q40 18 48 25
-Q51 31 45 35
-Q40 38 40 43
-"
-/>
-
-<circle
-class="pink"
-cx="40"
-cy="50"
-r="1.5"
-/>
+M29 24
+Q35 18 41 24
+Q43 29 38 33
+Q35 35 35 39
+M35 46 L35 47
+"/>
 
 </svg>`
 }

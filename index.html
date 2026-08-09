@@ -2,59 +2,46 @@
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>CAT NOSE ID™</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CAT NOSE ID</title>
 
 <style>
-*{box-sizing:border-box}
-
-:root{
-    --bg:#030714;
-    --card:#0b1430;
-    --card2:#101a3a;
-    --blue:#159cff;
-    --blue2:#42c5ff;
-    --pink:#ff238f;
-    --pink2:#ff65ba;
-    --purple:#8c39ff;
-    --text:#fff;
-    --muted:#aab6d5;
-    --line:#263b76;
-    --green:#35e889;
-    --yellow:#ffd52d;
-    --red:#ff475f;
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
     margin:0;
     padding:0;
-    width:100%;
     min-height:100%;
+    background:#020817;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
     background:
-        radial-gradient(circle at 50% -10%,#19265c 0,#080d24 38%,#02050d 80%);
-    color:var(--text);
-    font-family:Inter,Arial,Helvetica,sans-serif;
-    overflow-x:hidden;
-}
-
-button,input,textarea{
-    font-family:inherit;
+        radial-gradient(circle at 50% -10%,rgba(0,130,255,.18),transparent 35%),
+        radial-gradient(circle at 0% 50%,rgba(255,0,130,.08),transparent 30%),
+        #020817;
 }
 
 button{
-    cursor:pointer;
+    font-family:inherit;
 }
 
 .app{
     width:100%;
-    max-width:520px;
+    max-width:560px;
     margin:auto;
-    padding:16px 15px 35px;
+    min-height:100vh;
+    padding:14px 14px 45px;
 }
+
+/* =========================
+   COMMON
+========================= */
 
 .screen{
     display:none;
@@ -76,460 +63,406 @@ button{
     }
 }
 
-/* =========================
-   HEADER
-========================= */
-
 .header{
     display:flex;
     align-items:center;
-    gap:13px;
-    margin-bottom:15px;
+    justify-content:space-between;
+    margin-bottom:14px;
 }
 
-.logo{
-    width:67px;
-    height:67px;
-    flex-shrink:0;
-    border-radius:20px;
-    border:1px solid rgba(49,185,255,.75);
-    background:linear-gradient(145deg,#152451,#060a1c);
-    box-shadow:
-        0 0 20px rgba(0,157,255,.22),
-        inset 0 0 18px rgba(255,45,159,.08);
-    display:grid;
-    place-items:center;
+.back{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid #31506e;
+    background:#07152a;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
 }
 
-.logo svg{
-    width:50px;
-    height:50px;
+.title{
+    text-align:center;
+    flex:1;
 }
 
-.brand{
-    min-width:0;
-}
-
-.eyebrow{
-    color:#8999c2;
-    font-size:9px;
-    font-weight:900;
-    letter-spacing:.17em;
-}
-
-.brand-title{
-    margin:3px 0 4px;
-    font-size:25px;
-    line-height:.95;
-    letter-spacing:-1.5px;
-    font-weight:950;
-}
-
-.brand-title .pink{
-    color:var(--pink);
-}
-
-.brand-title .blue{
-    color:var(--blue2);
-}
-
-.brand-subtitle{
+.title h2{
     margin:0;
-    color:#aeb9d7;
-    font-size:10px;
+    font-size:17px;
+    letter-spacing:.02em;
 }
 
-/* =========================
-   GENERIC CARDS
-========================= */
+.title span{
+    color:#6db9ff;
+    font-size:11px;
+}
+
+.counter{
+    min-width:55px;
+    text-align:center;
+    padding:9px 7px;
+    border:1px solid #31506e;
+    border-radius:20px;
+    color:#7fc4ff;
+    font-size:12px;
+}
 
 .card{
+    border:1px solid rgba(85,150,210,.42);
     background:
-        linear-gradient(145deg,
-            rgba(16,27,62,.97),
-            rgba(6,10,28,.98)
-        );
-    border:1px solid rgba(59,82,145,.65);
-    border-radius:25px;
+        linear-gradient(145deg,rgba(8,22,44,.97),rgba(3,12,28,.98));
+    border-radius:28px;
     box-shadow:
-        0 0 30px rgba(0,66,170,.14),
-        inset 0 0 30px rgba(92,37,170,.06);
-    overflow:hidden;
+        0 0 35px rgba(0,90,180,.08),
+        inset 0 0 30px rgba(20,90,180,.04);
 }
 
-.card-inner{
-    padding:22px 20px;
+.card-pad{
+    padding:22px;
 }
 
-.section-title{
-    font-size:20px;
-    font-weight:950;
-    margin:0 0 8px;
+.neon-pink{
+    color:#ff3d9d;
 }
 
-.section-text{
-    color:var(--muted);
-    font-size:13px;
+.neon-blue{
+    color:#2e9cff;
+}
+
+.small{
+    color:#8fa2ba;
+    font-size:12px;
     line-height:1.55;
 }
 
-.paw-title{
-    color:var(--pink);
+.center{
+    text-align:center;
 }
 
 /* =========================
-   BUTTONS
+   PAW BUTTONS
 ========================= */
 
-.btn{
-    width:100%;
+.paw-button{
+    position:relative;
     border:0;
-    border-radius:16px;
-    min-height:52px;
-    padding:13px 15px;
-    font-size:12px;
-    font-weight:950;
-    color:white;
-}
-
-.btn-pink{
-    background:linear-gradient(135deg,#ff65ba,#ff1689);
+    cursor:pointer;
+    color:#fff;
+    min-height:105px;
+    padding:52px 14px 15px;
+    border-radius:28px;
+    font-weight:900;
+    font-size:14px;
+    line-height:1.15;
+    text-transform:uppercase;
     box-shadow:
-        0 0 20px rgba(255,31,143,.38),
-        inset 0 1px 8px rgba(255,255,255,.25);
+        0 0 18px rgba(255,30,140,.3),
+        inset 0 0 20px rgba(255,255,255,.06);
 }
 
-.btn-blue{
-    background:linear-gradient(135deg,#39baff,#078ce9);
-    box-shadow:
-        0 0 20px rgba(16,147,255,.30);
+.paw-button .paw{
+    position:absolute;
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:66px;
+    line-height:1;
+    filter:drop-shadow(0 0 10px currentColor);
 }
 
-.btn-dark{
-    background:#0e1732;
-    border:1px solid #31518d;
+.paw-button.pink{
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.18),transparent 25%),
+        linear-gradient(145deg,#ff2390,#e71976);
+    color:#fff;
 }
 
-.btn-red{
-    background:linear-gradient(135deg,#ff596d,#e71943);
+.paw-button.blue{
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.16),transparent 25%),
+        linear-gradient(145deg,#138cff,#0865d8);
+    color:#fff;
 }
 
-.btn-green{
-    background:linear-gradient(135deg,#45ef9b,#12b967);
+.paw-button.green{
+    background:linear-gradient(145deg,#20d86c,#0da84b);
 }
 
-.btn-yellow{
-    color:#16100a;
-    background:linear-gradient(135deg,#ffe36a,#ffbf16);
+.paw-button.small-paw{
+    min-height:78px;
+    padding-top:37px;
+    border-radius:22px;
 }
 
-.btn + .btn{
-    margin-top:9px;
-}
-
-.paw{
-    font-size:20px;
-    margin-right:7px;
+.paw-button.small-paw .paw{
+    font-size:45px;
+    top:-8px;
 }
 
 /* =========================
    HOME
 ========================= */
 
-.home-card{
-    padding:23px 19px 20px;
-}
-
-.home-cat{
-    width:185px;
-    height:145px;
-    display:block;
-    margin:0 auto 5px;
-}
-
-.home-title{
+.home-logo{
     text-align:center;
+    padding:8px 0 18px;
+}
+
+.cat-logo{
+    width:110px;
+    height:110px;
+    margin:auto;
+    border:2px solid #31aaff;
+    border-radius:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#061426;
+    box-shadow:
+        0 0 20px rgba(0,160,255,.3),
+        inset 0 0 20px rgba(255,0,150,.08);
+    font-size:65px;
+}
+
+.logo-name{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:-1px;
+    margin-top:12px;
+}
+
+.logo-name .nose-word{
+    color:#ff3b9d;
+}
+
+.logo-name .id-word{
+    color:#2d9dff;
+}
+
+.tagline{
+    font-weight:700;
+    color:#dce5ef;
+    margin-top:5px;
+}
+
+.hero{
+    padding:26px 20px 22px;
+    text-align:center;
+}
+
+.hero-cat{
+    font-size:85px;
+    margin:0 0 8px;
+    filter:drop-shadow(0 0 15px rgba(255,50,160,.35));
+}
+
+.hero h1{
+    margin:0 0 10px;
     font-size:27px;
-    line-height:1.05;
-    font-weight:950;
-    margin:0 0 11px;
-    letter-spacing:-.8px;
 }
 
-.home-description{
-    max-width:390px;
-    margin:0 auto;
-    text-align:center;
-    color:#b5bfd9;
-    font-size:14px;
+.hero p{
+    color:#9daec4;
+    font-size:15px;
     line-height:1.6;
 }
 
-.home-description strong{
-    color:#fff;
+.info-box{
+    border:1px solid #2b75ad;
+    border-radius:17px;
+    padding:15px;
+    margin:18px 0;
+    color:#dce7f3;
+    font-size:13px;
+    line-height:1.5;
 }
 
-.joke{
-    margin:18px auto;
-    max-width:380px;
-    padding:12px 14px;
-    text-align:center;
-    border:1px solid rgba(156,67,255,.65);
-    border-radius:15px;
-    color:#c5cee7;
-    background:rgba(42,19,74,.30);
-    font-size:10px;
-    line-height:1.55;
-}
-
-.home-actions{
+.home-buttons{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:17px;
-    margin-top:16px;
+    gap:12px;
 }
 
-.round-action{
-    width:100%;
-    aspect-ratio:1;
-    border-radius:50%;
-    border:0;
-    color:#fff;
-    font-weight:950;
-    font-size:10px;
-    line-height:1.35;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-}
-
-.round-action .big-paw{
-    font-size:30px;
-    margin-bottom:8px;
-}
-
-.round-pink{
-    background:radial-gradient(circle at 35% 25%,#ff70c0,#ff198d 55%,#c80d68);
-    box-shadow:0 0 27px rgba(255,25,142,.42);
-}
-
-.round-blue{
-    background:radial-gradient(circle at 35% 25%,#4fc7ff,#078fe8 55%,#0757b7);
-    box-shadow:0 0 27px rgba(0,143,255,.35);
-}
-
-.free-note{
+.disclaimer{
     text-align:center;
-    color:#7181a7;
-    font-size:9px;
-    line-height:1.5;
-    margin-top:17px;
+    margin:18px 5px 0;
+    color:#768da7;
+    font-size:11px;
+    line-height:1.6;
 }
 
 .ready{
-    margin-top:12px;
-    padding:15px 17px;
-    border-radius:20px;
-    background:rgba(10,19,42,.9);
-    border:1px solid #293b70;
-    color:#b7c2df;
-    font-size:12px;
-}
-
-.green-dot{
-    display:inline-block;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:var(--green);
-    box-shadow:0 0 12px rgba(53,232,137,.6);
-    margin-right:9px;
-}
-
-.home-panel{
-    margin-top:12px;
-    padding:20px;
-    border-radius:23px;
-    border:1px solid #293657;
-    background:rgba(5,11,27,.82);
-}
-
-.home-panel h3{
-    margin:0 0 8px;
-    font-size:20px;
-}
-
-.home-panel p{
-    color:#929fbe;
-    font-size:13px;
-    line-height:1.55;
-    margin:0 0 16px;
-}
-
-/* =========================
-   TOP BAR
-========================= */
-
-.topbar{
+    margin-top:15px;
+    padding:15px;
+    border:1px solid #234d70;
+    border-radius:24px;
     display:flex;
     align-items:center;
-    gap:11px;
-    margin:4px 0 13px;
+    gap:10px;
+    color:#b7c7d8;
+    background:#071326;
 }
 
-.back{
-    width:43px;
-    height:43px;
-    border-radius:14px;
-    border:1px solid #304575;
-    background:#0b1430;
-    color:#fff;
-    font-size:22px;
+.ready-dot{
+    width:13px;
+    height:13px;
+    background:#39ff8b;
+    border-radius:50%;
+    box-shadow:0 0 12px #39ff8b;
 }
 
-.topbar-main{
-    flex:1;
+.my-cats{
+    margin-top:15px;
 }
 
-.topbar-title{
-    font-size:15px;
-    font-weight:950;
+.section-title{
+    font-size:21px;
+    font-weight:900;
+    margin-bottom:8px;
 }
 
-.topbar-sub{
-    font-size:9px;
-    color:#7f8dad;
-    margin-top:3px;
-}
-
-.counter{
-    border:1px solid #304575;
-    background:#0b1430;
-    border-radius:99px;
-    padding:8px 11px;
-    font-size:10px;
-    color:#aab7d4;
+.empty{
+    color:#7e91a7;
+    margin-bottom:18px;
 }
 
 /* =========================
-   FORM
+   NEW SUSPECT
 ========================= */
 
-.form-group{
-    margin-bottom:13px;
+.form-card{
+    padding:22px;
 }
 
-.form-label{
+.cat-drawing{
+    text-align:center;
+    font-size:75px;
+    margin:0 0 8px;
+}
+
+.form-card h3{
+    text-align:center;
+    margin:0;
+    font-size:21px;
+}
+
+.field{
+    margin-top:18px;
+}
+
+.field label{
     display:block;
-    color:#9eabc9;
-    font-size:10px;
-    font-weight:900;
-    margin-bottom:6px;
+    color:#aebed0;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:7px;
 }
 
-input,
-textarea{
+.field input{
     width:100%;
-    border:1px solid #2d477d;
-    background:#080f25;
-    color:#fff;
+    padding:15px;
     border-radius:13px;
-    padding:13px;
+    border:1px solid #285274;
+    background:#061326;
+    color:#fff;
     outline:none;
-    font-size:14px;
+    font-size:15px;
 }
 
-textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-input:focus,
-textarea:focus{
-    border-color:#39baff;
-    box-shadow:0 0 0 2px rgba(57,186,255,.08);
-}
-
-.photo-box{
+.photo-row{
     display:grid;
-    grid-template-columns:100px 1fr;
+    grid-template-columns:1fr 1fr;
     gap:12px;
-    align-items:center;
+    margin-top:10px;
 }
 
 .photo-preview{
-    width:100px;
-    height:100px;
+    aspect-ratio:1;
     border-radius:50%;
-    object-fit:cover;
-    background:#101a37;
-    border:2px solid #4067a6;
-}
-
-.photo-placeholder{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    font-size:35px;
-    background:#101a37;
-    border:2px dashed #4067a6;
-}
-
-/* =========================
-   CAMERA
-========================= */
-
-.camera{
-    position:relative;
-    background:#000;
-    border-radius:24px;
-    overflow:hidden;
-    aspect-ratio:3/4;
-    border:1px solid #30436d;
-}
-
-#cameraVideo{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-#cameraCanvas{
-    display:none;
-}
-
-.scan-overlay{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
+    background:#0b1a2e;
+    border:2px solid #315b7e;
     display:flex;
     align-items:center;
     justify-content:center;
+    font-size:60px;
+    overflow:hidden;
+}
+
+.photo-upload{
+    border:1px dashed #2f8acb;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#78bfff;
+    font-size:12px;
+    min-height:130px;
+    cursor:pointer;
+}
+
+.notice{
+    margin-top:16px;
+    padding:13px;
+    border:1px solid #59376a;
+    border-radius:15px;
+    background:#100d21;
+    color:#b8abc7;
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* =========================
+   SCANNER
+========================= */
+
+.scanner{
+    position:relative;
+    overflow:hidden;
+    border-radius:25px;
+    border:1px solid #356487;
+    background:#000;
+}
+
+video{
+    display:block;
+    width:100%;
+    height:440px;
+    object-fit:cover;
+    background:#020509;
+}
+
+.scan-frame{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
 }
 
 .scan-circle{
-    width:57%;
+    width:62%;
     aspect-ratio:1;
-    border:2px solid rgba(255,255,255,.88);
+    border:3px solid #3dff75;
     border-radius:50%;
-    box-shadow:0 0 0 999px rgba(0,0,0,.20);
+    box-shadow:
+        0 0 20px rgba(50,255,100,.3),
+        0 0 0 999px rgba(0,0,0,.20);
 }
 
-.scan-label{
+.zone{
     position:absolute;
-    top:18%;
+    top:18px;
     left:50%;
     transform:translateX(-50%);
-    background:rgba(5,8,19,.9);
-    border:1px solid #405073;
-    border-radius:99px;
-    padding:8px 11px;
-    font-size:10px;
-    font-weight:950;
-    white-space:nowrap;
+    background:#061426;
+    border:1px solid #347ab1;
+    color:#fff;
+    border-radius:30px;
+    padding:9px 15px;
+    font-size:11px;
+    font-weight:900;
 }
 
 .scan-message{
@@ -537,250 +470,265 @@ textarea:focus{
     bottom:18px;
     left:50%;
     transform:translateX(-50%);
-    background:rgba(5,8,19,.92);
-    border:1px solid #405073;
-    border-radius:99px;
-    padding:9px 14px;
-    font-size:10px;
-    white-space:nowrap;
+    width:max-content;
+    max-width:90%;
+    background:rgba(3,12,25,.94);
+    border:1px solid #31506e;
+    border-radius:30px;
+    padding:10px 16px;
+    font-size:12px;
+    text-align:center;
 }
 
-.meter{
-    margin:12px 2px;
+.scan-status{
+    margin-top:14px;
 }
 
-.meter-head{
-    display:flex;
-    justify-content:space-between;
-    color:#8392b4;
-    font-size:9px;
-    font-weight:900;
-}
-
-.bar{
-    height:7px;
-    background:#151f39;
-    border-radius:99px;
+.progress{
+    height:8px;
+    background:#102237;
+    border-radius:20px;
     overflow:hidden;
-    margin-top:6px;
 }
 
-.bar-fill{
+.progress span{
+    display:block;
     height:100%;
     width:0%;
-    background:linear-gradient(90deg,#16a5ff,#ff3b9e);
-    transition:width .2s;
+    background:linear-gradient(90deg,#ff2690,#249eff);
+    transition:.25s;
+}
+
+.thumbs{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:7px;
+    margin-top:12px;
+}
+
+.thumb{
+    aspect-ratio:1;
+    border-radius:10px;
+    background:#102034;
+    border:1px solid #264965;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+}
+
+.thumb.ok{
+    border-color:#39ff87;
+    box-shadow:0 0 8px rgba(57,255,135,.25);
 }
 
 /* =========================
    EVIDENCE
 ========================= */
 
-.evidence-main{
-    text-align:center;
-    padding:19px;
-}
-
-.evidence-cat{
-    width:100%;
-    max-height:280px;
-    object-fit:cover;
-    border-radius:19px;
-    border:1px solid #334c82;
-}
-
-.evidence-text{
-    color:#b5bfd9;
-    font-size:12px;
-    line-height:1.5;
-    margin:13px 0;
-}
-
-.frames{
+.evidence-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:7px;
-    margin-top:12px;
+    gap:10px;
+    margin-top:18px;
 }
 
-.frame{
-    position:relative;
+.evidence{
     aspect-ratio:1;
-    border-radius:12px;
+    border-radius:14px;
     overflow:hidden;
-    border:2px solid #263b68;
-    background:#0b1330;
+    border:2px solid #203e5b;
+    background:#071426;
+    position:relative;
     cursor:pointer;
 }
 
-.frame.selected{
-    border-color:#2cff8d;
-    box-shadow:0 0 13px rgba(44,255,141,.35);
+.evidence.selected{
+    border-color:#36ff79;
+    box-shadow:0 0 12px rgba(54,255,121,.3);
 }
 
-.frame img{
+.evidence .nose-img{
     width:100%;
     height:100%;
-    object-fit:cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+    background:
+        radial-gradient(circle at 50% 45%,#b87862,#6d3c37 55%,#27181d);
 }
 
 .check{
     position:absolute;
-    right:4px;
-    bottom:4px;
-    width:21px;
-    height:21px;
+    right:5px;
+    bottom:5px;
+    width:22px;
+    height:22px;
     border-radius:50%;
-    background:#2cff8d;
-    color:#06130d;
-    display:none;
-    place-items:center;
-    font-weight:950;
-    font-size:11px;
-}
-
-.frame.selected .check{
-    display:grid;
+    background:#2dff75;
+    color:#02140a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    font-size:12px;
 }
 
 /* =========================
    CAT FILE
 ========================= */
 
-.profile-head{
-    padding:20px;
+.profile-top{
     display:flex;
     gap:15px;
     align-items:center;
 }
 
 .profile-photo{
-    width:92px;
-    height:92px;
+    width:90px;
+    height:90px;
     border-radius:50%;
-    object-fit:cover;
-    border:3px solid #ff3c9d;
+    border:2px solid #ff3d9d;
+    background:#132039;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:55px;
 }
 
 .profile-name{
-    font-size:24px;
-    font-weight:950;
+    font-size:29px;
+    font-weight:900;
 }
 
 .profile-status{
-    color:#ff59ad;
-    font-size:10px;
-    font-weight:900;
+    color:#39ff7b;
+    font-size:12px;
     margin-top:4px;
 }
 
 .stats{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-    padding:0 20px 20px;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin:20px 0;
 }
 
 .stat{
-    background:#0a122b;
-    border:1px solid #273c70;
-    border-radius:14px;
-    padding:12px;
+    border:1px solid #31567a;
+    border-radius:12px;
+    padding:12px 5px;
+    text-align:center;
 }
 
-.stat-value{
-    font-size:19px;
-    font-weight:950;
+.stat strong{
+    display:block;
+    font-size:23px;
 }
 
-.stat-label{
-    color:#7e8dad;
+.stat span{
+    display:block;
+    color:#8da1b7;
     font-size:9px;
-    margin-top:3px;
+    line-height:1.2;
+    margin-top:4px;
 }
 
-.incidents{
-    padding:20px;
-    border-top:1px solid #26355d;
+.crimes{
+    margin-top:12px;
 }
 
-.incident{
+.crime{
     display:flex;
-    gap:10px;
     align-items:center;
-    padding:11px 0;
-    border-bottom:1px solid #1b294b;
+    justify-content:space-between;
+    padding:11px;
+    border-bottom:1px solid #162c44;
+    font-size:12px;
 }
 
-.incident:last-child{
-    border-bottom:0;
-}
-
-.incident-icon{
-    width:35px;
-    height:35px;
-    border-radius:10px;
-    display:grid;
-    place-items:center;
-    background:#131f43;
-}
-
-.incident-text{
-    flex:1;
-}
-
-.incident-name{
-    font-size:11px;
-    font-weight:800;
-}
-
-.incident-count{
-    color:#ff5cad;
-    font-size:9px;
-    margin-top:3px;
+.crime b{
+    color:#ffcf35;
 }
 
 /* =========================
-   IDENTIFIED
+   INCIDENTS
 ========================= */
 
-.result{
+.incident-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    margin-top:18px;
+}
+
+.incident{
+    min-height:90px;
+    border:1px solid #285171;
+    border-radius:14px;
+    background:#071426;
+    color:#fff;
+    padding:10px 6px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:700;
+}
+
+.incident.active{
+    border-color:#ff3998;
+    box-shadow:0 0 12px rgba(255,40,150,.25);
+}
+
+.incident-icon{
+    font-size:25px;
+    display:block;
+    margin-bottom:5px;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.result-card{
     text-align:center;
-    padding:22px;
 }
 
 .result-badge{
     display:inline-block;
-    padding:8px 12px;
-    border-radius:99px;
-    background:rgba(41,238,142,.1);
-    border:1px solid rgba(41,238,142,.55);
-    color:#48ee9b;
-    font-size:9px;
-    font-weight:950;
+    border:1px solid #34ff72;
+    color:#34ff72;
+    padding:8px 13px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:900;
 }
 
 .result-photo{
-    width:180px;
-    height:180px;
+    width:190px;
+    height:190px;
     border-radius:50%;
-    object-fit:cover;
-    margin:18px auto 10px;
-    display:block;
-    border:4px solid #ff3b9b;
-    box-shadow:0 0 30px rgba(255,41,151,.3);
+    margin:25px auto 15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:115px;
+    border:4px solid #ff3c9c;
+    box-shadow:
+        0 0 30px rgba(255,40,150,.35),
+        inset 0 0 30px rgba(0,140,255,.15);
 }
 
 .result-name{
-    font-size:28px;
-    font-weight:950;
+    font-size:31px;
+    font-weight:900;
 }
 
-.confidence{
-    margin:8px 0 18px;
-    color:#70dcff;
-    font-size:12px;
+.match{
+    color:#39ff79;
+    font-size:19px;
     font-weight:900;
+    margin-top:6px;
 }
 
 /* =========================
@@ -789,32 +737,35 @@ textarea:focus{
 
 .unknown{
     text-align:center;
-    padding:28px 20px;
+    padding:30px 20px;
 }
 
-.unknown-icon{
+.unknown-cat{
+    font-size:120px;
+    margin:10px 0;
+}
+
+.question{
     font-size:65px;
-    margin-bottom:12px;
-}
-
-.unknown h2{
-    font-size:24px;
-    margin:0 0 8px;
-}
-
-.unknown p{
-    color:#aab6d5;
-    font-size:13px;
-    line-height:1.55;
+    color:#fff;
 }
 
 /* =========================
    ERROR
 ========================= */
 
-.error-box{
-    padding:25px 20px;
+.error-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.error-card{
+    padding:20px 14px;
     text-align:center;
+    border:1px solid #3a3155;
+    border-radius:20px;
+    background:#081327;
 }
 
 .error-icon{
@@ -822,57 +773,15 @@ textarea:focus{
     margin-bottom:10px;
 }
 
-.error-title{
-    font-size:20px;
-    font-weight:950;
-    margin-bottom:8px;
+.error-card h3{
+    margin:0 0 8px;
+    font-size:15px;
 }
 
-.error-text{
-    color:#a8b3cf;
-    font-size:12px;
-    line-height:1.55;
-}
-
-/* =========================
-   ADD INCIDENT
-========================= */
-
-.incident-options{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-
-.incident-option{
-    min-height:72px;
-    padding:10px;
-    border-radius:14px;
-    border:1px solid #2d467b;
-    background:#0b1430;
-    color:#dfe6f7;
-    font-size:10px;
-    font-weight:850;
-    text-align:left;
-}
-
-.incident-option.selected{
-    border-color:#ff3b9d;
-    background:rgba(255,35,143,.12);
-    box-shadow:0 0 12px rgba(255,35,143,.14);
-}
-
-/* =========================
-   SOURCE TEST
-========================= */
-
-.source-preview{
-    width:100%;
-    max-height:400px;
-    object-fit:contain;
-    border-radius:20px;
-    background:#000;
-    border:1px solid #2f4678;
+.error-card p{
+    color:#8fa0b3;
+    font-size:11px;
+    line-height:1.5;
 }
 
 /* =========================
@@ -881,46 +790,66 @@ textarea:focus{
 
 .footer{
     text-align:center;
-    color:#5d6b8c;
-    font-size:8px;
-    line-height:1.5;
-    padding:15px 5px 0;
+    margin-top:25px;
+    padding-top:18px;
+    border-top:1px solid #172d44;
+    color:#61758d;
+    font-size:10px;
+    line-height:1.6;
 }
 
-.footer .pink{
-    color:#ff3b9d;
+.footer-logo{
+    font-size:20px;
+    font-weight:900;
+    color:#fff;
 }
 
-.footer .blue{
-    color:#36b5ff;
+.footer-logo span{
+    color:#ff3c9d;
 }
+
+.footer-logo b{
+    color:#269cff;
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:390px){
 
     .app{
-        padding:13px 11px 30px;
+        padding-left:10px;
+        padding-right:10px;
     }
 
-    .brand-title{
-        font-size:22px;
+    .logo-name{
+        font-size:29px;
     }
 
-    .home-title{
+    .hero h1{
         font-size:24px;
     }
 
-    .home-actions{
-        gap:10px;
+    .home-buttons{
+        gap:8px;
     }
 
-    .round-action{
-        font-size:9px;
+    .paw-button{
+        font-size:12px;
     }
 
-    .round-action .big-paw{
-        font-size:27px;
+    .paw-button .paw{
+        font-size:57px;
     }
 
+    video{
+        height:390px;
+    }
+
+    .error-grid{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
@@ -930,861 +859,849 @@ textarea:focus{
 <div class="app">
 
 <!-- =====================================================
-     SCREEN 1 — DOMOV
+     1. HOME
 ===================================================== -->
 
 <section id="home" class="screen active">
 
-<header class="header">
+    <div class="home-logo">
 
-<div class="logo">
-<svg viewBox="0 0 100 100" fill="none">
-<path d="M22 42V19L40 30C46 27 54 27 60 30L78 19V42C78 62 66 77 50 77C34 77 22 62 22 42Z"
-stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="39" cy="48" r="2.5" fill="white"/>
-<circle cx="61" cy="48" r="2.5" fill="white"/>
-<path d="M47 57Q50 54 53 57Q50 61 47 57Z" fill="white"/>
-<path d="M50 61V67M50 67C46 70 43 68 41 66M50 67C54 70 57 68 59 66"
-stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-<path d="M25 55L10 52M25 61L9 62M75 55L90 52M75 61L91 62"
-stroke="white" stroke-width="2" stroke-linecap="round"/>
-</svg>
-</div>
+        <div class="cat-logo">
+            🐱
+        </div>
 
-<div class="brand">
-<div class="eyebrow">TECHNICKÝ PROTOTYP V0.5.0</div>
-<div class="brand-title">
-CAT <span class="pink">N❣SE</span> <span class="blue">ID</span>
-</div>
-<div class="brand-subtitle">
-Najzbytočnejší biometrický systém na planéte. 🐱
-</div>
-</div>
+        <div class="logo-name">
+            CAT <span class="nose-word">N<span style="font-size:.75em">🐾</span>SE</span>
+            <span class="id-word">ID</span>
+        </div>
 
-</header>
+        <div class="tagline">
+            Najzbytočnejší biometrický systém na planéte. 🐱
+        </div>
 
-<div class="card home-card">
+    </div>
 
-<svg class="home-cat" viewBox="0 0 220 170" fill="none">
+    <div class="card hero">
 
-<path d="M160 125C205 125 211 76 180 62C165 55 155 67 164 77C172 85 182 78 177 69"
-stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <div class="hero-cat">
+            🐽
+        </div>
 
-<path d="M55 96V42L79 57C91 51 104 49 110 49C116 49 129 51 141 57L165 42V96C165 127 142 146 110 146C78 146 55 127 55 96Z"
-stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <h1>
+            Naskenujeme podozrivého.
+        </h1>
 
-<circle cx="88" cy="87" r="3" fill="white"/>
-<circle cx="132" cy="87" r="3" fill="white"/>
+        <p>
+            Aplikácia automaticky nájde tvár mačky,
+            najlepšie zábery a pokúsi sa zistiť,
+            či ide o jedného z registrovaných
+            mačacích páchateľov.
+        </p>
 
-<path d="M102 100Q110 94 118 100Q110 109 102 100Z" fill="#ff5aaf"/>
+        <p>
+            Áno, je to úplne zadarmo.
+            A práve preto sme to vytvorili.
+        </p>
 
-<path d="M110 108V119M110 119C103 124 97 121 94 117M110 119C117 124 123 121 126 117"
-stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <div class="home-buttons">
 
-<path d="M55 101L23 94M55 110L20 110M165 101L197 94M165 110L200 110"
-stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <button class="paw-button pink"
+                    onclick="go('new')">
+                <span class="paw">🐾</span>
+                PRIDAŤ<br>MAČKU / PÁCHATEĽA
+            </button>
 
-<path d="M72 141C73 157 87 163 110 163C133 163 147 157 148 141"
-stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <button class="paw-button blue"
+                    onclick="go('scanner')">
+                <span class="paw">🐾</span>
+                HĽADAŤ<br>MAČKU / PÁCHATEĽA
+            </button>
 
-</svg>
+        </div>
 
-<h1 class="home-title">
-Najzbytočnejší biometrický systém na planéte.
-</h1>
+        <div class="disclaimer">
+            Bez reklám • Bez platieb • Bez predplatného<br>
+            Len nosy, mačky a úplne zbytočná biometria. 🐱
+        </div>
 
-<p class="home-description">
-Pomáhame ľudstvu vyriešiť najväčší problém modernej civilizácie.
-<br>
-<strong>Ktorá mačka / páchateľ to zase urobila?</strong>
-</p>
+    </div>
 
-<div class="joke">
-🐾 Táto aplikácia vznikla pre zábavu.
-<br>
-Žiadne reklamy. Žiadne platby. Žiadne predplatné.
-<br>
-Jednoducho najzbytočnejší biometrický skener, aký bol kedy vytvorený. 😼
-</div>
+    <div class="ready">
+        <span class="ready-dot"></span>
+        MAČACÍ NOS ID pripravené
+    </div>
 
-<div class="home-actions">
+    <div class="card card-pad my-cats">
 
-<button class="round-action round-pink" onclick="show('addCat')">
-<span class="big-paw">🐾</span>
-PRIDAŤ
-<br>
-MAČKU /
-<br>
-PÁCHATEĽA
-</button>
+        <div class="section-title">
+            🐱 Moje mačky / páchateľi
+        </div>
 
-<button class="round-action round-blue" onclick="show('scan')">
-<span class="big-paw">🐾</span>
-HĽADAŤ
-<br>
-MAČKU /
-<br>
-PÁCHATEĽA
-</button>
+        <div class="empty">
+            Zatiaľ nemáš uloženú žiadnu mačku.
+        </div>
 
-</div>
+        <button class="paw-button pink small-paw"
+                onclick="go('new')">
+            <span class="paw">🐾</span>
+            PRIDAŤ MAČKU / PÁCHATEĽA
+        </button>
 
-<div class="free-note">
-Bez reklám • Bez platieb • Bez predplatného
-<br>
-Len nosy, mačky a úplne zbytočná biometria. 🐱
-</div>
+        <button class="paw-button blue small-paw"
+                onclick="go('scanner')">
+            <span class="paw">🐾</span>
+            IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
+        </button>
 
-</div>
+    </div>
 
-<div class="ready">
-<span class="green-dot"></span>
-MAČACÍ NOS ID pripravené
-</div>
-
-<div class="home-panel">
-
-<h3>🐱 Moje mačky</h3>
-
-<p id="homeCatText">
-Zatiaľ nemáš uloženú žiadnu mačku.
-</p>
-
-<button class="btn btn-dark" onclick="show('addCat')">
-🐾 PRIDAŤ MAČKU
-</button>
-
-<button class="btn btn-blue" onclick="show('scan')">
-🔎 IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
-</button>
-
-</div>
-
-<div class="footer">
-CAT <span class="pink">N❣SE</span> <span class="blue">ID</span>™
-<br>
-Vytvorené pre zábavu. Žiadna platobná funkcia.
-</div>
+    <div class="footer">
+        <div class="footer-logo">
+            CAT <span>N🐾SE</span> <b>ID</b>
+        </div>
+        Vytvorené pre zábavu • Žiadna platobná funkcia<br>
+        Len nosy, mačky a úplne zbytočná biometria. 🐱
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 2 — NOVÝ PÁCHATEĽ
+     2. NEW SUSPECT
 ===================================================== -->
 
-<section id="addCat" class="screen">
+<section id="new" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('home')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Nový páchateľ</div>
-<div class="topbar-sub">Vytvorenie mačacieho spisu</div>
-</div>
+        <div class="title">
+            <h2>Nový páchateľ</h2>
+            <span>1 / 9</span>
+        </div>
 
-<div class="counter">1 / 9</div>
+        <div class="counter">1 / 9</div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card form-card">
 
-<div class="card-inner">
+        <div class="cat-drawing">
+            🐱
+        </div>
 
-<div style="text-align:center;font-size:43px;margin-bottom:5px">🐱</div>
+        <h3>
+            Každý zločin začína svoj spis.
+        </h3>
 
-<h2 class="section-title" style="text-align:center">
-Každý zločin začína svoj spis.
-</h2>
+        <p class="center small">
+            Aj keď je jeho jediným zločinom
+            zhorenie kresla. 😼
+        </p>
 
-<p class="section-text" style="text-align:center">
-Aj keď je jeho jediným zločinom zohriatie kresla. 😼
-</p>
+        <div class="field">
 
-<div class="form-group">
-<label class="form-label">Meno mačky / páchateľa</label>
-<input id="catName" type="text" placeholder="napr. Muro">
-</div>
+            <label>
+                MENO MAČKY / PÁCHATEĽA
+            </label>
 
-<div class="form-group">
+            <input id="catName"
+                   type="text"
+                   placeholder="Napr. Muro">
 
-<label class="form-label">
-Profilová fotografia
-</label>
+        </div>
 
-<div class="photo-box">
+        <div class="field">
 
-<div id="photoPlaceholder" class="photo-placeholder">
-🐱
-</div>
+            <label>
+                PROFILOVÁ FOTOGRAFIA
+            </label>
 
-<img id="photoPreview" class="photo-preview" style="display:none">
+            <div class="photo-row">
 
-<div>
-<input id="catPhoto" type="file" accept="image/*" onchange="previewPhoto(event)">
-</div>
+                <div class="photo-preview" id="photoPreview">
+                    🐱
+                </div>
 
-</div>
+                <label class="photo-upload">
+                    📷<br><br>
+                    PRIDAŤ<br>FOTKU
+                    <input type="file"
+                           accept="image/*"
+                           style="display:none"
+                           onchange="loadPhoto(event)">
+                </label>
 
-</div>
+            </div>
 
-<div class="joke">
-🐾 Neboj sa. Mačku nezatýkame.
-<br>
-Potrebujeme iba jej nos. A dôkazy.
-</div>
+        </div>
 
-<button class="btn btn-pink" onclick="createCat()">
-🐾 SPUSTIŤ IDENTIFIKAČNÝ SKEN
-</button>
+        <div class="notice">
+            🐾 Nebojte sa.<br>
+            Mačku nezatýkame.
+            Potrebujeme iba jej nos.
+        </div>
 
-<button class="btn btn-dark" onclick="show('home')">
-← SPÄŤ
-</button>
+        <button class="paw-button pink"
+                style="margin-top:18px"
+                onclick="startNewScan()">
 
-</div>
-</div>
+            <span class="paw">🐾</span>
+            SPUSTIŤ<br>
+            IDENTIFIKAČNÝ SKEN
+
+        </button>
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 3 — SKENOVANIE
+     3. SCANNER
 ===================================================== -->
 
-<section id="scan" class="screen">
+<section id="scanner" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('home')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Skenovanie páchateľa</div>
-<div class="topbar-sub">Živý mačací skener</div>
-</div>
+        <div class="title">
+            <h2>Skenovanie páchateľa</h2>
+            <span>2 / 9</span>
+        </div>
 
-<div class="counter" id="scanCounter">0 / 9</div>
+        <div class="counter">2 / 9</div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="scanner">
 
-<div class="card-inner" style="padding:12px">
+        <video id="camera"
+               autoplay
+               muted
+               playsinline></video>
 
-<div class="camera">
+        <div class="scan-frame">
+            <div class="scan-circle"></div>
+        </div>
 
-<video id="cameraVideo" autoplay playsinline muted></video>
+        <div class="zone">
+            ZÓNA NOS
+        </div>
 
-<canvas id="cameraCanvas"></canvas>
+        <div class="scan-message"
+             id="scanMessage">
+            Držte kameru stabilne.
+        </div>
 
-<div class="scan-overlay">
+    </div>
 
-<div class="scan-circle"></div>
+    <div class="scan-status">
 
-<div class="scan-label">
-🐾 ZÓNA NOS
-</div>
+        <div class="small">
+            Získavame dôkaz č. <span id="shotCount">0</span> / 9
+        </div>
 
-<div class="scan-message" id="scanMessage">
-Hľadám mačku / páchateľa...
-</div>
+        <div class="progress">
+            <span id="progressBar"></span>
+        </div>
 
-</div>
+    </div>
 
-</div>
+    <div class="thumbs"
+         id="thumbs">
 
-<div class="meter">
+        <div class="thumb">🐽</div>
+        <div class="thumb">🐽</div>
+        <div class="thumb">🐽</div>
+        <div class="thumb">🐽</div>
+        <div class="thumb">🐽</div>
 
-<div class="meter-head">
-<span>DETEKCIA NOSA</span>
-<span id="scanPercent">0%</span>
-</div>
+    </div>
 
-<div class="bar">
-<div id="scanBar" class="bar-fill"></div>
-</div>
+    <button class="paw-button blue"
+            style="margin-top:18px"
+            onclick="finishScan()">
 
-</div>
+        <span class="paw">🐾</span>
+        SKENOVAŤ<br>
+        PÁCHATEĽA
 
-</div>
-
-<div class="card-inner" style="padding-top:4px">
-
-<p class="section-text" style="text-align:center">
-Držte kameru stabilne.
-Páchateľa sa pokúšame udržať v zábere.
-<br>
-Získavame dôkaz č. <strong id="evidenceNumber">1</strong> / 9.
-</p>
-
-<button class="btn btn-pink" onclick="simulateScan()">
-🐾 SKENOVAŤ PÁCHATEĽA
-</button>
-
-<button class="btn btn-dark" onclick="show('photoTest')">
-📷 TEST S VIDEOM / FOTOGRAFIOU
-</button>
-
-<button class="btn btn-dark" onclick="stopCamera();show('home')">
-✕ UKONČIŤ SKENOVANIE
-</button>
-
-</div>
-
-</div>
+    </button>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 4 — TEST FOTO / VIDEO
-===================================================== -->
-
-<section id="photoTest" class="screen">
-
-<div class="topbar">
-
-<button class="back" onclick="show('scan')">‹</button>
-
-<div class="topbar-main">
-<div class="topbar-title">Test s videom / fotografiou</div>
-<div class="topbar-sub">Dôkazový materiál</div>
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-inner">
-
-<h2 class="section-title">
-📷 Nahraj podozrivého.
-</h2>
-
-<p class="section-text">
-Toto je testovací režim. Vyber fotografiu mačky z telefónu.
-</p>
-
-<input
-type="file"
-accept="image/*,video/*"
-onchange="loadSource(event)"
->
-
-<div id="sourceContainer" style="margin-top:12px"></div>
-
-<button
-id="sourceContinue"
-class="btn btn-pink"
-style="display:none"
-onclick="show('evidence')"
->
-🐾 POKRAČOVAŤ
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =====================================================
-     SCREEN 5 — DÔKAZOVÝ MATERIÁL
+     4. EVIDENCE
 ===================================================== -->
 
 <section id="evidence" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('scan')">‹</button>
+        <button class="back" onclick="go('scanner')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Dôkazový materiál</div>
-<div class="topbar-sub">Výber referenčných záberov</div>
-</div>
+        <div class="title">
+            <h2>Dôkazový materiál</h2>
+            <span>3 / 9</span>
+        </div>
 
-<div class="counter">4 / 9</div>
+        <div class="counter">3 / 9</div>
 
-</div>
+    </div>
 
-<div class="card evidence-main">
+    <div class="card card-pad">
 
-<div style="font-size:43px">🐾</div>
+        <div class="center"
+             style="font-size:48px">
+            🐾
+        </div>
 
-<h2 class="section-title">
-Páchateľ poskytol dostatok dôkazov.
-</h2>
+        <p class="center">
+            Páchateľ poskytol dostatok dôkazov.<br>
+            Vyberte najlepšie zábery nosa.
+        </p>
 
-<p class="evidence-text">
-Vyberte najlepšie zábery nosa.
-Mačací kriminalistický tím ich potrebuje na porovnanie.
-</p>
+        <div class="evidence-grid">
 
-<div class="frames">
+            <div class="evidence selected"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+                <div class="check">✓</div>
+            </div>
 
-<div class="frame selected" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+            <div class="evidence selected"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+                <div class="check">✓</div>
+            </div>
 
-<div class="frame selected" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+            <div class="evidence selected"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+                <div class="check">✓</div>
+            </div>
 
-<div class="frame selected" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1511044568932-338cba0edf74?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+            <div class="evidence selected"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+                <div class="check">✓</div>
+            </div>
 
-<div class="frame" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+            <div class="evidence selected"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+                <div class="check">✓</div>
+            </div>
 
-<div class="frame" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+            <div class="evidence"
+                 onclick="toggleEvidence(this)">
+                <div class="nose-img">🐽</div>
+            </div>
 
-<div class="frame" onclick="toggleFrame(this)">
-<img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=400&q=80">
-<span class="check">✓</span>
-</div>
+        </div>
 
-</div>
+        <button class="paw-button pink"
+                style="margin-top:22px"
+                onclick="identifySuspect()">
 
-<button class="btn btn-pink" style="margin-top:16px" onclick="show('catFile')">
-🐾 POTVRDIŤ PÁCHATEĽA
-</button>
+            <span class="paw">🐾</span>
+            POTVRDIŤ<br>PÁCHATEĽA
 
-<button class="btn btn-dark" onclick="show('scan')">
-↻ VYBRAŤ INÉ ZÁBERY
-</button>
+        </button>
 
-</div>
+        <button class="paw-button blue small-paw"
+                onclick="go('scanner')">
+
+            <span class="paw">🐾</span>
+            VYBRAŤ INÉ ZÁBERY
+
+        </button>
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 6 — CAT FILE
+     5. CAT FILE
 ===================================================== -->
 
-<section id="catFile" class="screen">
+<section id="profile" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('home')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">CAT FILE</div>
-<div class="topbar-sub">Profil mačky / páchateľa</div>
-</div>
+        <div class="title">
+            <h2>CAT FILE</h2>
+            <span>4 / 9</span>
+        </div>
 
-<div class="counter">5 / 9</div>
+        <div class="counter">4 / 9</div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card card-pad">
 
-<div class="profile-head">
+        <div class="profile-top">
 
-<img
-id="profilePhoto"
-class="profile-photo"
-src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=400&q=80"
->
+            <div class="profile-photo">
+                🐱
+            </div>
 
-<div>
+            <div>
 
-<div id="profileName" class="profile-name">
-Muro
-</div>
+                <div class="profile-name"
+                     id="profileName">
+                    Muro
+                </div>
 
-<div class="profile-status">
-Aktívny páchateľ 🐾
-</div>
+                <div class="profile-status">
+                    Aktívny páchateľ 🐱
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="stats">
+        <div class="stats">
 
-<div class="stat">
-<div class="stat-value">7</div>
-<div class="stat-label">UKRADNUTÉ JEDLO</div>
-</div>
+            <div class="stat">
+                <strong>7</strong>
+                <span>UKRADNUTÉ<br>JEDLO</span>
+            </div>
 
-<div class="stat">
-<div class="stat-value">2</div>
-<div class="stat-label">POŠKODENÉ ZARIADENIE</div>
-</div>
+            <div class="stat">
+                <strong>2</strong>
+                <span>POŠKODENÉ<br>ZARIADENIE</span>
+            </div>
 
-<div class="stat">
-<div class="stat-value">3</div>
-<div class="stat-label">NEOPRÁVNENÉ POSTELE</div>
-</div>
+            <div class="stat">
+                <strong>3</strong>
+                <span>NEOPRÁVNENÉ<br>POSTELE</span>
+            </div>
 
-<div class="stat">
-<div class="stat-value">4</div>
-<div class="stat-label">POŠKRABANIA</div>
-</div>
+        </div>
 
-</div>
+        <h3>
+            TRESTNÝ REGISTER
+        </h3>
 
-<div class="incidents">
+        <div class="crimes">
 
-<h3 class="section-title">
-Trestný register
-</h3>
+            <div class="crime">
+                🍗 Ukradnuté jedlo
+                <b>7×</b>
+            </div>
 
-<div class="incident">
-<div class="incident-icon">🍗</div>
-<div class="incident-text">
-<div class="incident-name">Ukradnuté jedlo</div>
-<div class="incident-count">7×</div>
-</div>
-</div>
+            <div class="crime">
+                🛋️ Poškodil zariadenie
+                <b>2×</b>
+            </div>
 
-<div class="incident">
-<div class="incident-icon">🛋️</div>
-<div class="incident-text">
-<div class="incident-name">Poškodenie nábytku</div>
-<div class="incident-count">2×</div>
-</div>
-</div>
+            <div class="crime">
+                🛏️ Neoprávnené postele
+                <b>3×</b>
+            </div>
 
-<div class="incident">
-<div class="incident-icon">🛏️</div>
-<div class="incident-text">
-<div class="incident-name">Neoprávnené využívanie cudzej postele</div>
-<div class="incident-count">3×</div>
-</div>
-</div>
+            <div class="crime">
+                😾 Poškriabal človeka
+                <b>4×</b>
+            </div>
 
-<div class="incident">
-<div class="incident-icon">🐾</div>
-<div class="incident-text">
-<div class="incident-name">Poškriabal človeka</div>
-<div class="incident-count">4×</div>
-</div>
-</div>
+            <div class="crime">
+                🚽 Netrafil sa do záchoda
+                <b>1×</b>
+            </div>
 
-<div class="incident">
-<div class="incident-icon">🚽</div>
-<div class="incident-text">
-<div class="incident-name">Netrafil sa do záchoda</div>
-<div class="incident-count">1×</div>
-</div>
-</div>
+        </div>
 
-<button class="btn btn-pink" onclick="show('addIncident')">
-🐾 PRIDAŤ INCIDENT
-</button>
+        <button class="paw-button pink"
+                style="margin-top:18px"
+                onclick="go('incident')">
 
-<button class="btn btn-blue" onclick="show('scan')">
-🔎 IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
-</button>
+            <span class="paw">🐾</span>
+            PRIDAŤ<br>INCIDENT
 
-</div>
+        </button>
 
-</div>
+        <button class="paw-button blue small-paw"
+                onclick="go('scanner')">
+
+            <span class="paw">🐾</span>
+            IDENTIFIKOVAŤ<br>PÁCHATEĽA
+
+        </button>
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 7 — PRIDAŤ INCIDENT
+     6. INCIDENT
 ===================================================== -->
 
-<section id="addIncident" class="screen">
+<section id="incident" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('catFile')">‹</button>
+        <button class="back" onclick="go('profile')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Pridať incident</div>
-<div class="topbar-sub">Nový zločin do spisu</div>
-</div>
+        <div class="title">
+            <h2>Pridať incident</h2>
+            <span>5 / 9</span>
+        </div>
 
-<div class="counter">6 / 9</div>
+        <div class="counter">5 / 9</div>
 
-</div>
+    </div>
 
-<div class="card">
+    <div class="card card-pad">
 
-<div class="card-inner">
+        <h2 class="center">
+            Čo dnes páchateľ spáchal?
+        </h2>
 
-<div style="text-align:center;font-size:45px">
-🐱‍👤
-</div>
+        <p class="center small">
+            Dátum a čas zaznamenáme automaticky.<br>
+            Ty už len vyber zločin. 🐱
+        </p>
 
-<h2 class="section-title" style="text-align:center">
-Čo dnes páchateľ spáchal?
-</h2>
+        <div class="incident-grid">
 
-<p class="section-text" style="text-align:center">
-Dátum a čas zaznamenáme automaticky.
-Ty už len vyber zločin. 😼
-</p>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🍗</span>
+                Ukradol jedlo
+            </button>
 
-<div class="incident-options">
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🛋️</span>
+                Poškodil zariadenie
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🍗<br>Ukradlo jedlo
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">😾</span>
+                Poškrabal ma
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🛋️<br>Poškodilo zariadenie
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">😼</span>
+                Kusol ma
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🐾<br>Poškriabalo ma
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🛏️</span>
+                Obsadil cudziu posteľ
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-😾<br>Kuslo ma
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🚽</span>
+                Netrafil sa do záchoda
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🛏️<br>Obsadilo cudziu posteľ
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🌿</span>
+                Zničil rastlinu
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🚽<br>Netrafilo sa do záchoda
-</button>
+            <button class="incident"
+                    onclick="selectIncident(this)">
+                <span class="incident-icon">🍲</span>
+                Vyhodil niečo z police
+            </button>
 
-<button class="incident-option" onclick="selectIncident(this)">
-🌱<br>Zničilo rastlinu
-</button>
+        </div>
 
-<button class="incident-option" onclick="selectIncident(this)">
-📦<br>Vyhodilo niečo z police
-</button>
+        <div class="field">
 
-</div>
+            <label>
+                ĎALŠÍ ZLOČIN / POZNÁMKA
+            </label>
 
-<div class="form-group" style="margin-top:15px">
+            <input type="text"
+                   placeholder="Opíš zločin, ak sa nezmestil...">
 
-<label class="form-label">
-Ďalší zločin / poznámka
-</label>
+        </div>
 
-<textarea
-id="incidentNote"
-placeholder="Opíš zločin, ak sa nezmestil do nášho zoznamu..."
-></textarea>
+        <button class="paw-button pink"
+                style="margin-top:18px"
+                onclick="saveIncident()">
 
-</div>
+            <span class="paw">🐾</span>
+            ZAREGISTROVAŤ<br>ZLOČIN
 
-<button class="btn btn-pink" onclick="saveIncident()">
-🐾 ZAREGISTROVAŤ ZLOČIN
-</button>
+        </button>
 
-</div>
-
-</div>
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 8 — IDENTIFIKOVANÝ
+     7. IDENTIFIED
 ===================================================== -->
 
 <section id="identified" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('home')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Páchateľ identifikovaný</div>
-<div class="topbar-sub">Výsledok biometrického vyšetrovania</div>
-</div>
+        <div class="title">
+            <h2>Páchateľ identifikovaný</h2>
+            <span>6 / 9</span>
+        </div>
 
-<div class="counter">7 / 9</div>
+        <div class="counter">6 / 9</div>
 
-</div>
+    </div>
 
-<div class="card result">
+    <div class="card result-card">
 
-<div class="result-badge">
-✓ PÁCHATEĽ IDENTIFIKOVANÝ
-</div>
+        <div class="result-badge">
+            ✓ PÁCHATEĽ IDENTIFIKOVANÝ
+        </div>
 
-<img
-class="result-photo"
-src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=500&q=80"
->
+        <div class="result-photo">
+            😎🐱
+        </div>
 
-<div class="result-name">
-Muro
-</div>
+        <div class="result-name">
+            Muro
+        </div>
 
-<div class="confidence">
-Zhoda nosa: 98%
-</div>
+        <div class="match">
+            Zhoda nosa: 98%
+        </div>
 
-<p class="section-text">
-Máme ho!
-<br>
-Tento nos už poznáme z registra.
-</p>
+        <p>
+            Máme ho!<br>
+            Tento nos už poznáme z registra.
+        </p>
 
-<button class="btn btn-pink" onclick="show('catFile')">
-🐾 OTVORIŤ CAT FILE
-</button>
+        <button class="paw-button pink"
+                onclick="go('profile')">
 
-<button class="btn btn-blue" onclick="show('addIncident')">
-🐾 PRIDAŤ NOVÝ INCIDENT
-</button>
+            <span class="paw">🐾</span>
+            OTVORIŤ CAT FILE
 
-</div>
+        </button>
+
+        <button class="paw-button blue small-paw"
+                onclick="go('incident')">
+
+            <span class="paw">🐾</span>
+            PRIDAŤ NOVÝ INCIDENT
+
+        </button>
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 9 — NEZNÁMY
+     8. UNKNOWN
 ===================================================== -->
 
 <section id="unknown" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('scan')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Neznámy páchateľ</div>
-<div class="topbar-sub">Výsledok skenovania</div>
-</div>
+        <div class="title">
+            <h2>Neznámy páchateľ</h2>
+            <span>7 / 9</span>
+        </div>
 
-<div class="counter">8 / 9</div>
+        <div class="counter">7 / 9</div>
 
-</div>
+    </div>
 
-<div class="card unknown">
+    <div class="card unknown">
 
-<div class="unknown-icon">
-🐈‍⬛
-</div>
+        <div class="question">
+            ? 🐱 ?
+        </div>
 
-<h2>
-Hmm... kto je to?
-</h2>
+        <div class="unknown-cat">
+            🐈‍⬛
+        </div>
 
-<p>
-Tento nos sa zatiaľ nenachádza v našom registri.
-<br><br>
-Možno ide o úplne nevinnú mačku.
-<br>
-Alebo o mimoriadne skúseného páchateľa.
-</p>
+        <h2>
+            Hmm... kto je to?
+        </h2>
 
-<button class="btn btn-pink" onclick="show('addCat')">
-🐾 PRIDAŤ DO REGISTRA
-</button>
+        <p>
+            Tento nos sa zatiaľ nenachádza
+            v našom registri.
+        </p>
 
-<button class="btn btn-blue" onclick="show('scan')">
-↻ SKÚSIŤ ZNOVA
-</button>
+        <button class="paw-button pink"
+                onclick="go('new')">
 
-</div>
+            <span class="paw">🐾</span>
+            PRIDAŤ DO REGISTRA
+
+        </button>
+
+        <button class="paw-button blue small-paw"
+                onclick="go('scanner')">
+
+            <span class="paw">🐾</span>
+            SKÚSIŤ ZNOVA
+
+        </button>
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     SCREEN 10 — CHYBY
+     9. ERRORS
 ===================================================== -->
 
 <section id="errors" class="screen">
 
-<div class="topbar">
+    <div class="header">
 
-<button class="back" onclick="show('home')">‹</button>
+        <button class="back" onclick="go('home')">‹</button>
 
-<div class="topbar-main">
-<div class="topbar-title">Chyby a hlášky</div>
-<div class="topbar-sub">Technické oddelenie</div>
-</div>
+        <div class="title">
+            <h2>Chyby a hlášky</h2>
+            <span>8 / 9</span>
+        </div>
 
-<div class="counter">9 / 9</div>
+        <div class="counter">8 / 9</div>
 
-</div>
+    </div>
 
-<div class="card error-box">
+    <div class="error-grid">
 
-<div class="error-icon">
-😿
-</div>
+        <div class="error-card">
 
-<div class="error-title">
-Kamera nedostupná
-</div>
+            <div class="error-icon">
+                📷❌
+            </div>
 
-<div class="error-text">
-Páchateľ nám neposkytol dostatočne kvalitný záber.
-Skús kameru otočiť alebo sa priblížiť.
-</div>
+            <h3>
+                Kamera nedostupná
+            </h3>
 
-<hr style="border:0;border-top:1px solid #23345d;margin:20px 0">
+            <p>
+                Páchateľ nám neposkytol
+                dostatočne kvalitný záber.
+                Skús kameru otočiť alebo
+                sa priblížiť.
+            </p>
 
-<div class="error-icon">
-😾
-</div>
+            <button class="paw-button pink small-paw"
+                    onclick="go('scanner')">
 
-<div class="error-title">
-Mačka nenájdená
-</div>
+                <span class="paw">🐾</span>
+                SKÚSIŤ ZNOVA
 
-<div class="error-text">
-Zatiaľ žiadny páchateľ.
-Skúsme to znova. Mačky bývajú prefíkané.
-</div>
+            </button>
 
-<hr style="border:0;border-top:1px solid #23345d;margin:20px 0">
+        </div>
 
-<div class="error-icon">
-🤨
-</div>
 
-<div class="error-title">
-Nedostatočný záber
-</div>
+        <div class="error-card">
 
-<div class="error-text">
-Nos je príliš malý, príliš rozmazaný alebo sa rozhodol
-nespolupracovať.
-</div>
+            <div class="error-icon">
+                😿
+            </div>
 
-<hr style="border:0;border-top:1px solid #23345d;margin:20px 0">
+            <h3>
+                Mačka nenájdená
+            </h3>
 
-<div class="error-icon">
-🔌
-</div>
+            <p>
+                Zatiaľ žiadny páchateľ.
+                Skúsme to znova.
+                Mačky bývajú prefíkané.
+            </p>
 
-<div class="error-title">
-AI sa nepodarilo pripojiť
-</div>
+            <button class="paw-button pink small-paw"
+                    onclick="go('scanner')">
 
-<div class="error-text">
-Technické oddelenie momentálne nevie komunikovať
-s biometrickým systémom.
-Skús to znova neskôr.
-</div>
+                <span class="paw">🐾</span>
+                SKÚSIŤ ZNOVA
 
-<button class="btn btn-pink" style="margin-top:20px" onclick="show('scan')">
-🐾 SKÚSIŤ ZNOVA
-</button>
+            </button>
 
-</div>
+        </div>
+
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                ⚠️
+            </div>
+
+            <h3>
+                Nedostatočný záber
+            </h3>
+
+            <p>
+                Nos je príliš malý,
+                príliš rozmazaný alebo sa
+                rozhodol nespolupracovať.
+            </p>
+
+            <button class="paw-button pink small-paw"
+                    onclick="go('scanner')">
+
+                <span class="paw">🐾</span>
+                SKÚSIŤ ZNOVA
+
+            </button>
+
+        </div>
+
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                ☁️❌
+            </div>
+
+            <h3>
+                AI sa nepodarilo pripojiť
+            </h3>
+
+            <p>
+                Technické oddelenie momentálne
+                nevie komunikovať s biometrickým
+                systémom. Skús to znova neskôr.
+            </p>
+
+            <button class="paw-button pink small-paw"
+                    onclick="go('scanner')">
+
+                <span class="paw">🐾</span>
+                SKÚSIŤ ZNOVA
+
+            </button>
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -1795,193 +1712,177 @@ Skús to znova neskôr.
 <script>
 
 /* =====================================================
-   NAVIGÁCIA
+   NAVIGATION
 ===================================================== */
 
-let currentScreen = "home";
+function go(screenId){
 
-function show(id){
-
-    stopCamera();
-
-    document.querySelectorAll(".screen").forEach(screen=>{
-        screen.classList.remove("active");
+    document.querySelectorAll('.screen').forEach(function(screen){
+        screen.classList.remove('active');
     });
 
-    const target=document.getElementById(id);
+    const target=document.getElementById(screenId);
 
     if(target){
-        target.classList.add("active");
-        currentScreen=id;
+        target.classList.add('active');
         window.scrollTo({
             top:0,
-            behavior:"instant"
+            behavior:'instant'
         });
     }
 
-    if(id==="scan"){
+    if(screenId==='scanner'){
         startCamera();
+        startFakeScan();
     }
+
 }
 
 
 /* =====================================================
-   KAMERA
+   CAMERA
 ===================================================== */
 
 let cameraStream=null;
 
 async function startCamera(){
 
-    const video=document.getElementById("cameraVideo");
+    const video=document.getElementById('camera');
 
     if(!video) return;
 
     try{
 
+        if(cameraStream){
+            video.srcObject=cameraStream;
+            return;
+        }
+
         cameraStream=await navigator.mediaDevices.getUserMedia({
             video:{
-                facingMode:"environment"
+                facingMode:{
+                    ideal:'environment'
+                },
+                width:{
+                    ideal:1280
+                },
+                height:{
+                    ideal:720
+                }
             },
             audio:false
         });
 
         video.srcObject=cameraStream;
 
-        document.getElementById("scanMessage").textContent=
-            "Hľadám mačku / páchateľa...";
-
     }catch(error){
 
-        document.getElementById("scanMessage").textContent=
-            "Kamera nie je dostupná.";
+        const msg=document.getElementById('scanMessage');
+
+        if(msg){
+            msg.textContent='Kamera nie je dostupná — môžeš použiť testovací režim.';
+        }
 
     }
-}
-
-function stopCamera(){
-
-    if(cameraStream){
-
-        cameraStream.getTracks().forEach(track=>{
-            track.stop();
-        });
-
-        cameraStream=null;
-    }
-}
-
-
-/* =====================================================
-   DEMO SKENOVANIA
-===================================================== */
-
-let scanRunning=false;
-
-function simulateScan(){
-
-    if(scanRunning) return;
-
-    scanRunning=true;
-
-    let progress=0;
-
-    const bar=document.getElementById("scanBar");
-    const percent=document.getElementById("scanPercent");
-    const message=document.getElementById("scanMessage");
-    const number=document.getElementById("evidenceNumber");
-
-    number.textContent="1";
-
-    message.textContent=
-        "Hľadám mačku / páchateľa...";
-
-    const timer=setInterval(()=>{
-
-        progress+=5;
-
-        if(progress>100){
-            progress=100;
-        }
-
-        bar.style.width=progress+"%";
-        percent.textContent=progress+"%";
-
-        if(progress>25){
-            message.textContent=
-                "Nos zachytený... 🐾";
-        }
-
-        if(progress>55){
-            message.textContent=
-                "Porovnávam páchateľa...";
-        }
-
-        if(progress>82){
-            message.textContent=
-                "Hľadám v registri...";
-        }
-
-        if(progress>=100){
-
-            clearInterval(timer);
-
-            scanRunning=false;
-
-            setTimeout(()=>{
-
-                /*
-                 * DEMO:
-                 * Po úspešnom dokončení sa zobrazí
-                 * identifikovaný páchateľ.
-                 *
-                 * Skutočný Roboflow výsledok sa sem
-                 * napojí neskôr.
-                 */
-
-                show("identified");
-
-                bar.style.width="0%";
-                percent.textContent="0%";
-
-            },500);
-
-        }
-
-    },120);
 
 }
 
 
 /* =====================================================
-   NOVÁ MAČKA
+   FAKE SCAN – LEN VIZUÁLNY PROTOTYP
 ===================================================== */
 
-function createCat(){
+let scanTimer=null;
 
-    const name=document.getElementById("catName").value.trim();
+function startFakeScan(){
 
-    if(!name){
+    clearInterval(scanTimer);
 
-        alert("Najprv zadaj meno mačky / páchateľa. 🐾");
+    let count=0;
 
-        return;
-    }
+    const countEl=document.getElementById('shotCount');
+    const bar=document.getElementById('progressBar');
+    const message=document.getElementById('scanMessage');
+    const thumbs=document.querySelectorAll('#thumbs .thumb');
 
-    document.getElementById("profileName").textContent=name;
+    if(!countEl || !bar || !message) return;
 
-    document.getElementById("homeCatText").textContent=
-        name+" je uložená v registri páchateľov.";
+    countEl.textContent='0';
+    bar.style.width='0%';
 
-    show("scan");
+    thumbs.forEach(function(t){
+        t.classList.remove('ok');
+    });
+
+    message.textContent='Hľadám mačku / páchateľa...';
+
+    scanTimer=setInterval(function(){
+
+        count++;
+
+        countEl.textContent=count;
+        bar.style.width=((count/9)*100)+'%';
+
+        if(thumbs[count-1]){
+            thumbs[count-1].classList.add('ok');
+        }
+
+        if(count===2){
+            message.textContent='Drž kameru stabilne... 🐾';
+        }
+
+        if(count===5){
+            message.textContent='Nos máme. Ešte chvíľu...';
+        }
+
+        if(count>=9){
+
+            clearInterval(scanTimer);
+
+            message.textContent='Mačka / páchateľ nájdený!';
+
+        }
+
+    },650);
+
 }
 
 
 /* =====================================================
-   FOTO PREVIEW
+   FINISH SCAN
 ===================================================== */
 
-function previewPhoto(event){
+function finishScan(){
+
+    clearInterval(scanTimer);
+
+    go('evidence');
+
+}
+
+
+/* =====================================================
+   NEW CAT
+===================================================== */
+
+function startNewScan(){
+
+    const name=document.getElementById('catName').value.trim();
+
+    if(name){
+        document.getElementById('profileName').textContent=name;
+    }
+
+    go('scanner');
+
+}
+
+
+/* =====================================================
+   PHOTO
+===================================================== */
+
+function loadPhoto(event){
 
     const file=event.target.files[0];
 
@@ -1991,71 +1892,65 @@ function previewPhoto(event){
 
     reader.onload=function(e){
 
-        const preview=document.getElementById("photoPreview");
-        const placeholder=document.getElementById("photoPlaceholder");
+        const preview=document.getElementById('photoPreview');
 
-        preview.src=e.target.result;
-        preview.style.display="block";
-        placeholder.style.display="none";
+        preview.innerHTML=
+            '<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover">';
 
-        document.getElementById("profilePhoto").src=
-            e.target.result;
     };
 
     reader.readAsDataURL(file);
+
 }
 
 
 /* =====================================================
-   TESTOVACIA FOTO
+   EVIDENCE
 ===================================================== */
 
-function loadSource(event){
+function toggleEvidence(element){
 
-    const file=event.target.files[0];
+    element.classList.toggle('selected');
 
-    if(!file) return;
+    const check=element.querySelector('.check');
 
-    const container=document.getElementById("sourceContainer");
+    if(element.classList.contains('selected')){
 
-    container.innerHTML="";
+        if(!check){
 
-    if(file.type.startsWith("image/")){
+            const c=document.createElement('div');
 
-        const img=document.createElement("img");
+            c.className='check';
+            c.textContent='✓';
 
-        img.className="source-preview";
+            element.appendChild(c);
 
-        img.src=URL.createObjectURL(file);
+        }
 
-        container.appendChild(img);
+    }else{
 
-    }else if(file.type.startsWith("video/")){
-
-        const video=document.createElement("video");
-
-        video.className="source-preview";
-
-        video.controls=true;
-        video.autoplay=false;
-
-        video.src=URL.createObjectURL(file);
-
-        container.appendChild(video);
+        if(check){
+            check.remove();
+        }
 
     }
 
-    document.getElementById("sourceContinue").style.display="block";
 }
 
 
 /* =====================================================
-   DÔKAZOVÉ ZÁBERY
+   IDENTIFICATION
 ===================================================== */
 
-function toggleFrame(frame){
+function identifySuspect(){
 
-    frame.classList.toggle("selected");
+    /*
+       Neskôr sem pripojíme Roboflow.
+       Teraz iba dokončujeme vizuálnu a
+       navigačnú časť aplikácie.
+    */
+
+    go('identified');
 
 }
 
@@ -2066,62 +1961,35 @@ function toggleFrame(frame){
 
 function selectIncident(button){
 
-    document
-        .querySelectorAll(".incident-option")
-        .forEach(item=>{
-            item.classList.remove("selected");
-        });
-
-    button.classList.add("selected");
+    button.classList.toggle('active');
 
 }
 
 
 function saveIncident(){
 
-    const selected=document.querySelector(
-        ".incident-option.selected"
-    );
-
-    const note=document.getElementById(
-        "incidentNote"
-    ).value.trim();
-
-    if(!selected && !note){
-
-        alert(
-            "Najprv vyber zločin alebo napíš vlastný. 🐾"
-        );
-
-        return;
-    }
-
     alert(
-        "Zločin bol úspešne pridaný do CAT FILE. 😼"
+        'Zločin bol zaznamenaný do CAT FILE. 🐾'
     );
 
-    document.getElementById(
-        "incidentNote"
-    ).value="";
+    go('profile');
 
-    document
-        .querySelectorAll(".incident-option")
-        .forEach(item=>{
-            item.classList.remove("selected");
-        });
-
-    show("catFile");
 }
 
 
 /* =====================================================
-   ZABEZPEČENIE PRI OPUSTENÍ STRÁNKY
+   START
 ===================================================== */
 
-window.addEventListener("beforeunload",()=>{
-    stopCamera();
-});
+window.addEventListener('load',function(){
 
+    /*
+       Aplikácia začína na domovskej obrazovke.
+    */
+
+    go('home');
+
+});
 
 </script>
 

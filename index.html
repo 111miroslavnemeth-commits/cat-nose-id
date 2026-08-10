@@ -11,6 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
+
+/* =========================================================
+   BASE
+========================================================= */
+
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
@@ -27,15 +32,22 @@ body{
     color:#fff;
     font-family:"Nunito",sans-serif;
     background:
-        radial-gradient(circle at 10% 0%,rgba(42,116,255,.18),transparent 32%),
-        radial-gradient(circle at 92% 18%,rgba(255,40,150,.14),transparent 30%),
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(42,116,255,.18),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 92% 18%,
+            rgba(255,40,150,.14),
+            transparent 30%
+        ),
         #080b19;
 }
 
 button,
 input,
-textarea,
-select{
+textarea{
     font:inherit;
 }
 
@@ -68,6 +80,11 @@ button{
         transform:none;
     }
 }
+
+
+/* =========================================================
+   BRAND
+========================================================= */
 
 .brand{
     display:flex;
@@ -131,7 +148,6 @@ button{
     display:flex;
     align-items:center;
     gap:6px;
-    flex:none;
 }
 
 .language-label{
@@ -153,14 +169,20 @@ button{
     outline:none;
 }
 
-#languageSelect:focus{
-    border-color:#35baff;
-}
+
+/* =========================================================
+   GENERAL CARDS
+========================================================= */
 
 .card{
     position:relative;
     overflow:hidden;
-    background:linear-gradient(145deg,#181f3b,#0b1023);
+    background:
+        linear-gradient(
+            145deg,
+            #181f3b,
+            #0b1023
+        );
     border:1px solid #2d416d;
     border-radius:29px;
     box-shadow:0 22px 65px rgba(0,0,0,.30);
@@ -171,36 +193,20 @@ button{
     margin-top:15px;
 }
 
+
+/* =========================================================
+   HOME
+========================================================= */
+
 .home{
     padding:35px 35px 30px;
     text-align:center;
-}
-
-.home-title{
-    margin:8px 0;
-    font-family:"Baloo 2",sans-serif;
-    font-size:40px;
-    font-weight:800;
-    line-height:.95;
-}
-
-.home-description{
-    max-width:680px;
-    margin:0 auto 20px;
-    color:#99a6c1;
-    font-size:14px;
-    line-height:1.55;
 }
 
 .home-cat{
     width:350px;
     max-width:90%;
     margin:10px auto 18px;
-}
-
-.home-cat svg{
-    width:100%;
-    height:auto;
 }
 
 .line-cat{
@@ -222,13 +228,58 @@ button{
     stroke:#ff49aa;
 }
 
+.line-cat .blue{
+    stroke:#39baff;
+}
+
+.home-title{
+    margin:8px 0;
+    font-family:"Baloo 2",sans-serif;
+    font-size:40px;
+    font-weight:800;
+    line-height:.95;
+}
+
+.home-title span{
+    color:#ff49aa;
+}
+
+.home-description{
+    max-width:680px;
+    margin:0 auto 15px;
+    color:#99a6c1;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.home-joke{
+    max-width:680px;
+    margin:0 auto 20px;
+    padding:12px 15px;
+    border:1px solid #334a76;
+    border-radius:15px;
+    background:rgba(11,18,40,.55);
+    color:#8290ad;
+    font-size:10px;
+    line-height:1.5;
+}
+
+.home-joke strong{
+    color:#ff68b6;
+}
+
 .action-button{
     width:100%;
     min-height:56px;
+    margin-top:10px;
     padding:13px 18px;
     border:1px solid #425e94;
     border-radius:17px;
-    background:linear-gradient(135deg,#1e73ff,#1552d0);
+    background:linear-gradient(
+        135deg,
+        #1e73ff,
+        #1552d0
+    );
     color:#fff;
     font-size:16px;
     font-weight:900;
@@ -239,18 +290,25 @@ button{
     filter:brightness(1.08);
 }
 
+.action-button.blue{
+    background:linear-gradient(
+        135deg,
+        #24baff,
+        #1976df
+    );
+}
+
 .action-button.secondary{
     background:#121a32;
     border-color:#344a77;
 }
 
-.action-button.pink{
-    background:linear-gradient(135deg,#ff3ca6,#d91c7f);
-    border-color:#ff55b1;
-}
-
-.action-button.blue{
-    background:linear-gradient(135deg,#24baff,#1976df);
+.action-button small{
+    display:block;
+    margin-top:3px;
+    color:#b9c7e2;
+    font-size:9px;
+    font-weight:700;
 }
 
 .button-row{
@@ -258,6 +316,36 @@ button{
     grid-template-columns:1fr 1fr;
     gap:10px;
 }
+
+
+/* =========================================================
+   PEEK CATS
+========================================================= */
+
+.peek-cat{
+    position:absolute;
+    pointer-events:none;
+    opacity:.9;
+}
+
+.peek-left{
+    width:180px;
+    height:180px;
+    left:-88px;
+    bottom:-55px;
+}
+
+.peek-right{
+    width:175px;
+    height:175px;
+    right:-80px;
+    top:-55px;
+}
+
+
+/* =========================================================
+   HEADINGS / NAV
+========================================================= */
 
 .screen-title{
     margin:0 0 8px;
@@ -272,25 +360,58 @@ button{
     line-height:1.5;
 }
 
-.back-button{
-    display:inline-flex;
+.back-row{
+    display:flex;
     align-items:center;
-    justify-content:center;
-    width:auto;
-    min-height:44px;
-    padding:10px 17px;
-    margin-bottom:13px;
-    border-radius:14px;
+    gap:12px;
+    margin:0 0 14px;
+}
+
+.back{
+    width:47px;
+    height:47px;
     border:1px solid #344a77;
+    border-radius:15px;
     background:#10172e;
     color:#fff;
-    font-weight:800;
+    font-size:31px;
+    line-height:1;
 }
+
+.back-title h2{
+    margin:0;
+    font-family:"Baloo 2",sans-serif;
+    font-size:29px;
+}
+
+.back-title small{
+    display:block;
+    margin-top:2px;
+    color:#8090ad;
+    font-size:10px;
+}
+
+
+/* =========================================================
+   CAT LIST
+========================================================= */
 
 .cat-list{
     display:grid;
     gap:10px;
     margin-top:15px;
+}
+
+.cat-empty,
+.no-incidents{
+    padding:22px;
+    text-align:center;
+    border-radius:18px;
+    background:#10172e;
+    border:1px solid #2e426b;
+    color:#8290ad;
+    font-size:11px;
+    line-height:1.5;
 }
 
 .cat-item{
@@ -307,7 +428,7 @@ button{
     text-align:left;
 }
 
-.cat-item-photo{
+.cat-photo{
     width:65px;
     height:65px;
     border-radius:18px;
@@ -318,26 +439,73 @@ button{
     font-size:30px;
 }
 
-.cat-item-photo img{
+.cat-photo img{
     width:100%;
     height:100%;
     object-fit:cover;
 }
 
-.cat-item-name{
+.cat-info strong{
+    display:block;
     font-family:"Baloo 2",sans-serif;
     font-size:21px;
     font-weight:800;
 }
 
-.cat-item-info{
+.cat-info span{
+    display:block;
+    margin-top:2px;
     color:#8190ad;
     font-size:10px;
 }
 
-.cat-item-arrow{
+.cat-arrow{
     color:#5d7bb5;
     font-size:22px;
+}
+
+
+/* =========================================================
+   NEW CAT
+========================================================= */
+
+.form{
+    padding:22px;
+}
+
+.photo-preview{
+    width:150px;
+    height:150px;
+    margin:10px auto 15px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#17203e;
+    border:3px solid #ff2d99;
+    display:grid;
+    place-items:center;
+    font-size:55px;
+}
+
+.photo-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.photo-input{
+    display:none;
+}
+
+.photo-label{
+    display:block;
+    width:100%;
+    padding:14px;
+    border:1px solid #344a77;
+    border-radius:16px;
+    background:#10172e;
+    text-align:center;
+    color:#fff;
+    font-weight:900;
 }
 
 .form-group{
@@ -373,32 +541,22 @@ button{
     border-color:#35baff;
 }
 
-.photo-input{
-    display:none;
-}
 
-.photo-preview{
-    width:150px;
-    height:150px;
-    margin:10px auto 15px;
-    border-radius:50%;
-    overflow:hidden;
-    background:#17203e;
-    border:3px solid #ff2d99;
-    display:grid;
-    place-items:center;
-    font-size:55px;
-}
+/* =========================================================
+   CAT FILE
+========================================================= */
 
-.photo-preview img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+.profile-card{
+    padding:22px;
 }
 
 .profile{
-    padding:25px 20px;
     text-align:center;
+}
+
+.profile-art{
+    max-width:250px;
+    margin:auto;
 }
 
 .profile-photo{
@@ -423,18 +581,26 @@ button{
 
 .profile h2{
     margin:0;
+    font-family:"Baloo 2",sans-serif;
     font-size:33px;
 }
 
-.profile-subtitle{
+.badge{
+    display:inline-block;
     margin-top:5px;
-    color:#8795b2;
-    font-size:11px;
+    padding:5px 10px;
+    border:1px solid #4d5d84;
+    border-radius:99px;
+    background:#111a33;
+    color:#8fa0bf;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:.08em;
 }
 
 .stats{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:1fr 1fr;
     gap:9px;
     margin:18px 0;
 }
@@ -446,13 +612,15 @@ button{
     border:1px solid #30456f;
 }
 
-.stat-value{
+.stat strong{
+    display:block;
     font-family:"Baloo 2",sans-serif;
     font-size:23px;
     font-weight:800;
 }
 
-.stat-label{
+.stat span{
+    display:block;
     margin-top:2px;
     color:#7584a2;
     font-size:8px;
@@ -466,24 +634,50 @@ button{
     margin-bottom:15px;
 }
 
-.extra-stat{
+.mini-stat{
     padding:12px;
     border-radius:16px;
     background:#0e152c;
     border:1px solid #2c416b;
 }
 
-.extra-stat b{
+.mini-stat b{
     display:block;
     font-size:10px;
     color:#8190ad;
 }
 
-.extra-stat span{
+.mini-stat span{
     display:block;
     margin-top:3px;
+    color:#7584a2;
+    font-size:8px;
+    font-weight:800;
+}
+
+.register-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.register-title h3{
+    margin:0;
+    font-family:"Baloo 2",sans-serif;
+    font-size:22px;
+}
+
+.muted{
+    color:#64738f;
+    font-size:9px;
     font-weight:900;
 }
+
+
+/* =========================================================
+   INCIDENTS
+========================================================= */
 
 .incident-grid{
     display:grid;
@@ -493,7 +687,7 @@ button{
 }
 
 .incident-option{
-    min-height:150px;
+    min-height:160px;
     padding:14px 9px;
     border-radius:20px;
     border:1px solid #30456f;
@@ -504,7 +698,12 @@ button{
 
 .incident-option.selected{
     border-color:#ff42a5;
-    background:linear-gradient(145deg,rgba(255,49,155,.14),#0b1228);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,49,155,.14),
+            #0b1228
+        );
     box-shadow:0 0 22px rgba(255,49,155,.10);
 }
 
@@ -559,7 +758,6 @@ button{
 }
 
 .incident-list{
-    margin-top:15px;
     display:grid;
     gap:9px;
 }
@@ -607,15 +805,10 @@ button{
     font-weight:900;
 }
 
-.no-incidents{
-    padding:20px;
-    text-align:center;
-    border-radius:18px;
-    background:#10172e;
-    border:1px solid #2e426b;
-    color:#8290ad;
-    font-size:11px;
-}
+
+/* =========================================================
+   EVIDENCE
+========================================================= */
 
 .evidence-panel{
     margin:18px 0;
@@ -627,6 +820,8 @@ button{
 
 .evidence-panel h3{
     margin:0 0 7px;
+    font-family:"Baloo 2",sans-serif;
+    font-size:21px;
 }
 
 .evidence-panel p{
@@ -677,6 +872,11 @@ button{
     text-align:center;
 }
 
+
+/* =========================================================
+   MODALS
+========================================================= */
+
 .modal-backdrop{
     position:fixed;
     inset:0;
@@ -723,13 +923,13 @@ button{
     margin-top:15px;
 }
 
-.fun-choices{
+.choices{
     display:grid;
     gap:9px;
     margin-top:15px;
 }
 
-.fun-choice{
+.choice{
     width:100%;
     padding:13px;
     border-radius:15px;
@@ -737,6 +937,11 @@ button{
     background:#10172e;
     color:#fff;
     font-weight:800;
+    text-align:left;
+}
+
+.choice strong{
+    display:block;
 }
 
 .evidence-camera{
@@ -779,6 +984,11 @@ button{
     width:100%;
     border-radius:18px;
 }
+
+
+/* =========================================================
+   CRIMINAL PAPER
+========================================================= */
 
 .criminal-paper{
     max-width:800px;
@@ -833,6 +1043,7 @@ button{
     padding:7px 10px;
     font-weight:900;
     font-size:14px;
+    opacity:.88;
 }
 
 .paper-section{
@@ -842,39 +1053,11 @@ button{
 }
 
 .paper-section h3{
+    font-family:Georgia,serif;
     font-size:16px;
-}
-
-.paper-profile{
-    display:grid;
-    grid-template-columns:100px 1fr;
-    gap:15px;
-}
-
-.paper-photo{
-    width:100px;
-    height:100px;
-    border:2px solid #222;
-    display:grid;
-    place-items:center;
-    font-size:42px;
-    overflow:hidden;
-}
-
-.paper-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.paper-fields{
-    font-size:11px;
-    line-height:1.7;
-}
-
-.paper-fields b{
-    display:inline-block;
-    min-width:145px;
+    margin:0 0 8px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
 }
 
 .paper-table{
@@ -892,6 +1075,39 @@ button{
 
 .paper-table th{
     background:#ded5c1;
+}
+
+.paper-profile{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:15px;
+}
+
+.paper-photo{
+    width:100px;
+    height:100px;
+    border:2px solid #222;
+    display:grid;
+    place-items:center;
+    font-size:42px;
+    overflow:hidden;
+    background:#d9d0bd;
+}
+
+.paper-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.paper-fields{
+    font-size:11px;
+    line-height:1.7;
+}
+
+.paper-fields b{
+    display:inline-block;
+    min-width:145px;
 }
 
 .paper-notice{
@@ -924,6 +1140,11 @@ button{
     text-align:center;
 }
 
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
 .footer{
     padding:25px 10px 0;
     text-align:center;
@@ -935,7 +1156,13 @@ button{
     color:#8290ad;
 }
 
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
 @media(min-width:760px){
+
     .app{
         padding-top:30px;
     }
@@ -959,9 +1186,37 @@ button{
     .action-button{
         max-width:760px;
     }
+
+    .peek-left{
+        width:220px;
+        height:220px;
+        left:-105px;
+        bottom:-70px;
+    }
+
+    .peek-right{
+        width:215px;
+        height:215px;
+        right:-100px;
+        top:-72px;
+    }
+
+    .incident-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .incident-option{
+        min-height:160px;
+    }
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media(max-width:600px){
+
     .app{
         padding:13px 10px 40px;
     }
@@ -973,20 +1228,6 @@ button{
 
     .brand-title{
         font-size:24px;
-    }
-
-    .brand-subtitle{
-        display:none;
-    }
-
-    .language-control{
-        align-self:flex-start;
-    }
-
-    #languageSelect{
-        max-width:110px;
-        padding:8px 24px 8px 8px;
-        font-size:10px;
     }
 
     .home{
@@ -1007,8 +1248,18 @@ button{
         font-size:18px;
     }
 
-    .button-row{
-        grid-template-columns:1fr;
+    .peek-left{
+        width:115px;
+        height:115px;
+        left:-52px;
+        bottom:-35px;
+    }
+
+    .peek-right{
+        width:110px;
+        height:110px;
+        right:-50px;
+        top:-34px;
     }
 
     .incident-grid{
@@ -1058,7 +1309,9 @@ button{
     }
 }
 
+
 @media(max-width:370px){
+
     .incident-grid{
         grid-template-columns:1fr;
     }
@@ -1071,17 +1324,26 @@ button{
         grid-template-columns:1fr;
     }
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
+
+<!-- =========================================================
+   BRAND
+========================================================= -->
+
 <header class="brand">
 
 <div class="brand-logo">
+
 <svg viewBox="0 0 100 100">
+
 <path d="
 M22 47
 L18 20
@@ -1092,40 +1354,94 @@ L78 47
 Q82 72 50 82
 Q18 72 22 47Z
 "/>
+
 <circle cx="38" cy="53" r="3"/>
 <circle cx="62" cy="53" r="3"/>
-<path class="pink" d="M43 63 Q50 70 57 63"/>
+
+<path
+class="pink"
+d="M43 63 Q50 70 57 63"
+/>
+
 </svg>
+
 </div>
 
 <div>
-<div class="brand-kicker">CAT NOSE ID</div>
-<div class="brand-title">CAT NOSE ID</div>
+
+<div class="brand-kicker">
+CAT NOSE ID
+</div>
+
+<div class="brand-title">
+CAT NOSE ID
+</div>
+
 <div class="brand-subtitle">
 Najzbytočnejší biometrický skener na planéte.
 </div>
+
 </div>
 
 <div class="language-control">
-<label for="languageSelect" class="language-label">🌐</label>
-<select id="languageSelect" aria-label="Jazyk aplikácie">
-<option value="sk">Slovenčina</option>
-<option value="en">English</option>
-<option value="cs">Čeština</option>
-<option value="de">Deutsch</option>
-<option value="it">Italiano</option>
+
+<label
+for="languageSelect"
+class="language-label"
+>
+🌐
+</label>
+
+<select
+id="languageSelect"
+aria-label="Jazyk aplikácie"
+>
+
+<option value="sk">
+Slovenčina
+</option>
+
+<option value="en">
+English
+</option>
+
+<option value="cs">
+Čeština
+</option>
+
+<option value="de">
+Deutsch
+</option>
+
+<option value="it">
+Italiano
+</option>
+
 </select>
+
 </div>
 
 </header>
 
 
-<section id="home" class="screen active">
+<!-- =========================================================
+   HOME
+========================================================= -->
+
+<section
+id="home"
+class="screen active"
+>
 
 <div class="card home">
 
-<div class="home-cat">
-<svg class="line-cat" viewBox="0 0 260 300">
+
+<div class="peek-cat peek-left">
+
+<svg
+class="line-cat"
+viewBox="0 0 260 300"
+>
 
 <path d="
 M91 241
@@ -1143,66 +1459,350 @@ Q143 259 110 250
 Q98 247 91 241
 "/>
 
-<path d="
-M95 241
-Q79 270 62 280
-M174 241
-Q194 267 217 276
-"/>
+<circle cx="108" cy="148" r="3"/>
+<circle cx="168" cy="148" r="3"/>
+
+<path
+class="pink"
+d="M133 163 Q138 170 144 163"
+/>
+
+</svg>
+
+</div>
+
+
+<div class="peek-cat peek-right">
+
+<svg
+class="line-cat"
+viewBox="0 0 260 300"
+>
 
 <path d="
-M110 250
-Q107 274 102 286
-M151 253
-Q153 273 160 286
+M91 241
+Q62 225 63 189
+L67 137
+L54 94
+L89 111
+Q109 91 132 91
+Q156 91 176 111
+L211 94
+L198 137
+L202 187
+Q204 226 175 241
+Q143 259 110 250
+Q98 247 91 241
 "/>
 
 <circle cx="108" cy="148" r="3"/>
 <circle cx="168" cy="148" r="3"/>
 
-<path class="pink" d="M133 163 Q138 170 144 163"/>
+<path
+class="blue"
+d="M133 163 Q140 170 147 163"
+/>
+
+</svg>
+
+</div>
+
+
+<div class="home-cat">
+
+<svg
+class="line-cat"
+viewBox="0 0 360 300"
+>
 
 <path d="
-M113 178
-Q138 192 164 178
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
 "/>
 
-<path class="pink" d="
-M93 167 L51 158
-M94 178 L50 179
-M181 167 L221 158
-M181 178 L224 179
+<path
+class="blue"
+d="
+M218 239
+Q288 245 300 191
+Q307 156 279 151
+Q259 147 257 165
+"/>
+
+<path d="
+M119 248
+Q117 270 109 286
+M184 254
+Q185 271 192 286
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path
+class="pink"
+d="
+M160 159
+Q166 151 172 159
+Q166 168 160 159
+"/>
+
+<path d="
+M166 166
+Q166 181 150 184
+M166 166
+Q166 181 182 184
+"/>
+
+<path d="
+M125 169 L76 157
+M126 181 L73 181
+M207 169 L258 157
+M206 181 L260 181
+"/>
+
+<path
+class="pink"
+d="
+M225 219
+Q241 205 255 217
+Q263 227 253 235
+Q240 245 227 235
+Q219 229 225 219
 "/>
 
 </svg>
+
 </div>
 
+
 <h1 class="home-title">
-KTO JE TEN<br>PÁCHATEĽ?
+KTO JE TEN <span>PÁCHATEĽ?</span>
 </h1>
 
+
 <p class="home-description">
-Nasmeruj kameru na mačku / páchateľa a nechaj náš úplne zbytočný biometrický systém pokúsiť sa zistiť, kto to je.
+
+Nasmeruj kameru na
+<strong>mačku / páchateľa</strong>
+a nechaj náš úplne zbytočný biometrický systém
+pokúsiť sa zistiť, kto to je.
+
 </p>
+
+
+<div class="home-joke">
+
+<strong>Upozornenie:</strong>
+Táto aplikácia nemá reklamy,
+nemá platby,
+nemá predplatné
+a nemá prakticky žiadny rozumný účel.
+
+</div>
+
+
+<button
+class="action-button"
+type="button"
+onclick="openScreen('scan')"
+>
+
+IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
+
+<small>
+Nasmeruj kameru a začni vyšetrovanie.
+</small>
+
+</button>
+
+
+<button
+class="action-button blue"
+type="button"
+onclick="openScreen('cats')"
+>
+
+MOJE MAČKY
+
+<small>
+Správa mačiek / páchateľov.
+</small>
+
+</button>
+
+
+<button
+class="action-button secondary"
+type="button"
+onclick="openScreen('about')"
+>
+
+O APLIKÁCII
+
+</button>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+   SCAN
+========================================================= -->
+
+<section
+id="scan"
+class="screen"
+>
+
+<div class="back-row">
+
+<button
+class="back"
+type="button"
+onclick="goBack()"
+>
+‹
+</button>
+
+<div class="back-title">
+
+<h2>
+Identifikácia
+</h2>
+
+<small>
+Biometrické vyšetrovanie mačky.
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card section">
+
+<div
+id="cameraPermissionInfo"
+class="home-joke"
+>
+
+Fotoaparát sa použije iba vtedy,
+keď ho výslovne spustíš.
+
+</div>
+
+
+<div
+class="evidence-camera"
+style="aspect-ratio:16/10"
+>
+
+<video
+id="scanVideo"
+playsinline
+muted
+autoplay
+></video>
+
+<div
+id="scanOverlay"
+class="evidence-camera-frame"
+></div>
+
+</div>
+
+
+<div
+id="scanStatus"
+class="evidence-camera-status"
+>
+
+Fotoaparát ešte nie je spustený.
+
+</div>
+
 
 <div class="button-row">
 
 <button
-id="startScanButton"
-class="action-button pink"
+id="startScanCamera"
+class="action-button"
 type="button"
+onclick="startScanCamera()"
 >
-📷 SKENOVAŤ MAČKU
+
+📷 SPUSTIŤ FOTOAPARÁT
+
 </button>
 
 <button
-id="openCatsButton"
-class="action-button"
+class="action-button secondary"
 type="button"
+onclick="stopScanCamera()"
 >
-🐱 MOJE MAČKY
+
+ZASTAVIŤ
+
 </button>
 
+</div>
+
+
+<button
+id="finishScanButton"
+class="action-button blue"
+type="button"
+onclick="finishScan()"
+>
+
+SPUSTIŤ ANALÝZU
+
+<small>
+AI bude pripojená v ďalšej fáze.
+</small>
+
+</button>
+
+</div>
+
+
+<div class="card section">
+
+<h3 class="screen-title">
+TEST VIDEA
+</h3>
+
+<p class="screen-description">
+Táto časť zostáva pripravená na neskoršie AI spracovanie videa.
+</p>
+
+<input
+id="scanMediaInput"
+type="file"
+accept="image/*,video/*"
+style="width:100%;color:#fff"
+>
+
+<div
+id="scanMediaResult"
+class="no-incidents"
+style="margin-top:12px"
+>
+Žiadny súbor.
 </div>
 
 </div>
@@ -1210,70 +1810,113 @@ type="button"
 </section>
 
 
-<section id="cats" class="screen">
+<!-- =========================================================
+   CATS
+========================================================= -->
+
+<section
+id="cats"
+class="screen"
+>
+
+<div class="back-row">
+
+<button
+class="back"
+type="button"
+onclick="goBack()"
+>
+‹
+</button>
+
+<div class="back-title">
+
+<h2>
+Moje mačky
+</h2>
+
+<small>
+Tvoje lokálne mačacie konto.
+</small>
+
+</div>
+
+</div>
+
 
 <div class="card section">
 
 <button
-class="back-button"
-type="button"
-onclick="goBack()"
->
-← SPÄŤ
-</button>
-
-<h2 class="screen-title">
-MOJE MAČKY
-</h2>
-
-<p class="screen-description">
-Tvoje mačky zostávajú uložené lokálne v tomto zariadení.
-</p>
-
-<button
-class="action-button pink"
+class="action-button"
 type="button"
 onclick="openNewCat()"
 >
+
 ＋ PRIDAŤ NOVÚ MAČKU
+
 </button>
 
-<div id="catList" class="cat-list"></div>
+
+<div
+id="catList"
+class="cat-list"
+></div>
 
 </div>
 
 </section>
 
 
-<section id="newCat" class="screen">
+<!-- =========================================================
+   NEW CAT
+========================================================= -->
 
-<div class="card section">
+<section
+id="newCat"
+class="screen"
+>
+
+<div class="back-row">
 
 <button
-class="back-button"
+class="back"
 type="button"
 onclick="goBack()"
 >
-← SPÄŤ
+‹
 </button>
 
-<h2 class="screen-title">
-NOVÁ MAČKA
+<div class="back-title">
+
+<h2>
+Nová mačka
 </h2>
 
-<p class="screen-description">
-Vytvor profil mačky.
-</p>
+<small>
+Vytvorenie profilu páchateľa.
+</small>
 
-<div class="photo-preview" id="photoPreview">
+</div>
+
+</div>
+
+
+<div class="card form">
+
+<div
+id="photoPreview"
+class="photo-preview"
+>
 🐱
 </div>
 
+
 <label
-class="action-button secondary"
-style="display:block;text-align:center"
+class="photo-label"
 >
-📷 VYBRAŤ FOTOGRAFIU
+
+📷 VYBRAŤ PROFILOVÚ FOTOGRAFIU
+
 <input
 id="catPhoto"
 class="photo-input"
@@ -1281,12 +1924,16 @@ type="file"
 accept="image/*"
 capture="environment"
 >
+
 </label>
+
 
 <div class="form-group">
 
-<label for="catName">
-MENO MAČKY
+<label
+for="catName"
+>
+MENO MAČKY / PÁCHATEĽA
 </label>
 
 <input
@@ -1299,34 +1946,98 @@ placeholder="Napr. Muro"
 
 </div>
 
-<div style="margin-top:15px">
 
 <button
-class="action-button pink"
+class="action-button"
 type="button"
-onclick="saveNewCat()"
+onclick="saveCat()"
 >
-ULOŽIŤ MAČKU
-</button>
 
-</div>
+ULOŽIŤ PROFIL
+
+</button>
 
 </div>
 
 </section>
 
 
-<section id="catFile" class="screen">
+<!-- =========================================================
+   CAT FILE
+========================================================= -->
 
-<div class="card profile">
+<section
+id="catFile"
+class="screen"
+>
+
+<div class="back-row">
 
 <button
-class="back-button"
+class="back"
 type="button"
 onclick="goBack()"
 >
-← SPÄŤ
+‹
 </button>
+
+<div class="back-title">
+
+<h2>
+CAT FILE
+</h2>
+
+<small>
+Osobný trestný register mačky.
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card profile-card">
+
+<div class="profile">
+
+<div class="profile-art">
+
+<svg
+class="line-cat"
+viewBox="0 0 360 300"
+>
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path
+class="pink"
+d="
+M160 159
+Q166 151 172 159
+Q166 168 160 159
+"/>
+
+</svg>
+
+</div>
+
 
 <div
 id="profilePhoto"
@@ -1335,144 +2046,260 @@ class="profile-photo"
 🐱
 </div>
 
-<h2 id="profileName">
-—
+
+<h2
+id="profileName"
+>
+Muro
 </h2>
 
-<div class="profile-subtitle">
-CAT NOSE ID PROFILE
+
+<div
+class="badge"
+id="profileBadge"
+>
+AKTÍVNY PÁCHATEĽ
 </div>
+
 
 <div class="stats">
 
 <div class="stat">
-<div
+
+<strong
 id="totalIncidents"
-class="stat-value"
 >
 0
-</div>
-<div class="stat-label">
-INCIDENTY
-</div>
+</strong>
+
+<span>
+incidentov
+</span>
+
 </div>
 
+
 <div class="stat">
-<div
+
+<strong
 id="confidenceValue"
-class="stat-value"
 >
 —
-</div>
-<div class="stat-label">
-POSLEDNÁ ZHODA
-</div>
-</div>
+</strong>
 
-<div class="stat">
-<div
-id="wantedLevel"
-class="stat-value"
-style="font-size:13px"
->
-BEZÚHONNÁ
-</div>
-<div class="stat-label">
-WANTED LEVEL
-</div>
+<span>
+posledná zhoda
+</span>
+
 </div>
 
 </div>
+
 
 <div class="extra-stats">
 
-<div class="extra-stat">
-<b>NAJČASTEJŠÍ ZLOČIN</b>
-<span id="topCrime">—</span>
+<div class="mini-stat">
+
+<b
+id="wantedLevel"
+>
+BEZÚHONNÁ
+</b>
+
+<span>
+WANTED LEVEL
+</span>
+
 </div>
 
-<div class="extra-stat">
-<b>LOKÁLNE ÚLOŽISKO</b>
-<span>AKTÍVNE</span>
+
+<div class="mini-stat">
+
+<b
+id="topCrime"
+>
+—
+</b>
+
+<span>
+NAJČASTEJŠÍ ZLOČIN
+</span>
+
+</div>
+
 </div>
 
 </div>
 
-<div class="button-row">
+
+<div class="card section">
+
+<div class="register-title">
+
+<h3>
+Trestný register
+</h3>
+
+<span class="muted">
+CAT FILE
+</span>
+
+</div>
+
+
+<div
+id="incidentList"
+class="incident-list"
+></div>
+
 
 <button
-class="action-button pink"
+id="addIncidentButton"
+class="action-button"
 type="button"
-onclick="openIncident()"
 >
-＋ PRIDAŤ INCIDENT
+
+PRIDAŤ NOVÝ INCIDENT
+
 </button>
+
 
 <button
 class="action-button blue"
 type="button"
 onclick="showProfileFun()"
 >
+
 🕵️ VYŠETROVACÍ PROFIL
+
 </button>
 
-</div>
 
-<div style="margin-top:10px">
+<button
+class="action-button"
+type="button"
+onclick="generateCriminalFile()"
+>
+
+STIAHNUŤ KRIMINÁLNY SPIS
+
+</button>
+
+
+<button
+class="action-button blue"
+type="button"
+onclick="shareCriminalFile()"
+>
+
+📤 ZDIEĽAŤ KRIMINÁLNY SPIS
+
+<small>
+WhatsApp, e-mail alebo iná aplikácia v telefóne.
+</small>
+
+</button>
+
 
 <button
 class="action-button secondary"
 type="button"
-onclick="generateCriminalFile()"
+onclick="deleteCurrentCat()"
 >
-📄 KRIMINÁLNY SPIS
+
+ODSTRÁNIŤ PÁCHATEĽA
+
 </button>
-
-</div>
-
-<div
-id="incidentList"
-class="incident-list"
->
-</div>
 
 </div>
 
 </section>
 
 
-<section id="incident" class="screen">
+<!-- =========================================================
+   INCIDENT
+========================================================= -->
 
-<div class="card section">
+<section
+id="incident"
+class="screen"
+>
+
+<div class="back-row">
 
 <button
-class="back-button"
+class="back"
 type="button"
 onclick="goBack()"
 >
-← SPÄŤ
+‹
 </button>
 
-<h2 class="screen-title">
-NOVÝ INCIDENT
+<div class="back-title">
+
+<h2>
+Nový mačací zločin
 </h2>
 
-<p
-id="incidentCatName"
-class="screen-description"
+<small id="incidentCatName">
+Čo dnes páchateľ spáchal?
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card form">
+
+<div style="max-width:250px;margin:auto">
+
+<svg
+class="line-cat"
+viewBox="0 0 360 300"
 >
-Čo dnes spáchal/a?
-</p>
+
+<path d="
+M112 245
+Q76 228 79 187
+L84 133
+L69 79
+L111 101
+Q135 76 166 77
+Q197 76 222 101
+L264 79
+L249 133
+L254 185
+Q257 226 221 245
+Q183 266 145 256
+Q126 252 112 245
+"/>
+
+<circle cx="132" cy="145" r="4"/>
+<circle cx="201" cy="145" r="4"/>
+
+<path
+class="pink"
+d="
+M160 159
+Q166 151 172 159
+Q166 168 160 159
+"/>
+
+</svg>
+
+</div>
+
 
 <div
 id="incidentOptions"
 class="incident-grid"
->
-</div>
+></div>
+
 
 <div class="form-group">
 
-<label for="incidentDate">
+<label>
 DÁTUM A ČAS
 </label>
 
@@ -1485,9 +2312,12 @@ readonly
 
 </div>
 
+
 <div class="form-group">
 
-<label for="incidentNote">
+<label
+for="incidentNote"
+>
 POZNÁMKA VYŠETROVATEĽA
 </label>
 
@@ -1499,6 +2329,7 @@ placeholder="Čo sa stalo?"
 
 </div>
 
+
 <div class="evidence-panel">
 
 <h3>
@@ -1506,8 +2337,10 @@ placeholder="Čo sa stalo?"
 </h3>
 
 <p>
-Chceš zadokumentovať skutok? Fotografia alebo video sa uložia iba lokálne do zariadenia.
+Chceš zadokumentovať skutok?
+Fotografia alebo video sa uložia iba lokálne do zariadenia.
 </p>
+
 
 <div class="evidence-actions">
 
@@ -1517,9 +2350,17 @@ class="evidence-choice"
 type="button"
 onclick="selectIncidentEvidence('photo')"
 >
-<strong>📷 FOTO</strong>
-<span>Fotodôkaz</span>
+
+<strong>
+📷 FOTO
+</strong>
+
+<span>
+Fotodôkaz
+</span>
+
 </button>
+
 
 <button
 id="evidenceVideoChoice"
@@ -1527,9 +2368,17 @@ class="evidence-choice"
 type="button"
 onclick="selectIncidentEvidence('video')"
 >
-<strong>🎥 VIDEO</strong>
-<span>Videodôkaz</span>
+
+<strong>
+🎥 VIDEO
+</strong>
+
+<span>
+Videodôkaz
+</span>
+
 </button>
+
 
 <button
 id="evidenceNoneChoice"
@@ -1537,11 +2386,19 @@ class="evidence-choice selected"
 type="button"
 onclick="selectIncidentEvidence('none')"
 >
-<strong>✕ NIE</strong>
-<span>Bez dôkazu</span>
+
+<strong>
+✕ NIE
+</strong>
+
+<span>
+Bez dôkazu
+</span>
+
 </button>
 
 </div>
+
 
 <div
 id="evidenceStatus"
@@ -1552,12 +2409,15 @@ Nebude priložený žiadny dôkaz.
 
 </div>
 
+
 <button
-class="action-button pink"
+class="action-button"
 type="button"
 onclick="registerIncident()"
 >
+
 ZAREGISTROVAŤ INCIDENT
+
 </button>
 
 </div>
@@ -1565,50 +2425,206 @@ ZAREGISTROVAŤ INCIDENT
 </section>
 
 
-<section id="identified" class="screen">
+<!-- =========================================================
+   IDENTIFIED
+========================================================= -->
 
-<div class="card section" style="text-align:center">
-
-<h2 class="screen-title">
-PÁCHATEĽ IDENTIFIKOVANÝ
-</h2>
-
-<div
-id="identifiedName"
-style="font-family:'Baloo 2';font-size:36px;font-weight:900"
+<section
+id="identified"
+class="screen"
 >
-—
-</div>
 
-<p>
-Zhoda nosa:
-<strong id="identifiedConfidence">—</strong>
-</p>
+<div class="back-row">
 
 <button
-class="action-button pink"
-type="button"
-onclick="openCurrentCatFile()"
->
-OTVORIŤ CAT FILE
-</button>
-
-<div style="margin-top:10px">
-
-<button
-class="action-button secondary"
+class="back"
 type="button"
 onclick="goBack()"
 >
-← SPÄŤ
+‹
 </button>
 
+<div class="back-title">
+
+<h2>
+Výsledok vyšetrovania
+</h2>
+
 </div>
+
+</div>
+
+
+<div class="card section profile">
+
+<div class="profile-photo">
+🐱
+</div>
+
+
+<h2
+id="identifiedName"
+>
+—
+</h2>
+
+
+<p>
+Zhoda nosa:
+<strong
+id="identifiedConfidence"
+>
+—
+</strong>
+</p>
+
+
+<button
+class="action-button"
+type="button"
+onclick="openCurrentCatFile()"
+>
+
+OTVORIŤ CAT FILE
+
+</button>
 
 </div>
 
 </section>
 
+
+<!-- =========================================================
+   ABOUT
+========================================================= -->
+
+<section
+id="about"
+class="screen"
+>
+
+<div class="back-row">
+
+<button
+class="back"
+type="button"
+onclick="goBack()"
+>
+‹
+</button>
+
+<div class="back-title">
+
+<h2>
+O aplikácii
+</h2>
+
+</div>
+
+</div>
+
+
+<div class="card section">
+
+<h3 class="screen-title">
+CAT NOSE ID
+</h3>
+
+<p class="screen-description">
+
+Úplne zbytočný biometrický systém vytvorený
+pre zábavu.
+
+</p>
+
+
+<p class="screen-description">
+
+Aplikáciu pre vašu zábavu vytvorila spoločnosť
+<strong style="color:#fff">
+FUN ON
+</strong>
+v súvislosti s projektom
+<strong style="color:#fff">
+FunOn Park Bratislava
+</strong>.
+
+</p>
+
+
+<p class="screen-description">
+
+Údaje mačiek, profily a záznamy zostávajú
+uložené lokálne v zariadení používateľa.
+Aplikácia ich automaticky nezverejňuje ostatným
+používateľom.
+
+</p>
+
+
+<p class="screen-description">
+
+Fotografie a videá dôkazov sa ukladajú v
+optimalizovanej podobe, aby zbytočne
+nezaberali veľa priestoru.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+   ERROR
+========================================================= -->
+
+<section
+id="error"
+class="screen"
+>
+
+<div class="card section profile">
+
+<div
+style="
+font-size:60px;
+margin-bottom:10px
+"
+>
+⚠️
+</div>
+
+<h2
+id="errorTitle"
+class="screen-title"
+>
+Chyba
+</h2>
+
+<p
+id="errorText"
+class="screen-description"
+>
+Nastala chyba.
+</p>
+
+<button
+class="action-button"
+type="button"
+onclick="goBack()"
+>
+SPÄŤ
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+   FUN MODAL
+========================================================= -->
 
 <div
 id="funModal"
@@ -1617,22 +2633,25 @@ class="modal-backdrop"
 
 <div class="modal">
 
-<h2 id="funTitle">
+<h2
+id="funTitle"
+>
 —
 </h2>
 
-<div id="funText"></div>
+<div
+id="funText"
+></div>
 
 <div
 id="funChoices"
-class="fun-choices"
+class="choices"
 ></div>
 
 <button
 class="action-button secondary"
 type="button"
 onclick="closeModal()"
-style="margin-top:10px"
 >
 ZATVORIŤ
 </button>
@@ -1641,6 +2660,10 @@ ZATVORIŤ
 
 </div>
 
+
+<!-- =========================================================
+   AFTER INCIDENT MODAL
+========================================================= -->
 
 <div
 id="afterIncidentModal"
@@ -1657,26 +2680,28 @@ class="modal-backdrop"
 Chceš podniknúť ďalšie kroky proti páchateľovi?
 </p>
 
-<div class="fun-choices">
+<div class="choices">
 
 <button
-class="fun-choice"
+class="choice"
 type="button"
 onclick="afterIncident('vet')"
 >
 🐾 ZAVOLAŤ VETERINÁRA
 </button>
 
+
 <button
-class="fun-choice"
+class="choice"
 type="button"
 onclick="afterIncident('police')"
 >
 🚓 ZAVOLAŤ POLÍCIU
 </button>
 
+
 <button
-class="fun-choice"
+class="choice"
 type="button"
 onclick="afterIncident('ignore')"
 >
@@ -1690,6 +2715,10 @@ onclick="afterIncident('ignore')"
 </div>
 
 
+<!-- =========================================================
+   EVIDENCE CAMERA
+========================================================= -->
+
 <div
 id="evidenceCameraModal"
 class="modal-backdrop"
@@ -1697,9 +2726,12 @@ class="modal-backdrop"
 
 <div class="modal">
 
-<h2 id="evidenceCameraTitle">
+<h2
+id="evidenceCameraTitle"
+>
 DÔKAZOVÝ MATERIÁL
 </h2>
+
 
 <div class="evidence-camera">
 
@@ -1710,9 +2742,12 @@ muted
 autoplay
 ></video>
 
-<div class="evidence-camera-frame"></div>
+<div
+class="evidence-camera-frame"
+></div>
 
 </div>
+
 
 <div
 id="evidenceCameraStatus"
@@ -1721,16 +2756,15 @@ class="evidence-camera-status"
 Pripravujem kameru…
 </div>
 
+
 <div
 id="evidencePreview"
 class="evidence-preview"
 style="display:none"
 ></div>
 
-<div
-class="modal-actions"
-style="grid-template-columns:1fr 1fr"
->
+
+<div class="modal-actions">
 
 <button
 id="evidenceCaptureButton"
@@ -1740,6 +2774,7 @@ onclick="captureIncidentEvidence()"
 >
 📷 ODFOTIŤ DÔKAZ
 </button>
+
 
 <button
 class="action-button secondary"
@@ -1756,6 +2791,10 @@ ZRUŠIŤ
 </div>
 
 
+<!-- =========================================================
+   CRIMINAL FILE MODAL
+========================================================= -->
+
 <div
 id="fileModal"
 class="modal-backdrop"
@@ -1767,11 +2806,9 @@ class="modal-backdrop"
 KRIMINÁLNY SPIS PÁCHATEĽA
 </h2>
 
-<p>
-Spis je pripravený. Vyzerá oficiálne. To je dôležité.
-</p>
 
 <div id="paperContainer"></div>
+
 
 <div class="modal-actions">
 
@@ -1783,6 +2820,7 @@ onclick="downloadCriminalFile()"
 STIAHNUŤ SPIS
 </button>
 
+
 <button
 class="action-button blue"
 type="button"
@@ -1790,6 +2828,7 @@ onclick="shareCriminalFile()"
 >
 📤 ZDIEĽAŤ SPIS
 </button>
+
 
 <button
 class="action-button secondary"
@@ -1806,18 +2845,29 @@ ZATVORIŤ
 </div>
 
 
+<!-- =========================================================
+   FOOTER
+========================================================= -->
+
 <div class="footer">
 
-<strong>CAT NOSE ID</strong>
+<strong>
+CAT NOSE ID
+</strong>
+
 <br>
+
 Aplikáciu pre vašu zábavu vytvorila spoločnosť
 <strong>FUN ON</strong>
 v súvislosti s projektom
 <strong>FunOn Park Bratislava</strong>.
+
 <br><br>
+
 Žiadne reklamy. Žiadne platby.
 
 </div>
+
 
 </div>
 
@@ -1828,231 +2878,741 @@ v súvislosti s projektom
    INTERNATIONALIZATION
 ========================================================= */
 
-const LANGUAGE_STORAGE_KEY = "catNoseLanguage";
+const LANGUAGE_STORAGE_KEY=
+    "catNoseLanguage";
 
-const translations = {
+const translations={
 
 sk:{},
 
 en:{
-"Najzbytočnejší biometrický skener na planéte.":"The most useless biometric scanner on the planet.",
-"KTO JE TEN":"WHO IS THE",
-"PÁCHATEĽ?":"CULPRIT?",
-"Nasmeruj kameru na mačku / páchateľa a nechaj náš úplne zbytočný biometrický systém pokúsiť sa zistiť, kto to je.":"Point the camera at the cat / culprit and let our completely useless biometric system try to find out who it is.",
-"MOJE MAČKY":"MY CATS",
-"PRIDAŤ NOVÚ MAČKU":"ADD NEW CAT",
-"NOVÁ MAČKA":"NEW CAT",
-"MENO MAČKY":"CAT NAME",
-"VYBRAŤ FOTOGRAFIU":"CHOOSE PHOTO",
-"ULOŽIŤ MAČKU":"SAVE CAT",
-"INCIDENTY":"INCIDENTS",
-"POSLEDNÁ ZHODA":"LAST MATCH",
-"BEZÚHONNÁ":"INNOCENT",
-"RECIDIVISTA":"RECIDIVIST",
-"PODOZRIVÝ":"SUSPECT",
-"VEREJNÝ NEPRIATEĽ DOMÁCNOSTI":"PUBLIC ENEMY OF THE HOUSEHOLD",
-"NAJČASTEJŠÍ ZLOČIN":"MOST COMMON CRIME",
-"LOKÁLNE ÚLOŽISKO":"LOCAL STORAGE",
-"AKTÍVNE":"ACTIVE",
-"PRIDAŤ INCIDENT":"ADD INCIDENT",
-"VYŠETROVACÍ PROFIL":"INVESTIGATION PROFILE",
-"KRIMINÁLNY SPIS":"CRIMINAL FILE",
-"NOVÝ INCIDENT":"NEW INCIDENT",
-"DÁTUM A ČAS":"DATE AND TIME",
-"POZNÁMKA VYŠETROVATEĽA":"INVESTIGATOR NOTE",
-"Čo sa stalo?":"What happened?",
-"DÔKAZOVÝ MATERIÁL":"EVIDENCE",
-"Chceš zadokumentovať skutok? Fotografia alebo video sa uložia iba lokálne do zariadenia.":"Do you want to document the incident? Photos and videos are stored only locally on the device.",
-"Fotodôkaz":"Photo evidence",
-"Videodôkaz":"Video evidence",
-"Bez dôkazu":"No evidence",
-"Nebude priložený žiadny dôkaz.":"No evidence will be attached.",
-"ZAREGISTROVAŤ INCIDENT":"REGISTER INCIDENT",
-"PÁCHATEĽ IDENTIFIKOVANÝ":"CULPRIT IDENTIFIED",
-"Zhoda nosa:":"Nose match:",
-"OTVORIŤ CAT FILE":"OPEN CAT FILE",
-"SPÄŤ":"BACK",
-"ZATVORIŤ":"CLOSE",
-"ČO TERAZ?":"WHAT NOW?",
-"Chceš podniknúť ďalšie kroky proti páchateľovi?":"Do you want to take further action against the culprit?",
-"ZAVOLAŤ VETERINÁRA":"CALL THE VET",
-"ZAVOLAŤ POLÍCIU":"CALL THE POLICE",
-"NECHAŤ TO TAK":"LET IT GO",
-"DÔKAZOVÝ MATERIÁL":"EVIDENCE",
-"Pripravujem kameru…":"Preparing camera…",
-"ODFOTIŤ DÔKAZ":"TAKE EVIDENCE PHOTO",
-"ZRUŠIŤ":"CANCEL",
-"KRIMINÁLNY SPIS PÁCHATEĽA":"CRIMINAL FILE OF THE CULPRIT",
-"Spis je pripravený. Vyzerá oficiálne. To je dôležité.":"The file is ready. It looks official. That is important.",
-"STIAHNUŤ SPIS":"DOWNLOAD FILE",
-"📤 ZDIEĽAŤ SPIS":"📤 SHARE FILE",
-"Žiadne reklamy. Žiadne platby.":"No ads. No payments.",
-"Ukradla jedlo":"Stole food",
-"Neoprávnené získanie cudzej potravy":"Unauthorized acquisition of someone else's food",
-"Mačací incident":"Cat incident",
-"Profil sa nenašiel":"Profile not found",
-"Tento profil už neexistuje.":"This profile no longer exists.",
-"Nie je vybraná mačka":"No cat selected",
-"Najprv otvor konkrétny CAT FILE.":"First open a specific CAT FILE.",
-"Čo dnes spáchal/a":"What did",
-"spáchal/a":"commit today",
-"Veterinár bol upozornený. Páchateľ tvrdí, že nič nezjedol.":"The vet has been notified. The culprit claims to have eaten nothing.",
-"Polícia bola imaginárne kontaktovaná. Operátor odporučil mačku nestrácať z dohľadu.":"The police were imaginatively contacted. The operator recommends keeping an eye on the cat.",
-"Rozumné rozhodnutie. Páchateľ už pravdepodobne plánuje ďalší incident.":"A sensible decision. The culprit is probably already planning another incident.",
-"ŽIADNY":"NONE",
-"Prípad, ktorý nikto neobjednal, ale niekto ho musel vyšetriť.":"A case nobody ordered, but somebody had to investigate it."
+
+"Najzbytočnejší biometrický skener na planéte.":
+"The most useless biometric scanner on the planet.",
+
+"KTO JE TEN PÁCHATEĽ?":
+"WHO IS THE CULPRIT?",
+
+"Nasmeruj kameru na":
+"Point the camera at",
+
+"mačku / páchateľa":
+"the cat / culprit",
+
+"a nechaj náš úplne zbytočný biometrický systém pokúsiť sa zistiť, kto to je.":
+"and let our completely useless biometric system try to find out who it is.",
+
+"Upozornenie:":
+"Warning:",
+
+"Táto aplikácia nemá reklamy, nemá platby, nemá predplatné a nemá prakticky žiadny rozumný účel.":
+"This application has no ads, no payments, no subscription and practically no sensible purpose.",
+
+"IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA":
+"IDENTIFY CAT / CULPRIT",
+
+"Nasmeruj kameru a začni vyšetrovanie.":
+"Point the camera and start the investigation.",
+
+"MOJE MAČKY":
+"MY CATS",
+
+"Správa mačiek / páchateľov.":
+"Manage cats / culprits.",
+
+"O APLIKÁCII":
+"ABOUT THE APP",
+
+"Identifikácia":
+"Identification",
+
+"Biometrické vyšetrovanie mačky.":
+"Biometric cat investigation.",
+
+"Fotoaparát sa použije iba vtedy, keď ho výslovne spustíš.":
+"The camera is used only when you explicitly start it.",
+
+"Fotoaparát ešte nie je spustený.":
+"The camera has not been started yet.",
+
+"SPUSTIŤ FOTOAPARÁT":
+"START CAMERA",
+
+"ZASTAVIŤ":
+"STOP",
+
+"SPUSTIŤ ANALÝZU":
+"START ANALYSIS",
+
+"AI bude pripojená v ďalšej fáze.":
+"AI will be connected in the next phase.",
+
+"TEST VIDEA":
+"VIDEO TEST",
+
+"Táto časť zostáva pripravená na neskoršie AI spracovanie videa.":
+"This section remains ready for future AI video processing.",
+
+"Žiadny súbor.":
+"No file.",
+
+"Moje mačky":
+"My cats",
+
+"Tvoje lokálne mačacie konto.":
+"Your local cat account.",
+
+"＋ PRIDAŤ NOVÚ MAČKU":
+"＋ ADD NEW CAT",
+
+"Nová mačka":
+"New cat",
+
+"Vytvorenie profilu páchateľa.":
+"Create a culprit profile.",
+
+"📷 VYBRAŤ PROFILOVÚ FOTOGRAFIU":
+"📷 CHOOSE PROFILE PHOTO",
+
+"MENO MAČKY / PÁCHATEĽA":
+"CAT / CULPRIT NAME",
+
+"ULOŽIŤ PROFIL":
+"SAVE PROFILE",
+
+"CAT FILE":
+"CAT FILE",
+
+"Osobný trestný register mačky.":
+"Personal criminal record of the cat.",
+
+"AKTÍVNY PÁCHATEĽ":
+"ACTIVE CULPRIT",
+
+"incidentov":
+"incidents",
+
+"posledná zhoda":
+"last match",
+
+"BEZÚHONNÁ":
+"INNOCENT",
+
+"WANTED LEVEL":
+"WANTED LEVEL",
+
+"NAJČASTEJŠÍ ZLOČIN":
+"MOST COMMON CRIME",
+
+"Trestný register":
+"Criminal record",
+
+"PRIDAŤ NOVÝ INCIDENT":
+"ADD NEW INCIDENT",
+
+"🕵️ VYŠETROVACÍ PROFIL":
+"🕵️ INVESTIGATION PROFILE",
+
+"STIAHNUŤ KRIMINÁLNY SPIS":
+"DOWNLOAD CRIMINAL FILE",
+
+"📤 ZDIEĽAŤ KRIMINÁLNY SPIS":
+"📤 SHARE CRIMINAL FILE",
+
+"WhatsApp, e-mail alebo iná aplikácia v telefóne.":
+"WhatsApp, email or another app on your phone.",
+
+"ODSTRÁNIŤ PÁCHATEĽA":
+"DELETE CULPRIT",
+
+"Nový mačací zločin":
+"New cat crime",
+
+"Čo dnes páchateľ spáchal?":
+"What did the culprit do today?",
+
+"DÁTUM A ČAS":
+"DATE AND TIME",
+
+"POZNÁMKA VYŠETROVATEĽA":
+"INVESTIGATOR NOTE",
+
+"Čo sa stalo?":
+"What happened?",
+
+"DÔKAZOVÝ MATERIÁL":
+"EVIDENCE",
+
+"Chceš zadokumentovať skutok? Fotografia alebo video sa uložia iba lokálne do zariadenia.":
+"Do you want to document the incident? Photos and videos are stored only locally on the device.",
+
+"📷 FOTO":
+"📷 PHOTO",
+
+"Fotodôkaz":
+"Photo evidence",
+
+"🎥 VIDEO":
+"🎥 VIDEO",
+
+"Videodôkaz":
+"Video evidence",
+
+"✕ NIE":
+"✕ NO",
+
+"Bez dôkazu":
+"No evidence",
+
+"Nebude priložený žiadny dôkaz.":
+"No evidence will be attached.",
+
+"ZAREGISTROVAŤ INCIDENT":
+"REGISTER INCIDENT",
+
+"Výsledok vyšetrovania":
+"Investigation result",
+
+"Zhoda nosa:":
+"Nose match:",
+
+"OTVORIŤ CAT FILE":
+"OPEN CAT FILE",
+
+"SPÄŤ":
+"BACK",
+
+"ČO TERAZ?":
+"WHAT NOW?",
+
+"Chceš podniknúť ďalšie kroky proti páchateľovi?":
+"Do you want to take further action against the culprit?",
+
+"🐾 ZAVOLAŤ VETERINÁRA":
+"🐾 CALL THE VET",
+
+"🚓 ZAVOLAŤ POLÍCIU":
+"🚓 CALL THE POLICE",
+
+"😼 NECHAŤ TO TAK":
+"😼 LET IT GO",
+
+"Pripravujem kameru…":
+"Preparing camera…",
+
+"📷 ODFOTIŤ DÔKAZ":
+"📷 TAKE EVIDENCE PHOTO",
+
+"ZRUŠIŤ":
+"CANCEL",
+
+"KRIMINÁLNY SPIS PÁCHATEĽA":
+"CRIMINAL FILE OF THE CULPRIT",
+
+"STIAHNUŤ SPIS":
+"DOWNLOAD FILE",
+
+"📤 ZDIEĽAŤ SPIS":
+"📤 SHARE FILE",
+
+"ZATVORIŤ":
+"CLOSE",
+
+"Žiadne reklamy. Žiadne platby.":
+"No ads. No payments.",
+
+"Chyba":
+"Error",
+
+"Nastala chyba.":
+"An error occurred.",
+
+"SPÄŤ":
+"BACK"
+
 },
 
 cs:{
-"Najzbytočnejší biometrický skener na planéte.":"Nejzbytečnější biometrický skener na planetě.",
-"MOJE MAČKY":"MOJE KOČKY",
-"PRIDAŤ NOVÚ MAČKU":"PŘIDAT NOVOU KOČKU",
-"NOVÁ MAČKA":"NOVÁ KOČKA",
-"MENO MAČKY":"JMÉNO KOČKY",
-"VYBRAŤ FOTOGRAFIU":"VYBRAT FOTOGRAFII",
-"ULOŽIŤ MAČKU":"ULOŽIT KOČKU",
-"INCIDENTY":"INCIDENTY",
-"POSLEDNÁ ZHODA":"POSLEDNÍ SHODA",
-"BEZÚHONNÁ":"BEZÚHONNÁ",
-"RECIDIVISTA":"RECIDIVISTA",
-"PODOZRIVÝ":"PODEZŘELÝ",
-"NAJČASTEJŠÍ ZLOČIN":"NEJČASTĚJŠÍ ZLOČIN",
-"LOKÁLNE ÚLOŽISKO":"LOKÁLNÍ ÚLOŽIŠTĚ",
-"AKTÍVNE":"AKTIVNÍ",
-"PRIDAŤ INCIDENT":"PŘIDAT INCIDENT",
-"VYŠETROVACÍ PROFIL":"VYŠETŘOVACÍ PROFIL",
-"KRIMINÁLNY SPIS":"KRIMINÁLNÍ SPIS",
-"NOVÝ INCIDENT":"NOVÝ INCIDENT",
-"DÁTUM A ČAS":"DATUM A ČAS",
-"POZNÁMKA VYŠETROVATEĽA":"POZNÁMKA VYŠETŘOVATELE",
-"Čo sa stalo?":"Co se stalo?",
-"DÔKAZOVÝ MATERIÁL":"DŮKAZNÍ MATERIÁL",
-"Fotodôkaz":"Fotodůkaz",
-"Videodôkaz":"Videodůkaz",
-"Bez dôkazu":"Bez důkazu",
-"Nebude priložený žiadny dôkaz.":"Nebude přiložen žádný důkaz.",
-"ZAREGISTROVAŤ INCIDENT":"ZAREGISTROVAT INCIDENT",
-"PÁCHATEĽ IDENTIFIKOVANÝ":"PACHATEL IDENTIFIKOVÁN",
-"OTVORIŤ CAT FILE":"OTEVŘÍT CAT FILE",
-"SPÄŤ":"ZPĚT",
-"ZATVORIŤ":"ZAVŘÍT",
-"ČO TERAZ?":"CO TEĎ?",
-"ZAVOLAŤ VETERINÁRA":"ZAVOLAT VETERINÁŘE",
-"ZAVOLAŤ POLÍCIU":"ZAVOLAT POLICII",
-"NECHAŤ TO TAK":"NECHAT TO BÝT",
-"Pripravujem kameru…":"Připravuji kameru…",
-"ODFOTIŤ DÔKAZ":"VYFOTIT DŮKAZ",
-"ZRUŠIŤ":"ZRUŠIT",
-"KRIMINÁLNY SPIS PÁCHATEĽA":"KRIMINÁLNÍ SPIS PACHATELE",
-"STIAHNUŤ SPIS":"STÁHNOUT SPIS",
-"📤 ZDIEĽAŤ SPIS":"📤 SDÍLET SPIS",
-"Žiadne reklamy. Žiadne platby.":"Žádné reklamy. Žádné platby.",
-"Ukradla jedlo":"Ukradla jídlo",
-"Mačací incident":"Kočičí incident"
+
+"Najzbytočnejší biometrický skener na planéte.":
+"Nejzbytečnější biometrický skener na planetě.",
+
+"KTO JE TEN PÁCHATEĽ?":
+"KDO JE TEN PACHATEL?",
+
+"MOJE MAČKY":
+"MOJE KOČKY",
+
+"Správa mačiek / páchateľov.":
+"Správa koček / pachatelů.",
+
+"O APLIKÁCII":
+"O APLIKACI",
+
+"Identifikácia":
+"Identifikace",
+
+"Biometrické vyšetrovanie mačky.":
+"Biometrické vyšetřování kočky.",
+
+"SPUSTIŤ FOTOAPARÁT":
+"SPUSTIT FOTOAPARÁT",
+
+"ZASTAVIŤ":
+"ZASTAVIT",
+
+"SPUSTIŤ ANALÝZU":
+"SPUSTIT ANALÝZU",
+
+"AI bude pripojená v ďalšej fáze.":
+"AI bude připojena v další fázi.",
+
+"Nová mačka":
+"Nová kočka",
+
+"Vytvorenie profilu páchateľa.":
+"Vytvoření profilu pachatele.",
+
+"MENO MAČKY / PÁCHATEĽA":
+"JMÉNO KOČKY / PACHATELE",
+
+"ULOŽIŤ PROFIL":
+"ULOŽIT PROFIL",
+
+"Osobný trestný register mačky.":
+"Osobní trestní rejstřík kočky.",
+
+"AKTÍVNY PÁCHATEĽ":
+"AKTIVNÍ PACHATEL",
+
+"incidentov":
+"incidentů",
+
+"posledná zhoda":
+"poslední shoda",
+
+"BEZÚHONNÁ":
+"BEZÚHONNÁ",
+
+"NAJČASTEJŠÍ ZLOČIN":
+"NEJČASTĚJŠÍ ZLOČIN",
+
+"Trestný register":
+"Trestní rejstřík",
+
+"PRIDAŤ NOVÝ INCIDENT":
+"PŘIDAT NOVÝ INCIDENT",
+
+"🕵️ VYŠETROVACÍ PROFIL":
+"🕵️ VYŠETŘOVACÍ PROFIL",
+
+"STIAHNUŤ KRIMINÁLNY SPIS":
+"STÁHNOUT TRESTNÍ SPIS",
+
+"📤 ZDIEĽAŤ KRIMINÁLNY SPIS":
+"📤 SDÍLET TRESTNÍ SPIS",
+
+"ODSTRÁNIŤ PÁCHATEĽA":
+"ODSTRANIT PACHATELE",
+
+"Nový mačací zločin":
+"Nový kočičí zločin",
+
+"Čo dnes páchateľ spáchal?":
+"Co dnes pachatel spáchal?",
+
+"DÁTUM A ČAS":
+"DATUM A ČAS",
+
+"POZNÁMKA VYŠETROVATEĽA":
+"POZNÁMKA VYŠETŘOVATELE",
+
+"Čo sa stalo?":
+"Co se stalo?",
+
+"DÔKAZOVÝ MATERIÁL":
+"DŮKAZNÍ MATERIÁL",
+
+"Fotodôkaz":
+"Fotodůkaz",
+
+"Videodôkaz":
+"Videodůkaz",
+
+"Bez dôkazu":
+"Bez důkazu",
+
+"ZAREGISTROVAŤ INCIDENT":
+"ZAREGISTROVAT INCIDENT",
+
+"Výsledok vyšetrovania":
+"Výsledek vyšetřování",
+
+"Zhoda nosa:":
+"Shoda nosu:",
+
+"OTVORIŤ CAT FILE":
+"OTEVŘÍT CAT FILE",
+
+"ČO TERAZ?":
+"CO TEĎ?",
+
+"ZAVOLAŤ VETERINÁRA":
+"ZAVOLAT VETERINÁŘE",
+
+"ZAVOLAŤ POLÍCIU":
+"ZAVOLAT POLICII",
+
+"NECHAŤ TO TAK":
+"NECHAT TO BÝT",
+
+"Pripravujem kameru…":
+"Připravuji kameru…",
+
+"ODFOTIŤ DÔKAZ":
+"VYFOTIT DŮKAZ",
+
+"ZRUŠIŤ":
+"ZRUŠIT",
+
+"KRIMINÁLNY SPIS PÁCHATEĽA":
+"TRESTNÍ SPIS PACHATELE",
+
+"STIAHNUŤ SPIS":
+"STÁHNOUT SPIS",
+
+"📤 ZDIEĽAŤ SPIS":
+"📤 SDÍLET SPIS",
+
+"ZATVORIŤ":
+"ZAVŘÍT"
+
 },
 
 de:{
-"Najzbytočnejší biometrický skener na planéte.":"Der nutzloseste biometrische Scanner der Welt.",
-"MOJE MAČKY":"MEINE KATZEN",
-"PRIDAŤ NOVÚ MAČKU":"NEUE KATZE HINZUFÜGEN",
-"NOVÁ MAČKA":"NEUE KATZE",
-"MENO MAČKY":"KATZENNAME",
-"VYBRAŤ FOTOGRAFIU":"FOTO AUSWÄHLEN",
-"ULOŽIŤ MAČKU":"KATZE SPEICHERN",
-"INCIDENTY":"VORFÄLLE",
-"POSLEDNÁ ZHODA":"LETZTE ÜBEREINSTIMMUNG",
-"BEZÚHONNÁ":"UNBESCHOLTEN",
-"RECIDIVISTA":"WIEDERHOLUNGSTÄTER",
-"PODOZRIVÝ":"VERDÄCHTIG",
-"NAJČASTEJŠÍ ZLOČIN":"HÄUFIGSTES VERBRECHEN",
-"LOKÁLNE ÚLOŽISKO":"LOKALER SPEICHER",
-"AKTÍVNE":"AKTIV",
-"PRIDAŤ INCIDENT":"VORFALL HINZUFÜGEN",
-"VYŠETROVACÍ PROFIL":"ERMITTLUNGSPROFIL",
-"KRIMINÁLNY SPIS":"STRAKTE",
-"NOVÝ INCIDENT":"NEUER VORFALL",
-"DÁTUM A ČAS":"DATUM UND UHRZEIT",
-"POZNÁMKA VYŠETROVATEĽA":"ERMITTLERNOTIZ",
-"Čo sa stalo?":"Was ist passiert?",
-"DÔKAZOVÝ MATERIÁL":"BEWEISMATERIAL",
-"Fotodôkaz":"Fotobeweis",
-"Videodôkaz":"Videobeweis",
-"Bez dôkazu":"Kein Beweis",
-"Nebude priložený žiadny dôkaz.":"Es wird kein Beweis angehängt.",
-"ZAREGISTROVAŤ INCIDENT":"VORFALL REGISTRIEREN",
-"PÁCHATEĽ IDENTIFIKOVANÝ":"TÄTER IDENTIFIZIERT",
-"OTVORIŤ CAT FILE":"CAT FILE ÖFFNEN",
-"SPÄŤ":"ZURÜCK",
-"ZATVORIŤ":"SCHLIESSEN",
-"ČO TERAZ?":"WAS JETZT?",
-"ZAVOLAŤ VETERINÁRA":"TIERARZT RUFEN",
-"ZAVOLAŤ POLÍCIU":"POLIZEI RUFEN",
-"NECHAŤ TO TAK":"IGNORIEREN",
-"Pripravujem kameru…":"Kamera wird vorbereitet…",
-"ODFOTIŤ DÔKAZ":"BEWEISFOTO AUFNEHMEN",
-"ZRUŠIŤ":"ABBRECHEN",
-"KRIMINÁLNY SPIS PÁCHATEĽA":"STRAKTE DES TÄTERS",
-"STIAHNUŤ SPIS":"AKTE HERUNTERLADEN",
-"📤 ZDIEĽAŤ SPIS":"📤 AKTE TEILEN",
-"Žiadne reklamy. Žiadne platby.":"Keine Werbung. Keine Zahlungen.",
-"Ukradla jedlo":"Futter gestohlen",
-"Mačací incident":"Katzenvorfall"
+
+"Najzbytočnejší biometrický skener na planéte.":
+"Der nutzloseste biometrische Scanner der Welt.",
+
+"KTO JE TEN PÁCHATEĽ?":
+"WER IST DER TÄTER?",
+
+"MOJE MAČKY":
+"MEINE KATZEN",
+
+"Správa mačiek / páchateľov.":
+"Katzen / Täter verwalten.",
+
+"O APLIKÁCII":
+"ÜBER DIE APP",
+
+"Identifikácia":
+"Identifikation",
+
+"Biometrické vyšetrovanie mačky.":
+"Biometrische Untersuchung einer Katze.",
+
+"SPUSTIŤ FOTOAPARÁT":
+"KAMERA STARTEN",
+
+"ZASTAVIŤ":
+"STOPP",
+
+"SPUSTIŤ ANALÝZU":
+"ANALYSE STARTEN",
+
+"AI bude pripojená v ďalšej fáze.":
+"Die KI wird in der nächsten Phase angeschlossen.",
+
+"Nová mačka":
+"Neue Katze",
+
+"Vytvorenie profilu páchateľa.":
+"Erstellung eines Täterprofils.",
+
+"MENO MAČKY / PÁCHATEĽA":
+"NAME DER KATZE / DES TÄTERS",
+
+"ULOŽIŤ PROFIL":
+"PROFIL SPEICHERN",
+
+"Osobný trestný register mačky.":
+"Persönliches Strafregister der Katze.",
+
+"AKTÍVNY PÁCHATEĽ":
+"AKTIVER TÄTER",
+
+"incidentov":
+"Vorfälle",
+
+"posledná zhoda":
+"Letzte Übereinstimmung",
+
+"BEZÚHONNÁ":
+"UNBESCHOLTEN",
+
+"NAJČASTEJŠÍ ZLOČIN":
+"HÄUFIGSTES VERBRECHEN",
+
+"Trestný register":
+"Strafregister",
+
+"PRIDAŤ NOVÝ INCIDENT":
+"NEUEN VORFALL HINZUFÜGEN",
+
+"🕵️ VYŠETROVACÍ PROFIL":
+"🕵️ ERMITTLUNGSPROFIL",
+
+"STIAHNUŤ KRIMINÁLNY SPIS":
+"STRAKTE HERUNTERLADEN",
+
+"📤 ZDIEĽAŤ KRIMINÁLNY SPIS":
+"📤 STRAKTE TEILEN",
+
+"ODSTRÁNIŤ PÁCHATEĽA":
+"TÄTER LÖSCHEN",
+
+"Nový mačací zločin":
+"Neues Katzenverbrechen",
+
+"Čo dnes páchateľ spáchal?":
+"Was hat der Täter heute getan?",
+
+"DÁTUM A ČAS":
+"DATUM UND UHRZEIT",
+
+"POZNÁMKA VYŠETROVATEĽA":
+"ERMITTLERNOTIZ",
+
+"Čo sa stalo?":
+"Was ist passiert?",
+
+"DÔKAZOVÝ MATERIÁL":
+"BEWEISMATERIAL",
+
+"Fotodôkaz":
+"FOTOBEWEIS",
+
+"Videodôkaz":
+"VIDEOBEWEIS",
+
+"Bez dôkazu":
+"KEIN BEWEIS",
+
+"ZAREGISTROVAŤ INCIDENT":
+"VORFALL REGISTRIEREN",
+
+"Výsledok vyšetrovania":
+"UNTERSUCHUNGSERGEBNIS",
+
+"Zhoda nosa:":
+"Nasenübereinstimmung:",
+
+"OTVORIŤ CAT FILE":
+"CAT FILE ÖFFNEN",
+
+"ČO TERAZ?":
+"WAS JETZT?",
+
+"ZAVOLAŤ VETERINÁRA":
+"TIERARZT RUFEN",
+
+"ZAVOLAŤ POLÍCIU":
+"POLIZEI RUFEN",
+
+"NECHAŤ TO TAK":
+"IGNORIEREN",
+
+"Pripravujem kameru…":
+"Kamera wird vorbereitet…",
+
+"ODFOTIŤ DÔKAZ":
+"BEWEISFOTO AUFNEHMEN",
+
+"ZRUŠIŤ":
+"ABBRECHEN",
+
+"KRIMINÁLNY SPIS PÁCHATEĽA":
+"STRAKTE DES TÄTERS",
+
+"STIAHNUŤ SPIS":
+"AKTE HERUNTERLADEN",
+
+"📤 ZDIEĽAŤ SPIS":
+"📤 AKTE TEILEN",
+
+"ZATVORIŤ":
+"SCHLIESSEN"
+
 },
 
 it:{
-"Najzbytočnejší biometrický skener na planéte.":"Lo scanner biometrico più inutile del pianeta.",
-"MOJE MAČKY":"I MIEI GATTI",
-"PRIDAŤ NOVÚ MAČKU":"AGGIUNGI NUOVO GATTO",
-"NOVÁ MAČKA":"NUOVO GATTO",
-"MENO MAČKY":"NOME DEL GATTO",
-"VYBRAŤ FOTOGRAFIU":"SCEGLI FOTO",
-"ULOŽIŤ MAČKU":"SALVA GATTO",
-"INCIDENTY":"INCIDENTI",
-"POSLEDNÁ ZHODA":"ULTIMA CORRISPONDENZA",
-"BEZÚHONNÁ":"INCENSURATO",
-"RECIDIVISTA":"RECIDIVO",
-"PODOZRIVÝ":"SOSPETTO",
-"NAJČASTEJŠÍ ZLOČIN":"CRIMINE PIÙ FREQUENTE",
-"LOKÁLNE ÚLOŽISKO":"MEMORIA LOCALE",
-"AKTÍVNE":"ATTIVA",
-"PRIDAŤ INCIDENT":"AGGIUNGI INCIDENTE",
-"VYŠETROVACÍ PROFIL":"PROFILO INVESTIGATIVO",
-"KRIMINÁLNY SPIS":"FASCICOLO CRIMINALE",
-"NOVÝ INCIDENT":"NUOVO INCIDENTE",
-"DÁTUM A ČAS":"DATA E ORA",
-"POZNÁMKA VYŠETROVATEĽA":"NOTA DELL'INVESTIGATORE",
-"Čo sa stalo?":"Cosa è successo?",
-"DÔKAZOVÝ MATERIÁL":"PROVE",
-"Fotodôkaz":"Prova fotografica",
-"Videodôkaz":"Prova video",
-"Bez dôkazu":"Nessuna prova",
-"Nebude priložený žiadny dôkaz.":"Nessuna prova verrà allegata.",
-"ZAREGISTROVAŤ INCIDENT":"REGISTRA INCIDENTE",
-"PÁCHATEĽ IDENTIFIKOVANÝ":"COLPEVOLE IDENTIFICATO",
-"OTVORIŤ CAT FILE":"APRI CAT FILE",
-"SPÄŤ":"INDIETRO",
-"ZATVORIŤ":"CHIUDI",
-"ČO TERAZ?":"E ADESSO?",
-"ZAVOLAŤ VETERINÁRA":"CHIAMA IL VETERINARIO",
-"ZAVOLAŤ POLÍCIU":"CHIAMA LA POLIZIA",
-"NECHAŤ TO TAK":"LASCIAR PERDERE",
-"Pripravujem kameru…":"Preparazione della fotocamera…",
-"ODFOTIŤ DÔKAZ":"SCATTA FOTO PROVA",
-"ZRUŠIŤ":"ANNULLA",
-"KRIMINÁLNY SPIS PÁCHATEĽA":"FASCICOLO CRIMINALE DEL COLPEVOLE",
-"STIAHNUŤ SPIS":"SCARICA FASCICOLO",
-"📤 ZDIEĽAŤ SPIS":"📤 CONDIVIDI FASCICOLO",
-"Žiadne reklamy. Žiadne platby.":"Nessuna pubblicità. Nessun pagamento.",
-"Ukradla jedlo":"Ha rubato il cibo",
-"Mačací incident":"Incidente felino"
+
+"Najzbytočnejší biometrický skener na planéte.":
+"Lo scanner biometrico più inutile del pianeta.",
+
+"KTO JE TEN PÁCHATEĽ?":
+"CHI È IL COLPEVOLE?",
+
+"MOJE MAČKY":
+"I MIEI GATTI",
+
+"Správa mačiek / páchateľov.":
+"Gestisci gatti / colpevoli.",
+
+"O APLIKÁCII":
+"INFORMAZIONI",
+
+"Identifikácia":
+"Identificazione",
+
+"Biometrické vyšetrovanie mačky.":
+"Indagine biometrica del gatto.",
+
+"SPUSTIŤ FOTOAPARÁT":
+"AVVIA FOTOCAMERA",
+
+"ZASTAVIŤ":
+"FERMA",
+
+"SPUSTIŤ ANALÝZU":
+"AVVIA ANALISI",
+
+"AI bude pripojená v ďalšej fáze.":
+"L'AI sarà collegata nella fase successiva.",
+
+"Nová mačka":
+"Nuovo gatto",
+
+"Vytvorenie profilu páchateľa.":
+"Crea il profilo del colpevole.",
+
+"MENO MAČKY / PÁCHATEĽA":
+"NOME DEL GATTO / COLPEVOLE",
+
+"ULOŽIŤ PROFIL":
+"SALVA PROFILO",
+
+"Osobný trestný register mačky.":
+"Registro criminale personale del gatto.",
+
+"AKTÍVNY PÁCHATEĽ":
+"COLPEVOLE ATTIVO",
+
+"incidentov":
+"incidenti",
+
+"posledná zhoda":
+"ultima corrispondenza",
+
+"BEZÚHONNÁ":
+"INNOCENTE",
+
+"NAJČASTEJŠÍ ZLOČIN":
+"CRIMINE PIÙ FREQUENTE",
+
+"Trestný register":
+"Registro criminale",
+
+"PRIDAŤ NOVÝ INCIDENT":
+"AGGIUNGI NUOVO INCIDENTE",
+
+"🕵️ VYŠETROVACÍ PROFIL":
+"🕵️ PROFILO INVESTIGATIVO",
+
+"STIAHNUŤ KRIMINÁLNY SPIS":
+"SCARICA FASCICOLO CRIMINALE",
+
+"📤 ZDIEĽAŤ KRIMINÁLNY SPIS":
+"📤 CONDIVIDI FASCICOLO CRIMINALE",
+
+"ODSTRÁNIŤ PÁCHATEĽA":
+"ELIMINA COLPEVOLE",
+
+"Nový mačací zločin":
+"Nuovo crimine felino",
+
+"Čo dnes páchateľ spáchal?":
+"Cosa ha fatto oggi il colpevole?",
+
+"DÁTUM A ČAS":
+"DATA E ORA",
+
+"POZNÁMKA VYŠETROVATEĽA":
+"NOTA DELL'INVESTIGATORE",
+
+"Čo sa stalo?":
+"Cosa è successo?",
+
+"DÔKAZOVÝ MATERIÁL":
+"PROVE",
+
+"Fotodôkaz":
+"PROVA FOTOGRAFICA",
+
+"Videodôkaz":
+"PROVA VIDEO",
+
+"Bez dôkazu":
+"NESSUNA PROVA",
+
+"ZAREGISTROVAŤ INCIDENT":
+"REGISTRA INCIDENTE",
+
+"Výsledok vyšetrovania":
+"RISULTATO DELL'INDAGINE",
+
+"Zhoda nosa:":
+"Corrispondenza del naso:",
+
+"OTVORIŤ CAT FILE":
+"APRI CAT FILE",
+
+"ČO TERAZ?":
+"E ADESSO?",
+
+"ZAVOLAŤ VETERINÁRA":
+"CHIAMA IL VETERINARIO",
+
+"ZAVOLAŤ POLÍCIU":
+"CHIAMA LA POLIZIA",
+
+"NECHAŤ TO TAK":
+"LASCIA PERDERE",
+
+"Pripravujem kameru…":
+"Preparazione fotocamera…",
+
+"ODFOTIŤ DÔKAZ":
+"SCATTA FOTO PROVA",
+
+"ZRUŠIŤ":
+"ANNULLA",
+
+"KRIMINÁLNY SPIS PÁCHATEĽA":
+"FASCICOLO CRIMINALE DEL COLPEVOLE",
+
+"STIAHNUŤ SPIS":
+"SCARICA FASCICOLO",
+
+"📤 ZDIEĽAŤ SPIS":
+"📤 CONDIVIDI FASCICOLO",
+
+"ZATVORIŤ":
+"CHIUDI"
+
 }
 
 };
 
 let currentLanguage="sk";
 
-const i18nOriginalText=new WeakMap();
-const i18nOriginalAttribute=new WeakMap();
+const i18nOriginalText=
+    new WeakMap();
+
+const i18nOriginalAttribute=
+    new WeakMap();
+
 
 function detectAppLanguage(){
 
@@ -2065,7 +3625,9 @@ function detectAppLanguage(){
         saved &&
         translations[saved]
     ){
+
         return saved;
+
     }
 
     const raw=(
@@ -2084,44 +3646,47 @@ function detectAppLanguage(){
         : "en";
 }
 
-function getSlovakSource(value){
 
-    const text=
-        (value || "")
+function sourceTextForNode(node){
+
+    const stored=
+        i18nOriginalText.get(node);
+
+    if(stored){
+        return stored;
+    }
+
+    const value=
+        (node.nodeValue || "")
         .replace(/\s+/g," ")
         .trim();
 
-    if(!text){
-        return text;
+    if(!value){
+        return "";
     }
 
-    if(
-        translations[currentLanguage] &&
-        Object.prototype.hasOwnProperty.call(
-            translations[currentLanguage],
-            text
-        )
-    ){
-        return text;
-    }
-
-    const currentMap=
+    const map=
         translations[currentLanguage] || {};
 
     for(
         const [source,target]
-        of Object.entries(currentMap)
+        of Object.entries(map)
     ){
+
         if(
             target &&
-            target===text
+            target===value
         ){
+
             return source;
+
         }
+
     }
 
-    return text;
+    return value;
 }
+
 
 function translateTextNode(node){
 
@@ -2129,68 +3694,15 @@ function translateTextNode(node){
         !node ||
         node.nodeType!==Node.TEXT_NODE
     ){
+
         return;
+
     }
-
-    const stored=
-        i18nOriginalText.get(node);
-
-    const original=
-        stored ||
-        getSlovakSource(
-            node.nodeValue
-        );
-
-    if(!original){
-        return;
-    }
-
-    i18nOriginalText.set(
-        node,
-        original
-    );
-
-    const langMap=
-        translations[currentLanguage] || {};
-
-    const translated=
-        langMap[original] ||
-        original;
-
-    const leading=
-        node.nodeValue.match(/^\s*/)?.[0] ||
-        "";
-
-    const trailing=
-        node.nodeValue.match(/\s*$/)?.[0] ||
-        "";
-
-    node.nodeValue=
-        leading+
-        translated+
-        trailing;
-}
-
-function translateDynamicTextNode(node){
-
-    if(
-        !node ||
-        node.nodeType!==Node.TEXT_NODE
-    ){
-        return;
-    }
-
-    const current=
-        node.nodeValue || "";
-
-    const stored=
-        i18nOriginalText.get(node);
 
     const source=
-        stored ||
-        getSlovakSource(current);
+        sourceTextForNode(node);
 
-    if(!source.trim()){
+    if(!source){
         return;
     }
 
@@ -2199,45 +3711,37 @@ function translateDynamicTextNode(node){
         source
     );
 
-    const langMap=
-        translations[currentLanguage] || {};
-
-    let value=
-        langMap[source] ||
+    const translated=
+        (
+            translations[currentLanguage] ||
+            {}
+        )[source] ||
         source;
 
+    const originalValue=
+        node.nodeValue || "";
+
     const leading=
-        current.match(/^\s*/)?.[0] ||
-        "";
+        originalValue.match(
+            /^\s*/
+        )?.[0] || "";
 
     const trailing=
-        current.match(/\s*$/)?.[0] ||
-        "";
+        originalValue.match(
+            /\s*$/
+        )?.[0] || "";
 
     node.nodeValue=
         leading+
-        value+
+        translated+
         trailing;
 }
+
 
 function translateApp(){
 
     document.documentElement.lang=
         currentLanguage;
-
-    document
-        .querySelectorAll(
-            "body *:not(script):not(style):not(option)"
-        )
-        .forEach(
-            element=>{
-                element.childNodes.forEach(
-                    node=>{
-                        translateTextNode(node);
-                    }
-                );
-            }
-        );
 
     document
         .querySelectorAll(
@@ -2248,7 +3752,18 @@ function translateApp(){
 
                 element.childNodes.forEach(
                     node=>{
-                        translateDynamicTextNode(node);
+
+                        if(
+                            node.nodeType===
+                            Node.TEXT_NODE
+                        ){
+
+                            translateTextNode(
+                                node
+                            );
+
+                        }
+
                     }
                 );
 
@@ -2256,7 +3771,8 @@ function translateApp(){
                     "placeholder",
                     "title",
                     "aria-label"
-                ].forEach(
+                ]
+                .forEach(
                     attribute=>{
 
                         if(
@@ -2264,7 +3780,9 @@ function translateApp(){
                                 attribute
                             )
                         ){
+
                             return;
+
                         }
 
                         let store=
@@ -2275,16 +3793,14 @@ function translateApp(){
                             store={};
                         }
 
-                        let original=
+                        const source=
                             store[attribute] ||
-                            getSlovakSource(
-                                element.getAttribute(
-                                    attribute
-                                )
+                            element.getAttribute(
+                                attribute
                             );
 
                         store[attribute]=
-                            original;
+                            source;
 
                         i18nOriginalAttribute.set(
                             element,
@@ -2293,10 +3809,11 @@ function translateApp(){
 
                         const translated=
                             (
-                                translations[currentLanguage] ||
-                                {}
-                            )[original] ||
-                            original;
+                                translations[
+                                    currentLanguage
+                                ] || {}
+                            )[source] ||
+                            source;
 
                         element.setAttribute(
                             attribute,
@@ -2308,7 +3825,9 @@ function translateApp(){
 
             }
         );
+
 }
+
 
 function setLanguage(
     language,
@@ -2318,17 +3837,21 @@ function setLanguage(
     if(
         !translations[language]
     ){
+
         language="en";
+
     }
 
     currentLanguage=
         language;
 
     if(persist){
+
         localStorage.setItem(
             LANGUAGE_STORAGE_KEY,
             language
         );
+
     }
 
     const select=
@@ -2337,8 +3860,10 @@ function setLanguage(
         );
 
     if(select){
+
         select.value=
             language;
+
     }
 
     translateApp();
@@ -2347,23 +3872,13 @@ function setLanguage(
     renderIncidentOptions();
 
     if(currentCatId){
+
         renderCurrentCat();
+
     }
+
 }
 
-function getLocale(){
-
-    const locales={
-        sk:"sk-SK",
-        en:"en-US",
-        cs:"cs-CZ",
-        de:"de-DE",
-        it:"it-IT"
-    };
-
-    return locales[currentLanguage] ||
-        "en-US";
-}
 
 function initializeLanguage(){
 
@@ -2383,10 +3898,12 @@ function initializeLanguage(){
         select.addEventListener(
             "change",
             event=>{
+
                 setLanguage(
                     event.target.value,
                     true
                 );
+
             }
         );
 
@@ -2396,6 +3913,25 @@ function initializeLanguage(){
         currentLanguage,
         false
     );
+
+}
+
+
+function getLocale(){
+
+    const locales={
+
+        sk:"sk-SK",
+        en:"en-US",
+        cs:"cs-CZ",
+        de:"de-DE",
+        it:"it-IT"
+
+    };
+
+    return locales[currentLanguage]
+        || "en-US";
+
 }
 
 
@@ -2409,26 +3945,36 @@ const STORAGE_KEY=
 const EVIDENCE_DB_NAME=
     "catNoseEvidenceDB";
 
-const EVIDENCE_DB_VERSION=1;
+const EVIDENCE_DB_VERSION=
+    1;
 
 const EVIDENCE_STORE=
     "evidence";
 
-const MAX_PROFILE_PHOTO_SIDE=800;
+const MAX_PROFILE_PHOTO_SIDE=
+    800;
 
-const PROFILE_PHOTO_QUALITY=.72;
+const PROFILE_PHOTO_QUALITY=
+    .72;
 
-const MAX_EVIDENCE_PHOTO_SIDE=1280;
+const MAX_EVIDENCE_PHOTO_SIDE=
+    1280;
 
-const EVIDENCE_PHOTO_QUALITY=.65;
+const EVIDENCE_PHOTO_QUALITY=
+    .65;
 
-const MAX_EVIDENCE_VIDEO_SECONDS=15;
+const MAX_EVIDENCE_VIDEO_SECONDS=
+    15;
 
-const EVIDENCE_VIDEO_WIDTH=1280;
+const EVIDENCE_VIDEO_WIDTH=
+    1280;
 
-const EVIDENCE_VIDEO_HEIGHT=720;
+const EVIDENCE_VIDEO_HEIGHT=
+    720;
 
-const EVIDENCE_VIDEO_BITRATE=500000;
+const EVIDENCE_VIDEO_BITRATE=
+    500000;
+
 
 let cats=[];
 
@@ -2464,54 +4010,160 @@ const incidents=[
 
 {
     id:"ukradla jedlo",
+
     title:"Ukradla jedlo",
-    description:"Neoprávnené získanie cudzej potravy",
+
+    description:
+        "Neoprávnené získanie cudzej potravy",
+
     icon:`
+
     <svg viewBox="0 0 70 60">
-        <path d="M12 42 Q35 49 58 42"/>
-        <path class="yellow"
-            d="M17 38 Q35 23 53 38 Q35 48 17 38Z"/>
-        <path d="M27 34 Q35 27 43 34"/>
-        <path class="pink" d="M35 23 L35 15"/>
-        <path d="M26 15 Q35 5 44 15"/>
-    </svg>`
+
+        <path
+            d="M12 42 Q35 49 58 42"
+        />
+
+        <path
+            class="yellow"
+            d="
+            M17 38
+            Q35 23 53 38
+            Q35 48 17 38Z
+            "
+        />
+
+        <path
+            d="M27 34 Q35 27 43 34"
+        />
+
+        <path
+            class="pink"
+            d="M35 23 L35 15"
+        />
+
+        <path
+            d="M26 15 Q35 5 44 15"
+        />
+
+    </svg>
+
+    `
 },
 
 {
     id:"zhodila predmet",
+
     title:"Zhodila predmet",
-    description:"Podozrivá manipulácia s predmetmi",
+
+    description:
+        "Podozrivá manipulácia s predmetmi",
+
     icon:`
+
     <svg viewBox="0 0 70 60">
-        <rect x="23" y="9" width="24" height="31" rx="3"/>
-        <path class="blue" d="M15 45 Q35 37 55 45"/>
-        <path class="pink" d="M20 13 L13 6 M50 13 L57 6"/>
-    </svg>`
+
+        <rect
+            x="23"
+            y="9"
+            width="24"
+            height="31"
+            rx="3"
+        />
+
+        <path
+            class="blue"
+            d="M15 45 Q35 37 55 45"
+        />
+
+        <path
+            class="pink"
+            d="M20 13 L13 6 M50 13 L57 6"
+        />
+
+    </svg>
+
+    `
 },
 
 {
     id:"znicila majetok",
+
     title:"Zničila majetok",
-    description:"Úmyselné poškodenie domácnosti",
+
+    description:
+        "Úmyselné poškodenie domácnosti",
+
     icon:`
+
     <svg viewBox="0 0 70 60">
-        <path d="M12 45 L58 45"/>
-        <path class="yellow" d="M21 43 L28 20 L42 28 L50 15"/>
-        <path class="pink" d="M27 10 L31 18 M40 8 L42 18"/>
-    </svg>`
+
+        <path
+            d="M12 45 L58 45"
+        />
+
+        <path
+            class="yellow"
+            d="
+            M21 43
+            L28 20
+            L42 28
+            L50 15
+            "
+        />
+
+        <path
+            class="pink"
+            d="M27 10 L31 18 M40 8 L42 18"
+        />
+
+    </svg>
+
+    `
 },
 
 {
     id:"napadla cloveka",
+
     title:"Napadla človeka",
-    description:"Agresívne správanie voči osobe",
+
+    description:
+        "Agresívne správanie voči osobe",
+
     icon:`
+
     <svg viewBox="0 0 70 60">
-        <circle cx="35" cy="19" r="10"/>
-        <path d="M18 52 Q35 30 52 52"/>
-        <path class="pink" d="M21 20 L13 12 M49 20 L57 12"/>
-        <path class="yellow" d="M28 21 L32 24 L28 27"/>
-    </svg>`
+
+        <circle
+            cx="35"
+            cy="19"
+            r="10"
+        />
+
+        <path
+            d="M18 52 Q35 30 52 52"
+        />
+
+        <path
+            class="pink"
+            d="
+            M21 20 L13 12
+            M49 20 L57 12
+            "
+        />
+
+        <path
+            class="yellow"
+            d="
+            M28 21
+            L32 24
+            L28 27
+            "
+        />
+
+    </svg>
+
+    `
 }
 
 ];
@@ -2522,6 +4174,7 @@ const incidents=[
 ========================================================= */
 
 const excuses=[
+
 "Bol to len experiment.",
 "Jedlo bolo príliš blízko.",
 "Ja som si myslel/a, že je to moje.",
@@ -2531,24 +4184,29 @@ const excuses=[
 "To už bolo ukradnuté predo mnou.",
 "Spala som.",
 "To bola iná mačka."
+
 ];
 
 const alibis=[
+
 "Sedela pri okne.",
 "Tvári sa, že nič nevie.",
 "Tvrdí, že bola v inej izbe.",
 "Má veľmi podozrivo pokojný výraz.",
 "Odvoláva sa na právo mlčať.",
 "Alibi zatiaľ nebolo potvrdené."
+
 ];
 
 const verdicts=[
+
 "Páchateľ je uznaný za extrémne podozrivého.",
 "Odporúča sa zvýšený dohľad nad miskou.",
 "Prípad zostáva otvorený.",
 "Mačka dostáva podmienečný zákaz kuchyne.",
 "Rozsudok: vinná z toho, že vyzerá vinná.",
 "Pre nedostatok dôkazov sa mačka prepúšťa. Zatiaľ."
+
 ];
 
 
@@ -2557,42 +4215,64 @@ const verdicts=[
 ========================================================= */
 
 function $(id){
+
     return document.getElementById(id);
+
 }
 
 function randomItem(array){
+
     return array[
         Math.floor(
-            Math.random()*array.length
+            Math.random()*
+            array.length
         )
     ];
+
 }
 
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
 }
 
 function safeFileName(value){
 
-    return String(value || "cat")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .replace(/[^a-z0-9]+/gi,"-")
-        .replace(/^-+|-+$/g,"")
-        .toLowerCase() ||
-        "cat";
+    return String(
+        value || "cat"
+    )
+    .normalize("NFD")
+    .replace(
+        /[\u0300-\u036f]/g,
+        ""
+    )
+    .replace(
+        /[^a-z0-9]+/gi,
+        "-"
+    )
+    .replace(
+        /^-+|-+$/g,
+        ""
+    )
+    .toLowerCase()
+    || "cat";
+
 }
 
 function formatBytes(bytes){
 
     if(!bytes){
+
         return "0 B";
+
     }
 
     const units=[
@@ -2604,22 +4284,160 @@ function formatBytes(bytes){
 
     const index=
         Math.floor(
-            Math.log(bytes)/Math.log(1024)
+            Math.log(bytes)/
+            Math.log(1024)
         );
 
     return (
         bytes/
-        Math.pow(1024,index)
+        Math.pow(
+            1024,
+            index
+        )
     ).toFixed(
-        index ? 1 : 0
+        index
+        ? 1
+        : 0
     )+
     " "+
     units[index];
+
 }
 
 
 /* =========================================================
-   LOCAL DATABASE
+   DATABASE NORMALIZATION
+========================================================= */
+
+function normalizeIncident(
+    incident
+){
+
+    if(
+        !incident ||
+        typeof incident!=="object"
+    ){
+
+        return null;
+
+    }
+
+    return {
+
+        id:String(
+            incident.id ||
+            (
+                "incident_"+
+                Date.now()+
+                "_"+
+                Math.random()
+                    .toString(36)
+                    .slice(2,7)
+            )
+        ),
+
+        type:String(
+            incident.type ||
+            "neznámy mačací zločin"
+        ),
+
+        note:String(
+            incident.note || ""
+        ),
+
+        date:
+            incident.date ||
+            new Date().toISOString(),
+
+        evidenceId:
+            incident.evidenceId
+            ? String(
+                incident.evidenceId
+            )
+            : "",
+
+        evidenceType:
+            incident.evidenceType==="photo" ||
+            incident.evidenceType==="video"
+            ? incident.evidenceType
+            : "",
+
+        evidenceSize:
+            Number.isFinite(
+                Number(
+                    incident.evidenceSize
+                )
+            )
+            ? Number(
+                incident.evidenceSize
+            )
+            : 0
+
+    };
+
+}
+
+function normalizeCat(cat){
+
+    if(
+        !cat ||
+        typeof cat!=="object"
+    ){
+
+        return null;
+
+    }
+
+    return {
+
+        id:String(
+            cat.id ||
+            (
+                "cat_"+
+                Date.now()+
+                "_"+
+                Math.random()
+                    .toString(36)
+                    .slice(2,7)
+            )
+        ),
+
+        name:String(
+            cat.name ||
+            "Neznámy páchateľ"
+        ),
+
+        photo:
+            typeof cat.photo==="string"
+            ? cat.photo
+            : "",
+
+        createdAt:
+            cat.createdAt ||
+            new Date().toISOString(),
+
+        lastMatch:
+            cat.lastMatch ??
+            null,
+
+        incidents:
+            Array.isArray(
+                cat.incidents
+            )
+            ? cat.incidents
+                .map(
+                    normalizeIncident
+                )
+                .filter(Boolean)
+            : []
+
+    };
+
+}
+
+
+/* =========================================================
+   DATABASE
 ========================================================= */
 
 function loadDatabase(){
@@ -2631,30 +4449,24 @@ function loadDatabase(){
                 STORAGE_KEY
             );
 
-        cats=
-            raw
-            ? JSON.parse(raw)
-            : [];
+        if(!raw){
 
-        if(!Array.isArray(cats)){
             cats=[];
+            return;
+
         }
 
-        cats.forEach(
-            cat=>{
+        const parsed=
+            JSON.parse(raw);
 
-                if(!Array.isArray(cat.incidents)){
-                    cat.incidents=[];
-                }
-
-                if(
-                    typeof cat.lastMatch!=="number"
-                ){
-                    cat.lastMatch=null;
-                }
-
-            }
-        );
+        cats=
+            Array.isArray(parsed)
+            ? parsed
+                .map(
+                    normalizeCat
+                )
+                .filter(Boolean)
+            : [];
 
     }catch(error){
 
@@ -2678,6 +4490,8 @@ function saveDatabase(){
             JSON.stringify(cats)
         );
 
+        return true;
+
     }catch(error){
 
         console.error(
@@ -2685,10 +4499,7 @@ function saveDatabase(){
             error
         );
 
-        showError(
-            "Úložisko je plné",
-            "Údaje sa nepodarilo uložiť. Skús odstrániť niektoré fotografie alebo údaje."
-        );
+        return false;
 
     }
 
@@ -2738,12 +4549,14 @@ function compressImage(
 
                             width=
                                 Math.round(
-                                    width*scale
+                                    width*
+                                    scale
                                 );
 
                             height=
                                 Math.round(
-                                    height*scale
+                                    height*
+                                    scale
                                 );
 
                             const canvas=
@@ -2780,11 +4593,13 @@ function compressImage(
                         };
 
                     image.onerror=
-                        ()=>reject(
-                            new Error(
-                                "IMAGE_LOAD_ERROR"
-                            )
-                        );
+                        ()=>{
+                            reject(
+                                new Error(
+                                    "IMAGE_LOAD_ERROR"
+                                )
+                            );
+                        };
 
                     image.src=
                         event.target.result;
@@ -2792,13 +4607,17 @@ function compressImage(
                 };
 
             reader.onerror=
-                ()=>reject(
-                    new Error(
-                        "FILE_READ_ERROR"
-                    )
-                );
+                ()=>{
+                    reject(
+                        new Error(
+                            "FILE_READ_ERROR"
+                        )
+                    );
+                };
 
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(
+                file
+            );
 
         }
     );
@@ -2822,50 +4641,80 @@ function renderCatList(){
     if(!cats.length){
 
         container.innerHTML=`
-        <div class="no-incidents">
-            Zatiaľ nemáš uloženú žiadnu mačku.
-            <br><br>
-            To je veľmi podozrivé.
-        </div>`;
+
+        <div class="cat-empty">
+
+        Zatiaľ nemáš registrovaného
+        žiadneho mačacieho páchateľa.
+
+        <br><br>
+
+        Pridaj prvého.
+
+        </div>
+
+        `;
 
         return;
+
     }
 
     container.innerHTML=
-        cats.map(
-            cat=>`
+        cats
+        .map(
+            cat=>{
 
-            <button
-                class="cat-item"
-                type="button"
-                onclick="openCatFile('${escapeHtml(cat.id)}')"
-            >
+                const count=
+                    Array.isArray(
+                        cat.incidents
+                    )
+                    ? cat.incidents.length
+                    : 0;
 
-                <div class="cat-item-photo">
+                return `
+
+                <button
+                    class="cat-item"
+                    type="button"
+                    onclick="openCatFile('${escapeHtml(cat.id)}')"
+                >
+
+                    <div class="cat-photo">
+
                     ${
                         cat.photo
-                        ? `<img src="${cat.photo}" alt="">`
+                        ? `<img
+                            src="${cat.photo}"
+                            alt=""
+                        >`
                         : "🐱"
                     }
-                </div>
 
-                <div>
-                    <div class="cat-item-name">
-                        ${escapeHtml(cat.name)}
                     </div>
 
-                    <div class="cat-item-info">
-                        ${cat.incidents.length} incidentov
+                    <div class="cat-info">
+
+                        <strong>
+                            ${escapeHtml(cat.name)}
+                        </strong>
+
+                        <span>
+                            ${count} incidentov
+                        </span>
+
                     </div>
-                </div>
 
-                <div class="cat-item-arrow">
-                    ›
-                </div>
+                    <div class="cat-arrow">
+                        ›
+                    </div>
 
-            </button>
-        `
-        ).join("");
+                </button>
+
+                `;
+
+            }
+        )
+        .join("");
 
 }
 
@@ -2882,7 +4731,8 @@ function openNewCat(){
 
     $("catPhoto").value="";
 
-    $("photoPreview").innerHTML="🐱";
+    $("photoPreview").innerHTML=
+        "🐱";
 
     openScreen(
         "newCat"
@@ -2890,7 +4740,9 @@ function openNewCat(){
 
 }
 
-$("catPhoto")?.addEventListener(
+
+$("catPhoto")
+?.addEventListener(
     "change",
     async event=>{
 
@@ -2911,13 +4763,17 @@ $("catPhoto")?.addEventListener(
                 );
 
             $("photoPreview").innerHTML=
-                `<img src="${catPhotoData}" alt="">`;
+                `<img
+                    src="${catPhotoData}"
+                    alt="Profilová fotografia"
+                >`;
 
         }catch(error){
 
             showError(
-                "Fotografiu sa nepodarilo načítať",
-                "Skús vybrať inú fotografiu."
+                "Fotografia sa nepodarila spracovať",
+                error.message ||
+                "Skús inú fotografiu."
             );
 
         }
@@ -2925,21 +4781,43 @@ $("catPhoto")?.addEventListener(
     }
 );
 
-function saveNewCat(){
+
+function saveCat(){
+
+    const input=
+        $("catName");
 
     const name=
-        $("catName")
-        .value
-        .trim();
+        input.value.trim();
 
     if(!name){
 
         showError(
             "Chýba meno",
-            "Najprv zadaj meno mačky."
+            "Najprv zadaj meno mačky / páchateľa."
         );
 
         return;
+
+    }
+
+    if(
+        cats.some(
+            cat=>
+                String(cat.name)
+                .toLowerCase()
+                ===
+                name.toLowerCase()
+        )
+    ){
+
+        showError(
+            "Páchateľ už existuje",
+            "V registri už máme mačku s týmto menom."
+        );
+
+        return;
+
     }
 
     const cat={
@@ -2950,32 +4828,52 @@ function saveNewCat(){
             "_"+
             Math.random()
                 .toString(36)
-                .slice(2,8),
+                .slice(2,7),
 
-        name,
+        name:name,
 
         photo:
-            catPhotoData || "",
+            catPhotoData,
 
-        incidents:[],
+        createdAt:
+            new Date().toISOString(),
 
         lastMatch:null,
 
-        createdAt:
-            new Date().toISOString()
+        incidents:[]
 
     };
 
-    cats.push(cat);
+    cats.push(
+        cat
+    );
 
-    saveDatabase();
+    if(
+        !saveDatabase()
+    ){
+
+        cats.pop();
+
+        showError(
+            "Mačku sa nepodarilo uložiť",
+            "Úložisko zariadenia odmietlo uloženie."
+        );
+
+        return;
+
+    }
 
     currentCatId=
         cat.id;
 
-    renderCatList();
+    input.value="";
 
-    renderCurrentCat();
+    $("catPhoto").value="";
+
+    $("photoPreview").innerHTML=
+        "🐱";
+
+    catPhotoData="";
 
     openScreen(
         "catFile"
@@ -3003,17 +4901,18 @@ function openCatFile(id){
         );
 
         return;
+
     }
 
-    currentCatId=id;
-
-    renderCurrentCat();
+    currentCatId=
+        id;
 
     openScreen(
         "catFile"
     );
 
 }
+
 
 function openCurrentCatFile(){
 
@@ -3031,11 +4930,10 @@ function openCurrentCatFile(){
             );
 
             return;
+
         }
 
     }
-
-    renderCurrentCat();
 
     openScreen(
         "catFile"
@@ -3043,7 +4941,10 @@ function openCurrentCatFile(){
 
 }
 
-function getProfileStats(cat){
+
+function getProfileStats(
+    cat
+){
 
     const counts={};
 
@@ -3056,7 +4957,8 @@ function getProfileStats(cat){
                 (
                     counts[
                         incident.type
-                    ] || 0
+                    ] ||
+                    0
                 )+1;
 
         }
@@ -3065,13 +4967,21 @@ function getProfileStats(cat){
     let top=null;
     let max=0;
 
-    Object.entries(counts).forEach(
+    Object.entries(
+        counts
+    )
+    .forEach(
         ([key,value])=>{
 
-            if(value>max){
+            if(
+                value>max
+            ){
 
-                top=key;
-                max=value;
+                top=
+                    key;
+
+                max=
+                    value;
 
             }
 
@@ -3102,14 +5012,17 @@ function getProfileStats(cat){
     }
 
     return {
+
         counts,
         top,
         max,
         n,
         level
+
     };
 
 }
+
 
 function renderCurrentCat(){
 
@@ -3128,45 +5041,61 @@ function renderCurrentCat(){
         );
 
         return;
+
     }
 
     const stats=
-        getProfileStats(cat);
+        getProfileStats(
+            cat
+        );
 
-    $("profileName").textContent=
-        cat.name;
+    $("profileName")
+        .textContent=
+            cat.name;
 
-    $("incidentCatName").textContent=
-        "Čo dnes spáchal/a "+
-        cat.name+
-        "?";
+    $("incidentCatName")
+        .textContent=
+            "Čo dnes spáchal/a "+
+            cat.name+
+            "?";
 
-    $("profilePhoto").innerHTML=
-        cat.photo
-        ? `<img src="${cat.photo}" alt="">`
-        : "🐱";
+    $("profilePhoto")
+        .innerHTML=
+            cat.photo
+            ? `<img
+                src="${cat.photo}"
+                alt=""
+            >`
+            : "🐱";
 
-    $("totalIncidents").textContent=
-        stats.n;
+    $("totalIncidents")
+        .textContent=
+            stats.n;
 
-    $("confidenceValue").textContent=
-        cat.lastMatch
-        ? cat.lastMatch+"%"
-        : "—";
+    $("confidenceValue")
+        .textContent=
+            cat.lastMatch
+            ? cat.lastMatch+"%"
+            : "—";
 
-    $("wantedLevel").textContent=
-        stats.level;
+    $("wantedLevel")
+        .textContent=
+            stats.level;
 
-    $("topCrime").textContent=
-        stats.top
-        ? (
-            incidents.find(
-                i=>i.id===stats.top
-            ) || {}
-        ).title || stats.top
-        : "—";
+    $("topCrime")
+        .textContent=
+            stats.top
+            ? (
+                incidents.find(
+                    i=>i.id===stats.top
+                ) || {}
+            ).title ||
+            stats.top
+            : "—";
 
-    renderIncidentList(cat);
+    renderIncidentList(
+        cat
+    );
 
 }
 
@@ -3175,7 +5104,9 @@ function renderCurrentCat(){
    INCIDENT LIST
 ========================================================= */
 
-function renderIncidentList(cat){
+function renderIncidentList(
+    cat
+){
 
     const container=
         $("incidentList");
@@ -3187,18 +5118,22 @@ function renderIncidentList(cat){
     if(!cat.incidents.length){
 
         container.innerHTML=`
+
         <div class="no-incidents">
 
-            Tento páchateľ zatiaľ nemá
-            žiadne evidované zločiny.
+        Tento páchateľ zatiaľ nemá
+        žiadne evidované zločiny.
 
-            <br><br>
+        <br><br>
 
-            To je podozrivé.
+        To je podozrivé.
 
-        </div>`;
+        </div>
+
+        `;
 
         return;
+
     }
 
     const counts={};
@@ -3212,14 +5147,17 @@ function renderIncidentList(cat){
                 (
                     counts[
                         incident.type
-                    ] || 0
+                    ] ||
+                    0
                 )+1;
 
         }
     );
 
     container.innerHTML=
-        Object.entries(counts)
+        Object.entries(
+            counts
+        )
         .map(
             ([type,count])=>{
 
@@ -3229,6 +5167,7 @@ function renderIncidentList(cat){
                     );
 
                 return `
+
                 <div class="incident-card">
 
                     <div class="incident-icon">
@@ -3267,7 +5206,9 @@ function renderIncidentList(cat){
                         ${count}×
                     </div>
 
-                </div>`;
+                </div>
+
+                `;
 
             }
         )
@@ -3290,6 +5231,7 @@ function openIncident(){
         );
 
         return;
+
     }
 
     selectedIncidentType=
@@ -3309,6 +5251,7 @@ function openIncident(){
 
 }
 
+
 function renderIncidentOptions(){
 
     const container=
@@ -3319,7 +5262,8 @@ function renderIncidentOptions(){
     }
 
     container.innerHTML=
-        incidents.map(
+        incidents
+        .map(
             incident=>{
 
                 const selected=
@@ -3329,9 +5273,13 @@ function renderIncidentOptions(){
                     : "";
 
                 return `
+
                 <button
                     type="button"
-                    class="incident-option ${selected}"
+                    class="
+                        incident-option
+                        ${selected}
+                    "
                     data-incident-type="${escapeHtml(incident.id)}"
                 >
 
@@ -3347,10 +5295,13 @@ function renderIncidentOptions(){
                         ${escapeHtml(incident.description)}
                     </span>
 
-                </button>`;
+                </button>
+
+                `;
 
             }
-        ).join("");
+        )
+        .join("");
 
     container
         .querySelectorAll(
@@ -3373,7 +5324,10 @@ function renderIncidentOptions(){
 
 }
 
-function selectIncident(type){
+
+function selectIncident(
+    type
+){
 
     selectedIncidentType=
         type;
@@ -3381,6 +5335,7 @@ function selectIncident(type){
     renderIncidentOptions();
 
 }
+
 
 function updateIncidentDate(){
 
@@ -3417,7 +5372,9 @@ function updateIncidentDate(){
 function openEvidenceDb(){
 
     if(evidenceDbPromise){
+
         return evidenceDbPromise;
+
     }
 
     evidenceDbPromise=
@@ -3474,7 +5431,10 @@ function openEvidenceDb(){
 
 }
 
-async function evidencePut(record){
+
+async function evidencePut(
+    record
+){
 
     const db=
         await openEvidenceDb();
@@ -3495,19 +5455,28 @@ async function evidencePut(record){
                 .put(record);
 
             transaction.oncomplete=
-                ()=>resolve(record);
+                ()=>{
+                    resolve(
+                        record
+                    );
+                };
 
             transaction.onerror=
-                ()=>reject(
-                    transaction.error
-                );
+                ()=>{
+                    reject(
+                        transaction.error
+                    );
+                };
 
         }
     );
 
 }
 
-async function evidenceGet(id){
+
+async function evidenceGet(
+    id
+){
 
     const db=
         await openEvidenceDb();
@@ -3529,14 +5498,60 @@ async function evidenceGet(id){
                 .get(id);
 
             request.onsuccess=
-                ()=>resolve(
-                    request.result
-                );
+                ()=>{
+                    resolve(
+                        request.result
+                    );
+                };
 
             request.onerror=
-                ()=>reject(
-                    request.error
+                ()=>{
+                    reject(
+                        request.error
+                    );
+                };
+
+        }
+    );
+
+}
+
+
+async function evidenceDelete(
+    id
+){
+
+    const db=
+        await openEvidenceDb();
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const transaction=
+                db.transaction(
+                    EVIDENCE_STORE,
+                    "readwrite"
                 );
+
+            transaction
+                .objectStore(
+                    EVIDENCE_STORE
+                )
+                .delete(id);
+
+            transaction.oncomplete=
+                ()=>{
+                    resolve(
+                        true
+                    );
+                };
+
+            transaction.onerror=
+                ()=>{
+                    reject(
+                        transaction.error
+                    );
+                };
 
         }
     );
@@ -3553,7 +5568,8 @@ function selectIncidentEvidenceNone(){
     evidenceMode=
         "none";
 
-    pendingIncidentEvidence=null;
+    pendingIncidentEvidence=
+        null;
 
     $("evidencePhotoChoice")
         ?.classList.remove(
@@ -3570,7 +5586,9 @@ function selectIncidentEvidenceNone(){
             "selected"
         );
 
-    if($("evidenceStatus")){
+    if(
+        $("evidenceStatus")
+    ){
 
         $("evidenceStatus")
             .textContent=
@@ -3580,7 +5598,10 @@ function selectIncidentEvidenceNone(){
 
 }
 
-function selectIncidentEvidence(mode){
+
+function selectIncidentEvidence(
+    mode
+){
 
     evidenceMode=
         mode;
@@ -3602,6 +5623,7 @@ function selectIncidentEvidence(mode){
         selectIncidentEvidenceNone();
 
         return;
+
     }
 
     if(mode==="photo"){
@@ -3630,7 +5652,9 @@ function selectIncidentEvidence(mode){
 
     }
 
-    openEvidenceCamera(mode);
+    openEvidenceCamera(
+        mode
+    );
 
 }
 
@@ -3639,13 +5663,18 @@ function selectIncidentEvidence(mode){
    CAMERA
 ========================================================= */
 
-async function openEvidenceCamera(mode){
+async function openEvidenceCamera(
+    mode
+){
 
     if(evidenceCaptureBusy){
+
         return;
+
     }
 
-    evidenceCaptureBusy=true;
+    evidenceCaptureBusy=
+        true;
 
     evidenceMode=
         mode;
@@ -3662,19 +5691,27 @@ async function openEvidenceCamera(mode){
     const capture=
         $("evidenceCaptureButton");
 
-    if(!modal || !video){
+    if(
+        !modal ||
+        !video
+    ){
 
-        evidenceCaptureBusy=false;
+        evidenceCaptureBusy=
+            false;
 
         return;
+
     }
 
-    modal.classList.add("show");
+    modal.classList.add(
+        "show"
+    );
 
-    $("evidenceCameraTitle").textContent=
-        mode==="photo"
-        ? "FOTODÔKAZ"
-        : "VIDEODÔKAZ";
+    $("evidenceCameraTitle")
+        .textContent=
+            mode==="photo"
+            ? "FOTODÔKAZ"
+            : "VIDEODÔKAZ";
 
     capture.textContent=
         mode==="photo"
@@ -3686,18 +5723,33 @@ async function openEvidenceCamera(mode){
 
     try{
 
+        if(
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ){
+
+            throw new Error(
+                "CAMERA_UNAVAILABLE"
+            );
+
+        }
+
         evidenceStream=
-            await navigator.mediaDevices.getUserMedia(
+            await navigator
+            .mediaDevices
+            .getUserMedia(
                 {
                     video:{
                         facingMode:{
                             ideal:"environment"
                         },
                         width:{
-                            ideal:EVIDENCE_VIDEO_WIDTH
+                            ideal:
+                                EVIDENCE_VIDEO_WIDTH
                         },
                         height:{
-                            ideal:EVIDENCE_VIDEO_HEIGHT
+                            ideal:
+                                EVIDENCE_VIDEO_HEIGHT
                         }
                     },
                     audio:
@@ -3725,41 +5777,17 @@ async function openEvidenceCamera(mode){
         status.textContent=
             "K fotoaparátu sa nepodarilo pristúpiť. Povoľ kameru v nastaveniach telefónu a skús to znova.";
 
-        modal.classList.add("show");
-
     }finally{
 
-        evidenceCaptureBusy=false;
+        evidenceCaptureBusy=
+            false;
 
     }
 
 }
 
-function closeEvidenceCamera(){
 
-    if(evidenceTimer){
-
-        clearTimeout(
-            evidenceTimer
-        );
-
-        evidenceTimer=null;
-
-    }
-
-    if(evidenceRecorder){
-
-        try{
-            if(
-                evidenceRecorder.state!=="inactive"
-            ){
-                evidenceRecorder.stop();
-            }
-        }catch(error){}
-
-        evidenceRecorder=null;
-
-    }
+function stopEvidenceStream(){
 
     if(evidenceStream){
 
@@ -3771,7 +5799,8 @@ function closeEvidenceCamera(){
                 }
             );
 
-        evidenceStream=null;
+        evidenceStream=
+            null;
 
     }
 
@@ -3782,20 +5811,77 @@ function closeEvidenceCamera(){
 
         video.pause();
 
-        video.srcObject=null;
+        video.srcObject=
+            null;
 
     }
+
+}
+
+
+function closeEvidenceCamera(){
+
+    if(evidenceTimer){
+
+        clearTimeout(
+            evidenceTimer
+        );
+
+        evidenceTimer=
+            null;
+
+    }
+
+    if(evidenceRecorder){
+
+        try{
+
+            if(
+                evidenceRecorder.state!==
+                "inactive"
+            ){
+
+                evidenceRecorder.stop();
+
+            }
+
+        }catch(error){}
+
+        evidenceRecorder=
+            null;
+
+    }
+
+    stopEvidenceStream();
+
+    evidenceMode=
+        null;
+
+    evidenceCaptureBusy=
+        false;
 
     $("evidenceCameraModal")
         ?.classList.remove(
             "show"
         );
 
+    const button=
+        $("evidenceCaptureButton");
+
+    if(button){
+
+        button.disabled=
+            false;
+
+        button.textContent=
+            "📷 ODFOTIŤ DÔKAZ";
+
+    }
+
     evidenceChunks=[];
 
-    evidenceCaptureBusy=false;
-
 }
+
 
 async function captureIncidentEvidence(){
 
@@ -3804,23 +5890,31 @@ async function captureIncidentEvidence(){
         !evidenceMode ||
         evidenceMode==="none"
     ){
+
         return;
+
     }
 
-    if(evidenceMode==="photo"){
+    if(
+        evidenceMode==="photo"
+    ){
 
         await capturePhotoEvidence();
 
         return;
+
     }
 
-    if(evidenceMode==="video"){
+    if(
+        evidenceMode==="video"
+    ){
 
         await captureVideoEvidence();
 
     }
 
 }
+
 
 async function capturePhotoEvidence(){
 
@@ -3831,7 +5925,9 @@ async function capturePhotoEvidence(){
         !video ||
         video.readyState<2
     ){
+
         return;
+
     }
 
     const width=
@@ -3876,6 +5972,10 @@ async function capturePhotoEvidence(){
         video,
         0,
         0,
+        width,
+        height,
+        0,
+        0,
         canvas.width,
         canvas.height
     );
@@ -3891,13 +5991,20 @@ async function capturePhotoEvidence(){
                 );
 
                 return;
+
             }
 
             pendingIncidentEvidence={
+
                 type:"photo",
+
                 mime:"image/jpeg",
-                size:blob.size,
+
+                size:
+                    blob.size,
+
                 blob
+
             };
 
             $("evidenceStatus")
@@ -3913,14 +6020,8 @@ async function capturePhotoEvidence(){
 
 }
 
+
 async function captureVideoEvidence(){
-
-    const video=
-        $("evidenceCameraVideo");
-
-    if(!video){
-        return;
-    }
 
     if(
         !window.MediaRecorder
@@ -3932,17 +6033,19 @@ async function captureVideoEvidence(){
         );
 
         return;
+
     }
 
     evidenceChunks=[];
 
-    let mimeType=
-        "";
+    let mimeType="";
 
     const candidates=[
+
         "video/webm;codecs=vp9",
         "video/webm;codecs=vp8",
         "video/webm"
+
     ];
 
     for(
@@ -3972,7 +6075,9 @@ async function captureVideoEvidence(){
                 evidenceStream,
                 {
                     mimeType:
-                        mimeType || undefined,
+                        mimeType ||
+                        undefined,
+
                     videoBitsPerSecond:
                         EVIDENCE_VIDEO_BITRATE
                 }
@@ -4008,12 +6113,17 @@ async function captureVideoEvidence(){
                     );
 
                 pendingIncidentEvidence={
+
                     type:"video",
+
                     mime:
                         blob.type,
+
                     size:
                         blob.size,
+
                     blob
+
                 };
 
                 $("evidenceStatus")
@@ -4033,14 +6143,20 @@ async function captureVideoEvidence(){
         evidenceTimer=
             setTimeout(
                 ()=>{
+
                     if(
                         evidenceRecorder &&
-                        evidenceRecorder.state!=="inactive"
+                        evidenceRecorder.state!==
+                        "inactive"
                     ){
+
                         evidenceRecorder.stop();
+
                     }
+
                 },
-                MAX_EVIDENCE_VIDEO_SECONDS*1000
+                MAX_EVIDENCE_VIDEO_SECONDS*
+                1000
             );
 
     }catch(error){
@@ -4066,8 +6182,12 @@ async function captureVideoEvidence(){
 
 async function persistPendingEvidence(){
 
-    if(!pendingIncidentEvidence){
+    if(
+        !pendingIncidentEvidence
+    ){
+
         return null;
+
     }
 
     const record={
@@ -4097,15 +6217,21 @@ async function persistPendingEvidence(){
 
     };
 
-    await evidencePut(record);
+    await evidencePut(
+        record
+    );
 
-    pendingIncidentEvidence=null;
+    pendingIncidentEvidence=
+        null;
 
     return record;
 
 }
 
-async function viewEvidence(evidenceId){
+
+async function viewEvidence(
+    evidenceId
+){
 
     try{
 
@@ -4123,6 +6249,7 @@ async function viewEvidence(evidenceId){
             );
 
             return;
+
         }
 
         const url=
@@ -4147,7 +6274,7 @@ async function viewEvidence(evidenceId){
                     "
                     src="${url}"
                 ></video>
-              `
+            `
             : `
                 <img
                     style="
@@ -4157,19 +6284,25 @@ async function viewEvidence(evidenceId){
                     src="${url}"
                     alt="Fotodôkaz"
                 >
-              `;
+            `;
 
         showFun(
             isVideo
-                ? "🎥 VIDEODÔKAZ"
-                : "📷 FOTODÔKAZ",
+            ? "🎥 VIDEODÔKAZ"
+            : "📷 FOTODÔKAZ",
+
             html+
             `
-            <p style="margin-top:10px">
+            <p
+                style="
+                    margin-top:10px
+                "
+            >
                 Lokálne uložené •
                 ${formatBytes(record.size)}
             </p>
             `,
+
             []
         );
 
@@ -4177,8 +6310,10 @@ async function viewEvidence(evidenceId){
             $("funModal");
 
         if(modal){
+
             modal.dataset.objectUrl=
                 url;
+
         }
 
     }catch(error){
@@ -4213,6 +6348,7 @@ async function registerIncident(){
         );
 
         return;
+
     }
 
     const note=
@@ -4220,19 +6356,14 @@ async function registerIncident(){
         .value
         .trim();
 
-    const incidentTitle=
-        (
-            incidents.find(
-                i=>i.id===selectedIncidentType
-            ) || {}
-        ).title ||
-        selectedIncidentType;
-
-    let evidenceRecord=null;
+    let evidenceRecord=
+        null;
 
     try{
 
-        if(pendingIncidentEvidence){
+        if(
+            pendingIncidentEvidence
+        ){
 
             evidenceRecord=
                 await persistPendingEvidence();
@@ -4268,23 +6399,26 @@ async function registerIncident(){
         type:
             selectedIncidentType,
 
-        note,
+        note:
+            note,
 
         date:
             $("incidentDate").value,
 
-        title:
-            incidentTitle,
-
         evidenceId:
             evidenceRecord
             ? evidenceRecord.id
-            : null,
+            : "",
 
         evidenceType:
             evidenceRecord
             ? evidenceRecord.type
-            : null
+            : "",
+
+        evidenceSize:
+            evidenceRecord
+            ? evidenceRecord.size
+            : 0
 
     };
 
@@ -4292,7 +6426,20 @@ async function registerIncident(){
         incident
     );
 
-    saveDatabase();
+    if(
+        !saveDatabase()
+    ){
+
+        cat.incidents.pop();
+
+        showError(
+            "Incident sa nepodarilo uložiť",
+            "Úložisko zariadenia odmietlo uloženie."
+        );
+
+        return;
+
+    }
 
     renderCurrentCat();
 
@@ -4300,7 +6447,8 @@ async function registerIncident(){
         "catFile"
     );
 
-    $("incidentNote").value="";
+    $("incidentNote").value=
+        "";
 
     selectIncidentEvidenceNone();
 
@@ -4333,7 +6481,9 @@ function showProfileFun(){
     }
 
     const stats=
-        getProfileStats(cat);
+        getProfileStats(
+            cat
+        );
 
     const top=
         stats.top
@@ -4346,9 +6496,11 @@ function showProfileFun(){
         : "žiadny";
 
     showFun(
+
         "🕵️ VYŠETROVACÍ PROFIL",
 
         `
+
         <strong>
             ${escapeHtml(cat.name)}
         </strong>
@@ -4383,7 +6535,9 @@ function showProfileFun(){
         <br>
 
         „${escapeHtml(
-            randomItem(excuses)
+            randomItem(
+                excuses
+            )
         )}“
 
         <br><br>
@@ -4395,24 +6549,43 @@ function showProfileFun(){
         <br>
 
         ${escapeHtml(
-            randomItem(alibis)
+            randomItem(
+                alibis
+            )
         )}
+
         `,
 
         [
 
             {
-                t:"😼 VYGENEROVAŤ NOVÚ VÝHOVORKU",
-                f:()=>showProfileFun()
+                t:
+                    "😼 VYGENEROVAŤ NOVÚ VÝHOVORKU",
+
+                f:
+                    ()=>{
+                        showProfileFun();
+                    }
+
             },
 
             {
-                t:"⚖️ VYNIESŤ ROZSUDOK",
-                f:()=>showFun(
-                    "⚖️ ROZSUDOK",
-                    randomItem(verdicts),
-                    []
-                )
+                t:
+                    "⚖️ VYNIESŤ ROZSUDOK",
+
+                f:
+                    ()=>{
+
+                        showFun(
+                            "⚖️ ROZSUDOK",
+                            randomItem(
+                                verdicts
+                            ),
+                            []
+                        );
+
+                    }
+
             }
 
         ]
@@ -4421,26 +6594,43 @@ function showProfileFun(){
 
 }
 
+
+/* =========================================================
+   GENERIC FUN MODAL
+========================================================= */
+
 function showFun(
     title,
     text,
     choices
 ){
 
-    $("funTitle").textContent=
-        title;
+    const modal=
+        $("funModal");
 
-    $("funText").innerHTML=
-        text;
+    const titleElement=
+        $("funTitle");
+
+    const textElement=
+        $("funText");
 
     const container=
         $("funChoices");
 
-    container.innerHTML="";
+    titleElement.textContent=
+        title;
+
+    textElement.innerHTML=
+        text;
+
+    container.innerHTML=
+        "";
 
     (
-        choices || []
-    ).forEach(
+        choices ||
+        []
+    )
+    .forEach(
         choice=>{
 
             const button=
@@ -4449,19 +6639,21 @@ function showFun(
                 );
 
             button.className=
-                "fun-choice";
+                "choice";
 
             button.type=
                 "button";
 
-            button.textContent=
-                choice.t;
+            button.innerHTML=
+                `<strong>
+                    ${escapeHtml(
+                        choice.t
+                    )}
+                </strong>`;
 
             button.addEventListener(
                 "click",
-                ()=>{
-                    choice.f();
-                }
+                choice.f
             );
 
             container.appendChild(
@@ -4471,42 +6663,49 @@ function showFun(
         }
     );
 
-    $("funModal")
-        .classList.add(
-            "show"
-        );
+    modal.classList.add(
+        "show"
+    );
 
 }
+
 
 function closeModal(){
 
     const modal=
         $("funModal");
 
-    if(modal){
+    if(
+        modal &&
+        modal.dataset.objectUrl
+    ){
 
-        const url=
-            modal.dataset.objectUrl;
-
-        if(url){
+        try{
 
             URL.revokeObjectURL(
-                url
+                modal.dataset.objectUrl
             );
 
-            delete modal.dataset.objectUrl;
+        }catch(error){}
 
-        }
-
-        modal.classList.remove(
-            "show"
-        );
+        delete modal.dataset.objectUrl;
 
     }
 
+    modal?.classList.remove(
+        "show"
+    );
+
 }
 
-function afterIncident(kind){
+
+/* =========================================================
+   AFTER INCIDENT
+========================================================= */
+
+function afterIncident(
+    kind
+){
 
     $("afterIncidentModal")
         .classList.remove(
@@ -4515,21 +6714,27 @@ function afterIncident(kind){
 
     let text="";
 
-    if(kind==="vet"){
+    if(
+        kind==="vet"
+    ){
 
         text=
             "Veterinár bol upozornený. Páchateľ tvrdí, že nič nezjedol.";
 
     }
 
-    if(kind==="police"){
+    if(
+        kind==="police"
+    ){
 
         text=
             "Polícia bola imaginárne kontaktovaná. Operátor odporučil mačku nestrácať z dohľadu.";
 
     }
 
-    if(kind==="ignore"){
+    if(
+        kind==="ignore"
+    ){
 
         text=
             "Rozumné rozhodnutie. Páchateľ už pravdepodobne plánuje ďalší incident.";
@@ -4540,6 +6745,87 @@ function afterIncident(kind){
         "ČO TERAZ?",
         text,
         []
+    );
+
+}
+
+
+/* =========================================================
+   DELETE CAT
+========================================================= */
+
+async function deleteCurrentCat(){
+
+    const cat=
+        cats.find(
+            c=>c.id===currentCatId
+        );
+
+    if(!cat){
+        return;
+    }
+
+    if(
+        !confirm(
+            'Naozaj chceš odstrániť páchateľa "'+
+            cat.name+
+            '"?'
+        )
+    ){
+
+        return;
+
+    }
+
+    const evidenceIds=
+        (
+            cat.incidents ||
+            []
+        )
+        .map(
+            incident=>
+                incident.evidenceId
+        )
+        .filter(Boolean);
+
+    cats=
+        cats.filter(
+            c=>c.id!==currentCatId
+        );
+
+    if(
+        !saveDatabase()
+    ){
+
+        showError(
+            "Páchateľa sa nepodarilo odstrániť",
+            "Úložisko zariadenia odmietlo zmenu."
+        );
+
+        return;
+
+    }
+
+    for(
+        const evidenceId
+        of evidenceIds
+    ){
+
+        try{
+
+            await evidenceDelete(
+                evidenceId
+            );
+
+        }catch(error){}
+
+    }
+
+    currentCatId=
+        null;
+
+    resetNavigation(
+        "home"
     );
 
 }
@@ -4561,63 +6847,113 @@ function buildCriminalFile(){
     }
 
     const stats=
-        getProfileStats(cat);
+        getProfileStats(
+            cat
+        );
 
-    const incidentRows=
-        cat.incidents.length
-        ? cat.incidents.map(
-            incident=>`
+    const rows=
+        cat.incidents
+        .slice()
+        .reverse()
+        .map(
+            incident=>{
 
-            <tr>
+                const item=
+                    incidents.find(
+                        i=>i.id===incident.type
+                    );
 
-                <td>
-                    ${escapeHtml(incident.date || "—")}
-                </td>
+                const date=
+                    new Date(
+                        incident.date
+                    );
 
-                <td>
-                    ${escapeHtml(
-                        (
-                            incidents.find(
-                                i=>i.id===incident.type
-                            ) || {}
-                        ).title ||
-                        incident.type
-                    )}
-                </td>
+                return `
 
-                <td>
-                    ${escapeHtml(
-                        incident.note ||
-                        "Bez poznámky"
-                    )}
-                </td>
+                <tr>
 
-                <td>
-                    ${
-                        incident.evidenceId
-                        ? (
-                            incident.evidenceType==="video"
-                            ? "VIDEO"
-                            : "FOTO"
-                        )
-                        : "—"
-                    }
-                </td>
+                    <td>
 
-            </tr>
-            `
-        ).join("")
-        : `
-        <tr>
-            <td colspan="4">
-                Žiadne evidované incidenty.
-            </td>
-        </tr>
-        `;
+                        ${
+                            date.toLocaleDateString(
+                                getLocale()
+                            )
+                        }
+
+                        ${
+                            date.toLocaleTimeString(
+                                getLocale(),
+                                {
+                                    hour:"2-digit",
+                                    minute:"2-digit"
+                                }
+                            )
+                        }
+
+                    </td>
+
+                    <td>
+
+                        ${
+                            escapeHtml(
+                                item
+                                ? item.title
+                                : incident.type
+                            )
+                        }
+
+                    </td>
+
+                    <td>
+
+                        ${
+                            escapeHtml(
+                                incident.note ||
+                                "—"
+                            )
+                        }
+
+                    </td>
+
+                    <td>
+
+                        ${
+                            incident.evidenceId
+                            ? (
+                                incident.evidenceType===
+                                "video"
+                                ? "VIDEO"
+                                : "FOTO"
+                            )
+                            : "—"
+                        }
+
+                    </td>
+
+                </tr>
+
+                `;
+
+            }
+        )
+        .join("");
+
+    const top=
+        stats.top
+        ? (
+            incidents.find(
+                i=>i.id===stats.top
+            ) || {}
+        ).title ||
+        stats.top
+        : "Žiadny evidovaný zločin";
 
     return `
 
-    <div class="criminal-paper">
+    <div
+        class="criminal-paper"
+        id="criminalPaper"
+    >
 
         <div class="paper-top">
 
@@ -4635,9 +6971,11 @@ function buildCriminalFile(){
 
         </div>
 
+
         <div class="paper-stamp">
             OFICIÁLNE OVERENÉ
         </div>
+
 
         <div class="paper-section">
 
@@ -4645,55 +6983,87 @@ function buildCriminalFile(){
                 IDENTIFIKÁCIA PÁCHATEĽA
             </h3>
 
+
             <div class="paper-profile">
 
                 <div class="paper-photo">
 
                     ${
                         cat.photo
-                        ? `<img src="${cat.photo}" alt="">`
+                        ? `<img
+                            src="${cat.photo}"
+                            alt=""
+                        >`
                         : "🐱"
                     }
 
                 </div>
 
+
                 <div class="paper-fields">
 
                     <div>
-                        <b>Meno páchateľa:</b>
-                        ${escapeHtml(cat.name)}
-                    </div>
 
-                    <div>
-                        <b>Počet incidentov:</b>
-                        ${stats.n}
-                    </div>
+                        <b>
+                            Meno páchateľa:
+                        </b>
 
-                    <div>
-                        <b>Stupeň nebezpečnosti:</b>
-                        ${escapeHtml(stats.level)}
-                    </div>
-
-                    <div>
-                        <b>Najčastejší zločin:</b>
                         ${escapeHtml(
-                            stats.top
-                            ? (
-                                incidents.find(
-                                    i=>i.id===stats.top
-                                ) || {}
-                            ).title || stats.top
-                            : "Žiadny"
+                            cat.name
                         )}
+
                     </div>
 
+
                     <div>
-                        <b>Posledná biometrická zhoda:</b>
+
+                        <b>
+                            Počet incidentov:
+                        </b>
+
+                        ${stats.n}
+
+                    </div>
+
+
+                    <div>
+
+                        <b>
+                            Stupeň nebezpečnosti:
+                        </b>
+
+                        ${escapeHtml(
+                            stats.level
+                        )}
+
+                    </div>
+
+
+                    <div>
+
+                        <b>
+                            Najčastejší zločin:
+                        </b>
+
+                        ${escapeHtml(
+                            top
+                        )}
+
+                    </div>
+
+
+                    <div>
+
+                        <b>
+                            Posledná biometrická zhoda:
+                        </b>
+
                         ${
                             cat.lastMatch
                             ? cat.lastMatch+"%"
                             : "Neuvedená"
                         }
+
                     </div>
 
                 </div>
@@ -4702,34 +7072,64 @@ function buildCriminalFile(){
 
         </div>
 
+
         <div class="paper-section">
 
             <h3>
                 EVIDOVANÉ SKUTKY
             </h3>
 
+
             <table class="paper-table">
 
                 <thead>
 
                     <tr>
-                        <th>Dátum</th>
-                        <th>Skutok</th>
-                        <th>Poznámka</th>
-                        <th>Dôkaz</th>
+
+                        <th>
+                            Dátum
+                        </th>
+
+                        <th>
+                            Skutok
+                        </th>
+
+                        <th>
+                            Poznámka
+                        </th>
+
+                        <th>
+                            Dôkaz
+                        </th>
+
                     </tr>
 
                 </thead>
 
+
                 <tbody>
 
-                    ${incidentRows}
+                    ${
+                        rows ||
+                        `
+                        <tr>
+
+                            <td
+                                colspan="4"
+                            >
+                                Žiadne evidované incidenty.
+                            </td>
+
+                        </tr>
+                        `
+                    }
 
                 </tbody>
 
             </table>
 
         </div>
+
 
         <div class="paper-notice">
 
@@ -4747,14 +7147,19 @@ function buildCriminalFile(){
             <br><br>
 
             <b>
+
                 Páchateľ sa preto považuje za
                 nevinného až do momentu,
                 keď ho prichytíme pri ďalšom zločine.
+
             </b>
 
         </div>
 
-        <div style="text-align:center">
+
+        <div
+            style="text-align:center"
+        >
 
             <div class="paper-seal">
 
@@ -4769,6 +7174,7 @@ function buildCriminalFile(){
             </div>
 
         </div>
+
 
         <div class="paper-footer">
 
@@ -4802,14 +7208,16 @@ function buildCriminalFile(){
 
 }
 
+
 function generateCriminalFile(){
 
     if(!currentCatId){
         return;
     }
 
-    $("paperContainer").innerHTML=
-        buildCriminalFile();
+    $("paperContainer")
+        .innerHTML=
+            buildCriminalFile();
 
     $("fileModal")
         .classList.add(
@@ -4817,6 +7225,7 @@ function generateCriminalFile(){
         );
 
 }
+
 
 function closeFileModal(){
 
@@ -4934,6 +7343,23 @@ body{
     font-size:16px;
 }
 
+.paper-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:10px;
+}
+
+.paper-table th,
+.paper-table td{
+    border:1px solid #555;
+    padding:6px;
+    text-align:left;
+}
+
+.paper-table th{
+    background:#ded5c1;
+}
+
 .paper-profile{
     display:grid;
     grid-template-columns:100px 1fr;
@@ -4964,23 +7390,6 @@ body{
 .paper-fields b{
     display:inline-block;
     min-width:145px;
-}
-
-.paper-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:10px;
-}
-
-.paper-table th,
-.paper-table td{
-    border:1px solid #555;
-    padding:6px;
-    text-align:left;
-}
-
-.paper-table th{
-    background:#ded5c1;
 }
 
 .paper-notice{
@@ -5059,21 +7468,29 @@ ${buildCriminalFile()}
         new Blob(
             [content],
             {
-                type:"text/html;charset=utf-8"
+                type:
+                    "text/html;charset=utf-8"
             }
         );
 
     const url=
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
 
     const link=
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href=url;
+    link.href=
+        url;
 
     link.download=
         "CAT-NOSE-ID-"+
-        safeFileName(cat.name)+
+        safeFileName(
+            cat.name
+        )+
         ".html";
 
     document.body.appendChild(
@@ -5112,7 +7529,9 @@ async function shareCriminalFile(){
     }
 
     const safeName=
-        safeFileName(cat.name);
+        safeFileName(
+            cat.name
+        );
 
     const content=`
 
@@ -5149,7 +7568,8 @@ ${buildCriminalFile()}
         new Blob(
             [content],
             {
-                type:"text/html;charset=utf-8"
+                type:
+                    "text/html;charset=utf-8"
             }
         );
 
@@ -5158,7 +7578,9 @@ ${buildCriminalFile()}
             [
                 blob
             ],
-            "CAT-NOSE-ID-"+safeName+".html",
+            "CAT-NOSE-ID-"+
+            safeName+
+            ".html",
             {
                 type:"text/html"
             }
@@ -5173,48 +7595,66 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
 
     try{
 
-        if(navigator.share){
+        if(
+            navigator.share
+        ){
 
             if(
                 navigator.canShare &&
-                navigator.canShare({
-                    files:[file]
-                })
+                navigator.canShare(
+                    {
+                        files:[
+                            file
+                        ]
+                    }
+                )
             ){
 
-                await navigator.share({
+                await navigator.share(
+                    {
 
-                    title:
-                        "CAT NOSE ID — Kriminálny spis",
+                        title:
+                            "CAT NOSE ID — Kriminálny spis",
 
-                    text,
+                        text:
+                            text,
 
-                    files:[file]
+                        files:[
+                            file
+                        ]
 
-                });
+                    }
+                );
 
                 return;
 
             }
 
-            await navigator.share({
+            await navigator.share(
+                {
 
-                title:
-                    "CAT NOSE ID — Kriminálny spis",
+                    title:
+                        "CAT NOSE ID — Kriminálny spis",
 
-                text
+                    text:
+                        text
 
-            });
+                }
+            );
 
             return;
 
         }
 
-        if(navigator.clipboard){
+        if(
+            navigator.clipboard
+        ){
 
-            await navigator.clipboard.writeText(
-                text
-            );
+            await navigator
+                .clipboard
+                .writeText(
+                    text
+                );
 
             showFun(
                 "📤 PRIPRAVENÉ NA ZDIEĽANIE",
@@ -5236,9 +7676,12 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
 
         if(
             error &&
-            error.name==="AbortError"
+            error.name===
+            "AbortError"
         ){
+
             return;
+
         }
 
         console.error(
@@ -5297,7 +7740,8 @@ function showAiResult(
 
     $("identifiedConfidence")
         .textContent=
-            Number(confidence)+"%";
+            Number(confidence)+
+            "%";
 
     openScreen(
         "identified"
@@ -5315,9 +7759,150 @@ function showError(
     text
 ){
 
+    $("errorTitle")
+        .textContent=
+            title;
+
+    $("errorText")
+        .textContent=
+            text;
+
+    openScreen(
+        "error"
+    );
+
+}
+
+
+/* =========================================================
+   SCAN CAMERA
+========================================================= */
+
+let scanStream=
+    null;
+
+async function startScanCamera(){
+
+    const video=
+        $("scanVideo");
+
+    const status=
+        $("scanStatus");
+
+    if(!video){
+        return;
+    }
+
+    try{
+
+        if(
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ){
+
+            throw new Error(
+                "CAMERA_UNAVAILABLE"
+            );
+
+        }
+
+        scanStream=
+            await navigator
+            .mediaDevices
+            .getUserMedia(
+                {
+                    video:{
+                        facingMode:{
+                            ideal:"environment"
+                        }
+                    },
+                    audio:false
+                }
+            );
+
+        video.srcObject=
+            scanStream;
+
+        await video.play();
+
+        status.textContent=
+            "Fotoaparát je pripravený.";
+
+    }catch(error){
+
+        console.error(
+            "SCAN CAMERA ERROR",
+            error
+        );
+
+        status.textContent=
+            "Fotoaparát nie je dostupný. Skontroluj povolenie fotoaparátu.";
+
+    }
+
+}
+
+
+function stopScanCamera(){
+
+    if(scanStream){
+
+        scanStream
+            .getTracks()
+            .forEach(
+                track=>{
+                    track.stop();
+                }
+            );
+
+        scanStream=
+            null;
+
+    }
+
+    const video=
+        $("scanVideo");
+
+    if(video){
+
+        video.pause();
+
+        video.srcObject=
+            null;
+
+    }
+
+    $("scanStatus")
+        .textContent=
+            "Fotoaparát bol zastavený.";
+
+}
+
+
+function finishScan(){
+
+    if(
+        !cats.length
+    ){
+
+        showError(
+            "Databáza je prázdna",
+            "Najprv pridaj mačku / páchateľa."
+        );
+
+        return;
+
+    }
+
     showFun(
-        "⚠️ "+title,
-        text,
+        "🔬 AI SKENOVANIE",
+        `
+        Kamera a skutočná AI identifikácia
+        budú pripojené v ďalšej fáze.
+        <br><br>
+        Táto obrazovka je pripravená na
+        napojenie AI.
+        `,
         []
     );
 
@@ -5325,38 +7910,78 @@ function showError(
 
 
 /* =========================================================
-   NAVIGATION
+   MEDIA TEST
 ========================================================= */
 
-const navigationHistory=[];
+$("scanMediaInput")
+?.addEventListener(
+    "change",
+    event=>{
 
-let navigationBusy=false;
+        const file=
+            event.target.files?.[0];
 
-function openScreen(
-    id,
-    options={}
+        if(!file){
+
+            $("scanMediaResult")
+                .textContent=
+                    "Žiadny súbor.";
+
+            return;
+
+        }
+
+        $("scanMediaResult")
+            .innerHTML=
+                `
+                <strong>
+                    ${escapeHtml(file.name)}
+                </strong>
+                <br>
+                ${formatBytes(file.size)}
+                <br><br>
+                Súbor bol vybraný lokálne.
+                AI spracovanie bude pripojené neskôr.
+                `;
+
+    }
+);
+
+
+/* =========================================================
+   NAVIGATION
+   Jeden jediný history systém.
+========================================================= */
+
+let historyStack=[
+    "home"
+];
+
+let isNavigatingBack=
+    false;
+
+let navigationInitialized=
+    false;
+
+let navigationBusy=
+    false;
+
+
+/* =========================================================
+   SHOW SCREEN
+========================================================= */
+
+function showScreen(
+    id
 ){
 
-    const current=
-        document.querySelector(
-            ".screen.active"
+    const target=
+        document.getElementById(
+            id
         );
 
-    const currentId=
-        current
-        ? current.id
-        : null;
-
-    if(
-        currentId &&
-        currentId!==id &&
-        !options.replace
-    ){
-
-        navigationHistory.push(
-            currentId
-        );
-
+    if(!target){
+        return;
     }
 
     document
@@ -5371,13 +7996,6 @@ function openScreen(
             }
         );
 
-    const target=
-        $(id);
-
-    if(!target){
-        return;
-    }
-
     target.classList.add(
         "active"
     );
@@ -5389,62 +8007,231 @@ function openScreen(
         }
     );
 
-    if(id==="catFile"){
-        renderCurrentCat();
-    }
+    if(
+        id==="home"
+    ){
 
-    if(id==="cats"){
         renderCatList();
+
     }
 
-    if(id==="incident"){
-        renderIncidentOptions();
+    if(
+        id==="cats"
+    ){
+
+        renderCatList();
+
+    }
+
+    if(
+        id==="catFile"
+    ){
+
+        renderCurrentCat();
+
+    }
+
+    if(
+        id==="incident"
+    ){
+
         updateIncidentDate();
+
+        renderIncidentOptions();
+
     }
 
 }
 
+
+function currentScreenId(){
+
+    const active=
+        document.querySelector(
+            ".screen.active"
+        );
+
+    return active
+        ? active.id
+        : "home";
+
+}
+
+
+/* =========================================================
+   OPEN SCREEN
+========================================================= */
+
+function openScreen(
+    id,
+    options={}
+){
+
+    const current=
+        currentScreenId();
+
+    if(
+        current===id
+    ){
+
+        showScreen(
+            id
+        );
+
+        return;
+
+    }
+
+    if(
+        !options.replace &&
+        !isNavigatingBack
+    ){
+
+        historyStack.push(
+            id
+        );
+
+    }
+
+    showScreen(
+        id
+    );
+
+}
+
+
+/* =========================================================
+   GO BACK
+========================================================= */
+
 function goBack(){
 
-    if(navigationBusy){
+    if(
+        navigationBusy
+    ){
+
         return;
+
     }
 
-    navigationBusy=true;
+    navigationBusy=
+        true;
+
+    if(
+        historyStack.length<=1
+    ){
+
+        showScreen(
+            "home"
+        );
+
+        historyStack=[
+            "home"
+        ];
+
+        setTimeout(
+            ()=>{
+                navigationBusy=
+                    false;
+            },
+            50
+        );
+
+        return;
+
+    }
+
+    historyStack.pop();
 
     const previous=
-        navigationHistory.pop();
+        historyStack[
+            historyStack.length-1
+        ];
 
-    if(previous){
+    isNavigatingBack=
+        true;
 
-        openScreen(
-            previous,
-            {
-                replace:true
-            }
-        );
+    showScreen(
+        previous
+    );
 
-    }else{
-
-        openScreen(
-            "home",
-            {
-                replace:true
-            }
-        );
-
-    }
+    isNavigatingBack=
+        false;
 
     setTimeout(
         ()=>{
-            navigationBusy=false;
+            navigationBusy=
+                false;
         },
         50
     );
 
 }
 
+
+/* =========================================================
+   RESET NAVIGATION
+========================================================= */
+
+function resetNavigation(
+    id
+){
+
+    historyStack=[
+        id
+    ];
+
+    isNavigatingBack=
+        true;
+
+    showScreen(
+        id
+    );
+
+    isNavigatingBack=
+        false;
+
+}
+
+
+/* =========================================================
+   BROWSER / ANDROID BACK
+========================================================= */
+
 function initializeNavigation(){
+
+    if(
+        navigationInitialized
+    ){
+
+        return;
+
+    }
+
+    navigationInitialized=
+        true;
+
+    /*
+       Vytvoríme jeden inicializačný
+       history state. Následné aplikáciové
+       obrazovky používajú vlastný stack.
+    */
+
+    if(
+        !window.history.state ||
+        window.history.state.catNose!==true
+    ){
+
+        window.history.replaceState(
+            {
+                catNose:true,
+                screen:"home"
+            },
+            "",
+            window.location.href
+        );
+
+    }
 
     window.addEventListener(
         "popstate",
@@ -5452,94 +8239,125 @@ function initializeNavigation(){
 
             event.preventDefault();
 
+            if(
+                navigationBusy
+            ){
+
+                return;
+
+            }
+
+            /*
+               Android/browser Back:
+               správa sa rovnako ako tlačidlo
+               SPÄŤ v aplikácii.
+            */
+
             goBack();
 
-        }
-    );
+            /*
+               Zostávame v aplikácii.
+               Pridáme nový history state,
+               aby ďalší Back opäť prešiel
+               cez aplikáciu a neukončil ju
+               okamžite.
+            */
 
-    document.addEventListener(
-        "keydown",
-        event=>{
-
-            if(
-                event.key!=="Escape"
-            ){
-                return;
-            }
-
-            if(
-                $("evidenceCameraModal")
-                ?.classList.contains(
-                    "show"
-                )
-            ){
-
-                closeEvidenceCamera();
-                return;
-
-            }
-
-            if(
-                $("funModal")
-                ?.classList.contains(
-                    "show"
-                )
-            ){
-
-                closeModal();
-                return;
-
-            }
-
-            if(
-                $("afterIncidentModal")
-                ?.classList.contains(
-                    "show"
-                )
-            ){
-
-                $("afterIncidentModal")
-                    .classList.remove(
-                        "show"
-                    );
-
-                return;
-
-            }
-
-            if(
-                $("fileModal")
-                ?.classList.contains(
-                    "show"
-                )
-            ){
-
-                closeFileModal();
-                return;
-
-            }
-
-            goBack();
+            window.history.pushState(
+                {
+                    catNose:true,
+                    screen:
+                        currentScreenId()
+                },
+                "",
+                window.location.href
+            );
 
         }
     );
 
 }
 
-window.addEventListener(
-    "popstate",
-    ()=>{
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
         if(
-            !navigationHistory.length
+            event.key!=="Escape"
         ){
+
             return;
+
         }
+
+        if(
+            $("evidenceCameraModal")
+            ?.classList.contains(
+                "show"
+            )
+        ){
+
+            closeEvidenceCamera();
+
+            return;
+
+        }
+
+        if(
+            $("funModal")
+            ?.classList.contains(
+                "show"
+            )
+        ){
+
+            closeModal();
+
+            return;
+
+        }
+
+        if(
+            $("afterIncidentModal")
+            ?.classList.contains(
+                "show"
+            )
+        ){
+
+            $("afterIncidentModal")
+                .classList.remove(
+                    "show"
+                );
+
+            return;
+
+        }
+
+        if(
+            $("fileModal")
+            ?.classList.contains(
+                "show"
+            )
+        ){
+
+            closeFileModal();
+
+            return;
+
+        }
+
+        goBack();
+
     }
 );
 
 
 /* =========================================================
-   MODAL OUTSIDE CLICK
+   CLICK OUTSIDE MODALS
 ========================================================= */
 
 document.addEventListener(
@@ -5590,51 +8408,16 @@ document.addEventListener(
             afterModal
         ){
 
-            afterModal.classList.remove(
-                "show"
-            );
+            afterModal
+                .classList
+                .remove(
+                    "show"
+                );
 
         }
 
     }
 );
-
-
-/* =========================================================
-   START SCAN PLACEHOLDER
-========================================================= */
-
-$("startScanButton")
-    ?.addEventListener(
-        "click",
-        ()=>{
-
-            showFun(
-                "📷 SKENOVANIE",
-                `
-                Kamera a AI identifikácia
-                budú pripojené v ďalšej fáze.
-                <br><br>
-                Aplikácia je na túto funkcionalitu
-                pripravená.
-                `,
-                []
-            );
-
-        }
-    );
-
-$("openCatsButton")
-    ?.addEventListener(
-        "click",
-        ()=>{
-
-            openScreen(
-                "cats"
-            );
-
-        }
-    );
 
 
 /* =========================================================
@@ -5656,6 +8439,66 @@ document.addEventListener(
         updateIncidentDate();
 
         selectIncidentEvidenceNone();
+
+        const addIncidentButton=
+            $("addIncidentButton");
+
+        if(
+            addIncidentButton
+        ){
+
+            addIncidentButton.addEventListener(
+                "click",
+                ()=>{
+
+                    if(
+                        !currentCatId
+                    ){
+
+                        showError(
+                            "Nie je vybraná mačka",
+                            "Najprv otvor konkrétny CAT FILE."
+                        );
+
+                        return;
+
+                    }
+
+                    const cat=
+                        cats.find(
+                            c=>c.id===
+                            currentCatId
+                        );
+
+                    if(!cat){
+
+                        showError(
+                            "Profil sa nenašiel",
+                            "Tento profil už neexistuje."
+                        );
+
+                        return;
+
+                    }
+
+                    $("incidentCatName")
+                        .textContent=
+                            "Čo dnes spáchal/a "+
+                            cat.name+
+                            "?";
+
+                    renderIncidentOptions();
+
+                    updateIncidentDate();
+
+                    openScreen(
+                        "incident"
+                    );
+
+                }
+            );
+
+        }
 
         initializeNavigation();
 

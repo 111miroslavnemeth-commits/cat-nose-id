@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#080b19">
-
 <title>CAT NOSE ID</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,11 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-
-/* =========================================================
-   BASE
-========================================================= */
-
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
@@ -33,22 +27,15 @@ body{
     color:#fff;
     font-family:"Nunito",sans-serif;
     background:
-        radial-gradient(
-            circle at 10% 0%,
-            rgba(42,116,255,.18),
-            transparent 32%
-        ),
-        radial-gradient(
-            circle at 92% 18%,
-            rgba(255,40,150,.14),
-            transparent 30%
-        ),
+        radial-gradient(circle at 10% 0%,rgba(42,116,255,.18),transparent 32%),
+        radial-gradient(circle at 92% 18%,rgba(255,40,150,.14),transparent 30%),
         #080b19;
 }
 
 button,
 input,
-textarea{
+textarea,
+select{
     font:inherit;
 }
 
@@ -81,11 +68,6 @@ button{
         transform:none;
     }
 }
-
-
-/* =========================================================
-   BRAND
-========================================================= */
 
 .brand{
     display:flex;
@@ -144,20 +126,41 @@ button{
     font-weight:700;
 }
 
+.language-control{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex:none;
+}
 
-/* =========================================================
-   GENERAL CARDS
-========================================================= */
+.language-label{
+    color:#9da9c3;
+    font-size:16px;
+}
+
+#languageSelect{
+    appearance:none;
+    -webkit-appearance:none;
+    padding:9px 28px 9px 11px;
+    border-radius:13px;
+    border:1px solid #344a77;
+    background:#10172e;
+    color:#fff;
+    font-family:"Nunito",sans-serif;
+    font-size:11px;
+    font-weight:800;
+    outline:none;
+}
+
+#languageSelect:focus{
+    border-color:#35baff;
+}
 
 .card{
     position:relative;
     overflow:hidden;
-    background:
-        linear-gradient(
-            145deg,
-            #181f3b,
-            #0b1023
-        );
+    background:linear-gradient(145deg,#181f3b,#0b1023);
     border:1px solid #2d416d;
     border-radius:29px;
     box-shadow:0 22px 65px rgba(0,0,0,.30);
@@ -168,25 +171,41 @@ button{
     margin-top:15px;
 }
 
-.muted{
-    color:#9da9c3;
+.home{
+    padding:35px 35px 30px;
+    text-align:center;
 }
 
-h1,
-h2,
-h3{
+.home-title{
+    margin:8px 0;
     font-family:"Baloo 2",sans-serif;
+    font-size:40px;
+    font-weight:800;
+    line-height:.95;
 }
 
+.home-description{
+    max-width:680px;
+    margin:0 auto 20px;
+    color:#99a6c1;
+    font-size:14px;
+    line-height:1.55;
+}
 
-/* =========================================================
-   CAT LINE ART
-========================================================= */
+.home-cat{
+    width:350px;
+    max-width:90%;
+    margin:10px auto 18px;
+}
 
-.line-cat{
-    display:block;
+.home-cat svg{
     width:100%;
     height:auto;
+}
+
+.line-cat{
+    width:100%;
+    height:100%;
 }
 
 .line-cat path,
@@ -200,311 +219,73 @@ h3{
 }
 
 .line-cat .pink{
-    stroke:#ff4baa;
-}
-
-.line-cat .blue{
-    stroke:#39baff;
-}
-
-
-/* =========================================================
-   HOME
-========================================================= */
-
-.home{
-    padding:32px 22px 28px;
-    text-align:center;
-}
-
-.home-cat{
-    position:relative;
-    width:min(370px,88%);
-    margin:0 auto 4px;
-}
-
-.home-title{
-    margin:4px 0 8px;
-    font-size:39px;
-    line-height:.95;
-    letter-spacing:-.03em;
-}
-
-.home-title span{
-    color:#ff4baa;
-}
-
-.home-description{
-    max-width:650px;
-    margin:0 auto;
-    color:#aeb9d1;
-    font-size:14px;
-    line-height:1.6;
-}
-
-.home-description strong{
-    color:#ff68b9;
-}
-
-.home-joke{
-    max-width:650px;
-    margin:15px auto 20px;
-    padding:12px 15px;
-    border:1px dashed #3b4f7d;
-    border-radius:18px;
-    color:#aab5ce;
-    font-size:12px;
-}
-
-.home-joke strong{
-    color:#fff;
-}
-
-
-/* =========================================================
-   DECORATIVE CATS
-========================================================= */
-
-.peek-cat{
-    position:absolute;
-    pointer-events:none;
-    z-index:5;
-}
-
-.peek-cat svg{
-    width:100%;
-    height:100%;
-}
-
-.peek-cat path,
-.peek-cat circle,
-.peek-cat line{
-    fill:none;
-    stroke:#fff;
-    stroke-width:4;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
-
-.peek-cat .pink{
     stroke:#ff49aa;
 }
 
-.peek-left{
-    width:170px;
-    height:170px;
-    left:-75px;
-    bottom:-52px;
-    transform:rotate(-8deg);
-}
-
-.peek-right{
-    width:165px;
-    height:165px;
-    right:-72px;
-    top:-53px;
-    transform:rotate(8deg);
-}
-
-
-/* =========================================================
-   NORMAL BUTTONS
-========================================================= */
-
 .action-button{
-    position:relative;
-    display:block;
     width:100%;
-    min-height:64px;
-    margin:12px auto;
-    padding:15px 20px;
-    border:1px solid #ff6abd;
-    border-radius:20px;
-    background:
-        linear-gradient(
-            135deg,
-            #ff62bb,
-            #df167f
-        );
+    min-height:56px;
+    padding:13px 18px;
+    border:1px solid #425e94;
+    border-radius:17px;
+    background:linear-gradient(135deg,#1e73ff,#1552d0);
     color:#fff;
-    font-family:"Baloo 2",sans-serif;
-    font-size:21px;
-    line-height:1.05;
-    font-weight:800;
-    text-align:center;
-    box-shadow:
-        0 12px 25px rgba(0,0,0,.30);
-    transition:
-        transform .12s ease,
-        filter .12s ease;
+    font-size:16px;
+    font-weight:900;
+    box-shadow:0 12px 28px rgba(25,90,255,.18);
 }
 
 .action-button:hover{
-    filter:brightness(1.05);
-}
-
-.action-button:active{
-    transform:scale(.985);
-}
-
-.action-button.blue{
-    border-color:#47c5ff;
-    background:
-        linear-gradient(
-            135deg,
-            #319eff,
-            #1647b8
-        );
+    filter:brightness(1.08);
 }
 
 .action-button.secondary{
-    border-color:#3d517d;
-    background:
-        linear-gradient(
-            145deg,
-            #202b4d,
-            #10172e
-        );
+    background:#121a32;
+    border-color:#344a77;
 }
 
-.action-button small{
-    display:block;
-    margin-top:5px;
-    color:rgba(255,255,255,.78);
-    font-family:"Nunito",sans-serif;
-    font-size:10px;
-    line-height:1.25;
+.action-button.pink{
+    background:linear-gradient(135deg,#ff3ca6,#d91c7f);
+    border-color:#ff55b1;
+}
+
+.action-button.blue{
+    background:linear-gradient(135deg,#24baff,#1976df);
+}
+
+.button-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.screen-title{
+    margin:0 0 8px;
+    font-family:"Baloo 2",sans-serif;
+    font-size:31px;
     font-weight:800;
 }
 
-
-/* =========================================================
-   INFO
-========================================================= */
-
-.info{
-    margin-top:17px;
-    padding:18px;
-    border-radius:22px;
-    background:#10162e;
-    border:1px solid #2c406c;
-    text-align:left;
+.screen-description{
+    color:#8e9bb8;
+    font-size:12px;
+    line-height:1.5;
 }
 
-.info h3{
-    margin:0 0 6px;
-}
-
-.info p{
-    margin:0;
-    color:#9eaac3;
-    font-size:13px;
-    line-height:1.55;
-}
-
-.status{
-    display:flex;
+.back-button{
+    display:inline-flex;
     align-items:center;
-    gap:9px;
-    margin-top:13px;
-    padding:13px 15px;
-    border-radius:18px;
-    background:#10162e;
-    border:1px solid #2d416d;
-    color:#aab6cf;
-    font-size:11px;
-    font-weight:800;
-}
-
-.status-dot{
-    width:9px;
-    height:9px;
-    flex:none;
-    border-radius:50%;
-    background:#4bf092;
-    box-shadow:0 0 12px rgba(75,240,146,.7);
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-.back-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:14px;
-}
-
-.back{
-    width:47px;
-    height:47px;
-    padding:0;
-    border-radius:17px;
-    background:#11172e;
-    border:1px solid #30446e;
-    color:#fff;
-    font-size:28px;
-}
-
-.back-title h2{
-    margin:0;
-    font-size:26px;
-    line-height:1;
-}
-
-.back-title small{
-    color:#7584a4;
-    font-size:10px;
-}
-
-
-/* =========================================================
-   FORMS
-========================================================= */
-
-.form{
-    padding:22px;
-}
-
-.field{
-    margin-bottom:16px;
-}
-
-.field label{
-    display:block;
-    margin-bottom:7px;
-    color:#aeb9d0;
-    font-size:11px;
-    font-weight:900;
-}
-
-.field input,
-.field textarea{
-    width:100%;
-    padding:14px;
-    border-radius:15px;
+    justify-content:center;
+    width:auto;
+    min-height:44px;
+    padding:10px 17px;
+    margin-bottom:13px;
+    border-radius:14px;
     border:1px solid #344a77;
-    background:#0b1126;
+    background:#10172e;
     color:#fff;
-    outline:none;
+    font-weight:800;
 }
-
-.field textarea{
-    min-height:105px;
-    resize:vertical;
-}
-
-.field input:focus,
-.field textarea:focus{
-    border-color:#35baff;
-}
-
-
-/* =========================================================
-   CAT LIST
-========================================================= */
 
 .cat-list{
     display:grid;
@@ -512,95 +293,101 @@ h3{
     margin-top:15px;
 }
 
-.cat-empty,
-.no-incidents{
-    padding:24px 15px;
-    text-align:center;
-    color:#7785a4;
-    border:1px dashed #344a77;
-    border-radius:20px;
-}
-
 .cat-item{
-    display:flex;
-    align-items:center;
     width:100%;
+    display:grid;
+    grid-template-columns:65px 1fr auto;
+    align-items:center;
     gap:12px;
     padding:11px;
-    text-align:left;
+    border-radius:20px;
+    border:1px solid #30456f;
+    background:#10172e;
     color:#fff;
-    background:#0b1228;
-    border:1px solid #293d68;
-    border-radius:21px;
+    text-align:left;
 }
 
-.cat-photo{
-    width:64px;
-    height:64px;
-    flex:none;
+.cat-item-photo{
+    width:65px;
+    height:65px;
+    border-radius:18px;
+    overflow:hidden;
+    background:#17203e;
     display:grid;
     place-items:center;
-    overflow:hidden;
-    border-radius:19px;
-    background:#17203c;
-    border:1px solid #40547e;
     font-size:30px;
 }
 
-.cat-photo img{
+.cat-item-photo img{
     width:100%;
     height:100%;
     object-fit:cover;
 }
 
-.cat-info{
-    flex:1;
-    min-width:0;
-}
-
-.cat-info strong{
-    display:block;
+.cat-item-name{
     font-family:"Baloo 2",sans-serif;
-    font-size:19px;
-    line-height:1;
+    font-size:21px;
+    font-weight:800;
 }
 
-.cat-info span{
-    display:block;
-    margin-top:4px;
-    color:#7584a4;
+.cat-item-info{
+    color:#8190ad;
     font-size:10px;
 }
 
-.cat-arrow{
-    color:#7081a7;
-    font-size:27px;
+.cat-item-arrow{
+    color:#5d7bb5;
+    font-size:22px;
 }
 
+.form-group{
+    margin-top:15px;
+}
 
-/* =========================================================
-   PHOTO
-========================================================= */
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    color:#9da9c3;
+    font-size:11px;
+    font-weight:800;
+}
 
-.photo-box{
-    padding:17px;
-    border:1px dashed #3d5486;
-    border-radius:22px;
-    background:#0b1127;
-    text-align:center;
+.text-input,
+.textarea{
+    width:100%;
+    border:1px solid #344a77;
+    border-radius:16px;
+    background:#0d142b;
+    color:#fff;
+    padding:13px;
+    outline:none;
+}
+
+.textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.text-input:focus,
+.textarea:focus{
+    border-color:#35baff;
+}
+
+.photo-input{
+    display:none;
 }
 
 .photo-preview{
-    width:120px;
-    height:120px;
-    margin:0 auto 13px;
+    width:150px;
+    height:150px;
+    margin:10px auto 15px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#17203e;
+    border:3px solid #ff2d99;
     display:grid;
     place-items:center;
-    overflow:hidden;
-    border-radius:50%;
-    background:#17203d;
-    border:2px solid #35baff;
-    font-size:45px;
+    font-size:55px;
 }
 
 .photo-preview img{
@@ -609,47 +396,122 @@ h3{
     object-fit:cover;
 }
 
-.file-input{
-    display:none;
+.profile{
+    padding:25px 20px;
+    text-align:center;
 }
 
+.profile-photo{
+    width:135px;
+    height:135px;
+    margin:0 auto 11px;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border-radius:50%;
+    background:#17203e;
+    border:3px solid #ff2d99;
+    box-shadow:0 0 30px rgba(255,45,153,.18);
+    font-size:52px;
+}
 
-/* =========================================================
-   INCIDENTS
-========================================================= */
+.profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile h2{
+    margin:0;
+    font-size:33px;
+}
+
+.profile-subtitle{
+    margin-top:5px;
+    color:#8795b2;
+    font-size:11px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    margin:18px 0;
+}
+
+.stat{
+    padding:13px 8px;
+    border-radius:17px;
+    background:#10172e;
+    border:1px solid #30456f;
+}
+
+.stat-value{
+    font-family:"Baloo 2",sans-serif;
+    font-size:23px;
+    font-weight:800;
+}
+
+.stat-label{
+    margin-top:2px;
+    color:#7584a2;
+    font-size:8px;
+    font-weight:800;
+}
+
+.extra-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-bottom:15px;
+}
+
+.extra-stat{
+    padding:12px;
+    border-radius:16px;
+    background:#0e152c;
+    border:1px solid #2c416b;
+}
+
+.extra-stat b{
+    display:block;
+    font-size:10px;
+    color:#8190ad;
+}
+
+.extra-stat span{
+    display:block;
+    margin-top:3px;
+    font-weight:900;
+}
 
 .incident-grid{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:11px;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
     margin-top:15px;
 }
 
 .incident-option{
-    min-height:142px;
-    padding:13px;
-    border-radius:22px;
+    min-height:150px;
+    padding:14px 9px;
+    border-radius:20px;
     border:1px solid #30456f;
-    background:#0b1228;
+    background:#10172e;
     color:#fff;
-    text-align:left;
+    text-align:center;
 }
 
 .incident-option.selected{
     border-color:#ff42a5;
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,49,155,.14),
-            #0b1228
-        );
+    background:linear-gradient(145deg,rgba(255,49,155,.14),#0b1228);
     box-shadow:0 0 22px rgba(255,49,155,.10);
 }
 
 .incident-art{
     width:64px;
     height:58px;
-    margin-bottom:6px;
+    margin:0 auto 6px;
 }
 
 .incident-art svg{
@@ -696,10 +558,64 @@ h3{
     line-height:1.35;
 }
 
+.incident-list{
+    margin-top:15px;
+    display:grid;
+    gap:9px;
+}
 
-/* =========================================================
-   EVIDENCE
-========================================================= */
+.incident-card{
+    display:grid;
+    grid-template-columns:60px 1fr auto;
+    align-items:center;
+    gap:11px;
+    padding:10px;
+    border-radius:18px;
+    background:#10172e;
+    border:1px solid #2e426b;
+}
+
+.incident-icon{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    display:grid;
+    place-items:center;
+    background:#17203e;
+}
+
+.incident-icon svg{
+    width:45px;
+    height:45px;
+}
+
+.incident-text strong{
+    display:block;
+    font-size:13px;
+}
+
+.incident-text span{
+    display:block;
+    margin-top:3px;
+    color:#7887a5;
+    font-size:9px;
+}
+
+.incident-count{
+    font-family:"Baloo 2",sans-serif;
+    font-size:20px;
+    font-weight:900;
+}
+
+.no-incidents{
+    padding:20px;
+    text-align:center;
+    border-radius:18px;
+    background:#10172e;
+    border:1px solid #2e426b;
+    color:#8290ad;
+    font-size:11px;
+}
 
 .evidence-panel{
     margin:18px 0;
@@ -761,357 +677,6 @@ h3{
     text-align:center;
 }
 
-
-/* =========================================================
-   CAT FILE
-========================================================= */
-
-.profile{
-    padding:25px 20px;
-    text-align:center;
-}
-
-.profile-photo{
-    width:135px;
-    height:135px;
-    margin:0 auto 11px;
-    display:grid;
-    place-items:center;
-    overflow:hidden;
-    border-radius:50%;
-    background:#17203e;
-    border:3px solid #ff2d99;
-    box-shadow:0 0 30px rgba(255,45,153,.18);
-    font-size:52px;
-}
-
-.profile-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.profile h2{
-    margin:0;
-    font-size:33px;
-}
-
-.badge{
-    display:inline-block;
-    margin-top:5px;
-    padding:6px 11px;
-    border-radius:99px;
-    background:#192449;
-    border:1px solid #40527f;
-    color:#bbc8e8;
-    font-size:9px;
-    font-weight:900;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:18px;
-}
-
-.stat{
-    padding:14px;
-    border-radius:19px;
-    background:#0b1228;
-    border:1px solid #293d68;
-}
-
-.stat strong{
-    display:block;
-    font-family:"Baloo 2",sans-serif;
-    font-size:29px;
-    line-height:1;
-}
-
-.stat span{
-    display:block;
-    margin-top:5px;
-    color:#7786a4;
-    font-size:9px;
-    font-weight:900;
-    text-transform:uppercase;
-}
-
-.extra-stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-}
-
-.mini-stat{
-    padding:12px;
-    border-radius:18px;
-    background:#0b1228;
-    border:1px solid #293d68;
-}
-
-.mini-stat b{
-    display:block;
-    color:#ff61b5;
-    font-family:"Baloo 2",sans-serif;
-    font-size:13px;
-}
-
-.mini-stat span{
-    display:block;
-    margin-top:4px;
-    color:#7786a4;
-    font-size:8px;
-    font-weight:900;
-}
-
-.register-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-
-.register-title h3{
-    margin:0;
-}
-
-.incident-list{
-    display:grid;
-    gap:9px;
-    margin-top:14px;
-}
-
-.incident-card{
-    display:grid;
-    grid-template-columns:64px 1fr auto;
-    align-items:center;
-    gap:10px;
-    min-height:80px;
-    padding:9px;
-    border-radius:21px;
-    background:#0b1228;
-    border:1px solid #293d68;
-}
-
-.incident-icon{
-    width:60px;
-    height:60px;
-    display:grid;
-    place-items:center;
-    border-radius:18px;
-    background:#17203c;
-    border:1px solid #3d517d;
-}
-
-.incident-icon svg{
-    width:45px;
-    height:45px;
-}
-
-.incident-icon path,
-.incident-icon circle,
-.incident-icon line,
-.incident-icon rect,
-.incident-icon ellipse{
-    fill:none;
-    stroke:#fff;
-    stroke-width:3.5;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
-
-.incident-icon .pink{
-    stroke:#ff4baa;
-}
-
-.incident-icon .blue{
-    stroke:#39baff;
-}
-
-.incident-icon .yellow{
-    stroke:#ffd34d;
-}
-
-.incident-text strong{
-    display:block;
-    font-family:"Baloo 2",sans-serif;
-    font-size:17px;
-    line-height:1;
-}
-
-.incident-text span{
-    display:block;
-    margin-top:4px;
-    color:#7180a0;
-    font-size:9px;
-}
-
-.incident-count{
-    min-width:42px;
-    color:#ff61b5;
-    font-family:"Baloo 2",sans-serif;
-    font-size:23px;
-    text-align:center;
-}
-
-.incident-evidence{
-    margin-top:7px;
-}
-
-.incident-evidence button{
-    padding:5px 8px;
-    border-radius:10px;
-    border:1px solid #3b517d;
-    background:#131d3a;
-    color:#aab9d7;
-    font-size:8px;
-    font-weight:900;
-}
-
-
-/* =========================================================
-   SCAN - READY FOR REAL AI
-========================================================= */
-
-.scan-card{
-    padding:12px;
-}
-
-.camera{
-    position:relative;
-    width:100%;
-    aspect-ratio:3/4;
-    overflow:hidden;
-    border-radius:26px;
-    background:#04060c;
-    border:1px solid #354a76;
-}
-
-.camera-placeholder{
-    position:absolute;
-    inset:0;
-    display:grid;
-    place-items:center;
-    text-align:center;
-    padding:25px;
-    color:#8795b5;
-}
-
-.camera-placeholder-content{
-    width:min(320px,85%);
-}
-
-.camera-placeholder strong{
-    display:block;
-    margin-top:8px;
-    color:#dfe5f4;
-    font-family:"Baloo 2",sans-serif;
-    font-size:22px;
-}
-
-.camera-placeholder span{
-    display:block;
-    margin-top:4px;
-    font-size:11px;
-    line-height:1.5;
-}
-
-.scan-frame{
-    position:absolute;
-    left:50%;
-    top:48%;
-    width:min(58%,380px);
-    aspect-ratio:1;
-    transform:translate(-50%,-50%);
-    border:3px solid #35baff;
-    border-radius:50%;
-    box-shadow:
-        0 0 0 999px rgba(0,0,0,.22),
-        0 0 32px rgba(53,186,255,.45);
-}
-
-.scan-label,
-.scan-message{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    width:max-content;
-    max-width:90%;
-    padding:9px 13px;
-    border-radius:99px;
-    background:#080d20ee;
-    border:1px solid #40547f;
-    text-align:center;
-    font-size:10px;
-    font-weight:900;
-}
-
-.scan-label{
-    top:14%;
-}
-
-.scan-message{
-    bottom:17px;
-}
-
-.ai-waiting{
-    margin:14px 5px 5px;
-    padding:13px;
-    border-radius:17px;
-    background:#10172e;
-    border:1px solid #30456f;
-    color:#8d9ab7;
-    font-size:10px;
-    line-height:1.5;
-    text-align:center;
-}
-
-
-/* =========================================================
-   RESULT
-========================================================= */
-
-.result,
-.error{
-    padding:28px 20px;
-    text-align:center;
-}
-
-.result-cat{
-    width:280px;
-    max-width:85%;
-    margin:0 auto 5px;
-}
-
-.result h2{
-    margin:0;
-    font-size:33px;
-}
-
-.confidence{
-    width:108px;
-    height:108px;
-    margin:17px auto;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    border:7px solid #ff2d99;
-    font-family:"Baloo 2",sans-serif;
-    font-size:28px;
-}
-
-.error-icon{
-    font-size:50px;
-}
-
-
-/* =========================================================
-   MODALS
-========================================================= */
-
 .modal-backdrop{
     position:fixed;
     inset:0;
@@ -1119,9 +684,9 @@ h3{
     display:none;
     align-items:center;
     justify-content:center;
-    padding:14px;
+    padding:15px;
     background:rgba(2,4,12,.78);
-    backdrop-filter:blur(8px);
+    backdrop-filter:blur(7px);
 }
 
 .modal-backdrop.show{
@@ -1129,138 +694,100 @@ h3{
 }
 
 .modal{
-    width:min(760px,100%);
+    width:min(700px,100%);
     max-height:92vh;
     overflow:auto;
-    padding:20px;
+    padding:22px;
     border-radius:25px;
-    background:
-        linear-gradient(
-            145deg,
-            #181f3b,
-            #0b1023
-        );
-    border:1px solid #354a76;
-    box-shadow:0 30px 100px rgba(0,0,0,.55);
+    background:#11182f;
+    border:1px solid #344a77;
+    box-shadow:0 30px 90px rgba(0,0,0,.5);
 }
 
 .modal h2{
-    margin-top:0;
+    margin:0 0 10px;
+    font-family:"Baloo 2",sans-serif;
+    font-size:27px;
 }
 
 .modal p{
-    color:#9da9c3;
-    font-size:12px;
-    line-height:1.55;
-}
-
-.choice-grid{
-    display:grid;
-    gap:10px;
-    margin:15px 0;
-}
-
-.choice{
-    width:100%;
-    padding:14px;
-    border-radius:18px;
-    border:1px solid #30456f;
-    background:#0b1228;
-    color:#fff;
-    text-align:left;
-}
-
-.choice strong{
-    display:block;
-    font-family:"Baloo 2",sans-serif;
-    font-size:17px;
-}
-
-.choice span{
-    display:block;
-    margin-top:4px;
-    color:#7786a5;
-    font-size:10px;
-    line-height:1.4;
+    color:#8e9bb8;
+    font-size:11px;
+    line-height:1.5;
 }
 
 .modal-actions{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr;
     gap:9px;
     margin-top:15px;
 }
 
-
-/* =========================================================
-   EVIDENCE CAMERA
-========================================================= */
-
-.evidence-camera-wrap{
-    position:relative;
-    width:100%;
-    overflow:hidden;
-    border-radius:22px;
-    background:#03050a;
-    border:1px solid #354a76;
+.fun-choices{
+    display:grid;
+    gap:9px;
+    margin-top:15px;
 }
 
-#evidenceCameraVideo{
-    display:block;
+.fun-choice{
     width:100%;
-    max-height:55vh;
+    padding:13px;
+    border-radius:15px;
+    border:1px solid #344a77;
+    background:#10172e;
+    color:#fff;
+    font-weight:800;
+}
+
+.evidence-camera{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/3;
+    overflow:hidden;
+    border-radius:20px;
+    background:#05070e;
+    border:1px solid #344a77;
+}
+
+.evidence-camera video{
+    width:100%;
+    height:100%;
     object-fit:cover;
 }
 
 .evidence-camera-frame{
     position:absolute;
-    left:50%;
-    top:50%;
-    width:70%;
-    aspect-ratio:4/3;
-    transform:translate(-50%,-50%);
-    border:2px solid rgba(53,186,255,.8);
-    border-radius:22px;
+    inset:15%;
+    border:2px dashed rgba(255,255,255,.6);
+    border-radius:20px;
     pointer-events:none;
 }
 
 .evidence-camera-status{
-    margin-top:10px;
-    padding:10px;
-    border-radius:14px;
-    background:#10172e;
-    border:1px solid #30456f;
-    color:#9aa8c4;
-    font-size:10px;
+    margin-top:9px;
+    color:#8e9bb8;
     text-align:center;
+    font-size:10px;
 }
 
 .evidence-preview{
-    margin-top:10px;
+    margin-top:12px;
 }
 
 .evidence-preview img,
 .evidence-preview video{
     width:100%;
-    max-height:300px;
-    object-fit:contain;
-    border-radius:17px;
-    background:#05070e;
+    border-radius:18px;
 }
 
-
-/* =========================================================
-   CRIMINAL FILE
-========================================================= */
-
 .criminal-paper{
+    max-width:800px;
+    margin:auto;
     position:relative;
     overflow:hidden;
     background:#f1ead8;
     color:#171717;
-    border-radius:7px;
     padding:30px 28px;
-    box-shadow:0 20px 70px rgba(0,0,0,.5);
     font-family:Georgia,"Times New Roman",serif;
 }
 
@@ -1306,7 +833,6 @@ h3{
     padding:7px 10px;
     font-weight:900;
     font-size:14px;
-    opacity:.88;
 }
 
 .paper-section{
@@ -1316,11 +842,39 @@ h3{
 }
 
 .paper-section h3{
-    font-family:Georgia,serif;
     font-size:16px;
-    margin:0 0 8px;
-    text-transform:uppercase;
-    letter-spacing:.05em;
+}
+
+.paper-profile{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:15px;
+}
+
+.paper-photo{
+    width:100px;
+    height:100px;
+    border:2px solid #222;
+    display:grid;
+    place-items:center;
+    font-size:42px;
+    overflow:hidden;
+}
+
+.paper-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.paper-fields{
+    font-size:11px;
+    line-height:1.7;
+}
+
+.paper-fields b{
+    display:inline-block;
+    min-width:145px;
 }
 
 .paper-table{
@@ -1338,39 +892,6 @@ h3{
 
 .paper-table th{
     background:#ded5c1;
-}
-
-.paper-profile{
-    display:grid;
-    grid-template-columns:100px 1fr;
-    gap:15px;
-}
-
-.paper-photo{
-    width:100px;
-    height:100px;
-    border:2px solid #222;
-    display:grid;
-    place-items:center;
-    font-size:42px;
-    overflow:hidden;
-    background:#d9d0bd;
-}
-
-.paper-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.paper-fields{
-    font-size:11px;
-    line-height:1.7;
-}
-
-.paper-fields b{
-    display:inline-block;
-    min-width:145px;
 }
 
 .paper-notice{
@@ -1403,11 +924,6 @@ h3{
     text-align:center;
 }
 
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
 .footer{
     padding:25px 10px 0;
     text-align:center;
@@ -1419,13 +935,7 @@ h3{
     color:#8290ad;
 }
 
-
-/* =========================================================
-   DESKTOP
-========================================================= */
-
 @media(min-width:760px){
-
     .app{
         padding-top:30px;
     }
@@ -1449,37 +959,9 @@ h3{
     .action-button{
         max-width:760px;
     }
-
-    .peek-left{
-        width:220px;
-        height:220px;
-        left:-105px;
-        bottom:-70px;
-    }
-
-    .peek-right{
-        width:215px;
-        height:215px;
-        right:-100px;
-        top:-72px;
-    }
-
-    .incident-grid{
-        grid-template-columns:repeat(4,1fr);
-    }
-
-    .incident-option{
-        min-height:160px;
-    }
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
 @media(max-width:600px){
-
     .app{
         padding:13px 10px 40px;
     }
@@ -1491,6 +973,20 @@ h3{
 
     .brand-title{
         font-size:24px;
+    }
+
+    .brand-subtitle{
+        display:none;
+    }
+
+    .language-control{
+        align-self:flex-start;
+    }
+
+    #languageSelect{
+        max-width:110px;
+        padding:8px 24px 8px 8px;
+        font-size:10px;
     }
 
     .home{
@@ -1511,18 +1007,8 @@ h3{
         font-size:18px;
     }
 
-    .peek-left{
-        width:115px;
-        height:115px;
-        left:-52px;
-        bottom:-35px;
-    }
-
-    .peek-right{
-        width:110px;
-        height:110px;
-        right:-50px;
-        top:-34px;
+    .button-row{
+        grid-template-columns:1fr;
     }
 
     .incident-grid{
@@ -1572,9 +1058,7 @@ h3{
     }
 }
 
-
 @media(max-width:370px){
-
     .incident-grid{
         grid-template-columns:1fr;
     }
@@ -1587,26 +1071,17 @@ h3{
         grid-template-columns:1fr;
     }
 }
-
 </style>
 </head>
-
 
 <body>
 
 <div class="app">
 
-
-<!-- =========================================================
-   BRAND
-========================================================= -->
-
 <header class="brand">
 
 <div class="brand-logo">
-
 <svg viewBox="0 0 100 100">
-
 <path d="
 M22 47
 L18 20
@@ -1617,56 +1092,40 @@ L78 47
 Q82 72 50 82
 Q18 72 22 47Z
 "/>
-
 <circle cx="38" cy="53" r="3"/>
 <circle cx="62" cy="53" r="3"/>
-
-<path
-class="pink"
-d="M43 63 Q50 70 57 63"
-/>
-
+<path class="pink" d="M43 63 Q50 70 57 63"/>
 </svg>
-
 </div>
 
 <div>
-
-<div class="brand-kicker">
-CAT NOSE ID
-</div>
-
-<div class="brand-title">
-CAT NOSE ID
-</div>
-
+<div class="brand-kicker">CAT NOSE ID</div>
+<div class="brand-title">CAT NOSE ID</div>
 <div class="brand-subtitle">
 Najzbytočnejší biometrický skener na planéte.
 </div>
+</div>
 
+<div class="language-control">
+<label for="languageSelect" class="language-label">🌐</label>
+<select id="languageSelect" aria-label="Jazyk aplikácie">
+<option value="sk">Slovenčina</option>
+<option value="en">English</option>
+<option value="cs">Čeština</option>
+<option value="de">Deutsch</option>
+<option value="it">Italiano</option>
+</select>
 </div>
 
 </header>
 
 
-<!-- =========================================================
-   HOME
-========================================================= -->
-
-<section
-id="home"
-class="screen active"
->
+<section id="home" class="screen active">
 
 <div class="card home">
 
-
-<div class="peek-cat peek-left">
-
-<svg
-class="line-cat"
-viewBox="0 0 260 300"
->
+<div class="home-cat">
+<svg class="line-cat" viewBox="0 0 260 300">
 
 <path d="
 M91 241
@@ -1701,19 +1160,14 @@ Q153 273 160 286
 <circle cx="108" cy="148" r="3"/>
 <circle cx="168" cy="148" r="3"/>
 
-<path
-class="pink"
-d="M133 163 Q138 170 144 163"
-/>
+<path class="pink" d="M133 163 Q138 170 144 163"/>
 
 <path d="
 M113 178
 Q138 192 164 178
 "/>
 
-<path
-class="pink"
-d="
+<path class="pink" d="
 M93 167 L51 158
 M94 178 L50 179
 M181 167 L221 158
@@ -1721,755 +1175,158 @@ M181 178 L224 179
 "/>
 
 </svg>
-
 </div>
-
-
-<div class="peek-cat peek-right">
-
-<svg
-class="line-cat"
-viewBox="0 0 260 300"
->
-
-<path d="
-M91 241
-Q62 225 63 189
-L67 137
-L54 94
-L89 111
-Q109 91 132 91
-Q156 91 176 111
-L211 94
-L198 137
-L202 187
-Q204 226 175 241
-Q143 259 110 250
-Q98 247 91 241
-"/>
-
-<circle cx="108" cy="148" r="3"/>
-<circle cx="168" cy="148" r="3"/>
-
-<path
-class="pink"
-d="M133 163 Q138 170 144 163"
-/>
-
-<path d="
-M113 178
-Q138 192 164 178
-"/>
-
-</svg>
-
-</div>
-
-
-<div class="home-cat">
-
-<svg
-class="line-cat"
-viewBox="0 0 360 300"
->
-
-<path d="
-M112 245
-Q76 228 79 187
-L84 133
-L69 79
-L111 101
-Q135 76 166 77
-Q197 76 222 101
-L264 79
-L249 133
-L254 185
-Q257 226 221 245
-Q183 266 145 256
-Q126 252 112 245
-"/>
-
-<path
-class="blue"
-d="
-M218 239
-Q288 245 300 191
-Q307 156 279 151
-Q259 147 257 165
-"/>
-
-<path d="
-M119 248
-Q117 270 109 286
-M184 254
-Q185 271 192 286
-"/>
-
-<circle cx="132" cy="145" r="4"/>
-<circle cx="201" cy="145" r="4"/>
-
-<path
-class="pink"
-d="
-M160 159
-Q166 151 172 159
-Q166 168 160 159
-"/>
-
-<path d="
-M166 166
-Q166 181 150 184
-M166 166
-Q166 181 182 184
-"/>
-
-<path d="
-M125 169 L76 157
-M126 181 L73 181
-M207 169 L258 157
-M206 181 L260 181
-"/>
-
-<path
-class="pink"
-d="
-M225 219
-Q241 205 255 217
-Q263 227 253 235
-Q240 245 227 235
-Q219 229 225 219
-"/>
-
-</svg>
-
-</div>
-
 
 <h1 class="home-title">
-KTO JE TEN <span>PÁCHATEĽ?</span>
+KTO JE TEN<br>PÁCHATEĽ?
 </h1>
 
-
 <p class="home-description">
-
-Nasmeruj kameru na
-<strong>mačku / páchateľa</strong>
-a nechaj náš úplne zbytočný biometrický systém
-pokúsiť sa zistiť, kto to je.
-
+Nasmeruj kameru na mačku / páchateľa a nechaj náš úplne zbytočný biometrický systém pokúsiť sa zistiť, kto to je.
 </p>
 
-
-<div class="home-joke">
-
-<strong>Upozornenie:</strong>
-Táto aplikácia nemá reklamy,
-nemá platby,
-nemá predplatné
-a nemá prakticky žiadny rozumný účel.
-
-</div>
-
+<div class="button-row">
 
 <button
+id="startScanButton"
+class="action-button pink"
+type="button"
+>
+📷 SKENOVAŤ MAČKU
+</button>
+
+<button
+id="openCatsButton"
 class="action-button"
 type="button"
-onclick="openScreen('scan')"
 >
-
-IDENTIFIKOVAŤ MAČKU / PÁCHATEĽA
-
-<small>
-Nasmeruj kameru a začni vyšetrovanie.
-</small>
-
+🐱 MOJE MAČKY
 </button>
 
-
-<button
-class="action-button secondary"
-type="button"
-onclick="openScreen('about')"
->
-
-O APLIKÁCII
-
-</button>
-
-
-<div class="info">
-
-<h3>
-Prečo táto aplikácia existuje?
-</h3>
-
-<p>
-Je vytvorená výhradne pre zábavu.
-Neobsahuje reklamné bannery a nikdy ich obsahovať nebude.
-Nemá žiadnu platobnú možnosť a nikdy ju mať nebude.
-Je to najzbytočnejší biometrický skener mačiek na planéte.
-</p>
-
 </div>
-
-
-<div class="info">
-
-<h3>
-Prečo FUN ON?
-</h3>
-
-<p>
-Pretože niekto musel vytvoriť systém,
-ktorý bude brať mačaciu kriminalitu úplne vážne.
-A keď už máme FunOn Park Bratislava,
-bolo by škoda nechať mačky bez vlastného vyšetrovacieho systému.
-</p>
-
-</div>
-
-
-<div class="status">
-
-<span class="status-dot"></span>
-
-CAT NOSE ID je pripravené na vyšetrovanie.
-
-</div>
-
-</div>
-
-
-<!-- MY CATS -->
-
-<div class="card section">
-
-<h2 style="margin:0">
-Moje mačky
-</h2>
-
-<p class="muted">
-Registrovaní mačací páchatelia a ich CAT FILE.
-</p>
-
-<div
-id="catList"
-class="cat-list"
-></div>
-
-
-<button
-class="action-button"
-type="button"
-onclick="openScreen('newCat')"
->
-
-PRIDAŤ MAČKU / PÁCHATEĽA
-
-</button>
 
 </div>
 
 </section>
 
 
-<!-- =========================================================
-   ABOUT
-========================================================= -->
-
-<section
-id="about"
-class="screen"
->
-
-<div class="back-row">
-
-<button
-class="back"
-type="button"
-onclick="goBack()"
->
-‹
-</button>
-
-<div class="back-title">
-
-<h2>
-O aplikácii
-</h2>
-
-<small>
-CAT NOSE ID
-</small>
-
-</div>
-
-</div>
-
+<section id="cats" class="screen">
 
 <div class="card section">
 
-<h2>
-Prečo CAT NOSE ID?
-</h2>
-
-<p>
-CAT NOSE ID vznikol jednoducho preto,
-že mačky si zaslúžia vlastný vyšetrovací systém.
-</p>
-
-<p>
-Aplikácia je vytvorená pre zábavu.
-Žiadne reklamy.
-Žiadne platby.
-Žiadne predplatné.
-Len mačky, nosy, vyšetrovanie
-a podozrivo veľké množstvo evidovaných zločinov.
-</p>
-
-<p>
-Aplikáciu pre vašu zábavu vytvorila spoločnosť
-<strong>FUN ON</strong>
-v súvislosti s projektom
-<strong>FunOn Park Bratislava</strong>.
-</p>
-
-<p>
-Ak vás niekedy zaujímalo,
-čo by sa stalo, keby niekto vytvoril
-kriminalistický register pre mačky,
-teraz to už viete.
-</p>
-
 <button
-class="action-button secondary"
+class="back-button"
 type="button"
 onclick="goBack()"
 >
-
-SPÄŤ
-
+← SPÄŤ
 </button>
+
+<h2 class="screen-title">
+MOJE MAČKY
+</h2>
+
+<p class="screen-description">
+Tvoje mačky zostávajú uložené lokálne v tomto zariadení.
+</p>
+
+<button
+class="action-button pink"
+type="button"
+onclick="openNewCat()"
+>
+＋ PRIDAŤ NOVÚ MAČKU
+</button>
+
+<div id="catList" class="cat-list"></div>
 
 </div>
 
 </section>
 
 
-<!-- =========================================================
-   NEW CAT
-========================================================= -->
+<section id="newCat" class="screen">
 
-<section
-id="newCat"
-class="screen"
->
-
-<div class="back-row">
+<div class="card section">
 
 <button
-class="back"
+class="back-button"
 type="button"
 onclick="goBack()"
 >
-‹
+← SPÄŤ
 </button>
 
-<div class="back-title">
-
-<h2>
-Nový páchateľ
+<h2 class="screen-title">
+NOVÁ MAČKA
 </h2>
 
-<small>
-Zaregistruj mačku do databázy.
-</small>
+<p class="screen-description">
+Vytvor profil mačky.
+</p>
 
+<div class="photo-preview" id="photoPreview">
+🐱
 </div>
 
-</div>
-
-
-<div class="card form">
-
-<div style="max-width:260px;margin:auto">
-
-<svg
-class="line-cat"
-viewBox="0 0 360 300"
+<label
+class="action-button secondary"
+style="display:block;text-align:center"
 >
+📷 VYBRAŤ FOTOGRAFIU
+<input
+id="catPhoto"
+class="photo-input"
+type="file"
+accept="image/*"
+capture="environment"
+>
+</label>
 
-<path d="
-M112 245
-Q76 228 79 187
-L84 133
-L69 79
-L111 101
-Q135 76 166 77
-Q197 76 222 101
-L264 79
-L249 133
-L254 185
-Q257 226 221 245
-Q183 266 145 256
-Q126 252 112 245
-"/>
+<div class="form-group">
 
-<path
-class="blue"
-d="
-M218 239
-Q288 245 300 191
-Q307 156 279 151
-Q259 147 257 165
-"/>
-
-<circle cx="132" cy="145" r="4"/>
-<circle cx="201" cy="145" r="4"/>
-
-<path
-class="pink"
-d="
-M160 159
-Q166 151 172 159
-Q166 168 160 159Z
-"/>
-
-<path d="
-M166 166
-Q166 181 150 184
-M166 166
-Q166 181 182 184
-"/>
-
-</svg>
-
-</div>
-
-
-<div class="field">
-
-<label>
-Meno mačky / páchateľa
+<label for="catName">
+MENO MAČKY
 </label>
 
 <input
 id="catName"
+class="text-input"
 type="text"
-placeholder="Napríklad Muro"
-autocomplete="off"
-/>
+maxlength="40"
+placeholder="Napr. Muro"
+>
 
 </div>
 
-
-<div class="field">
-
-<label>
-Profilová fotografia
-</label>
-
-<div class="photo-box">
-
-<div
-id="photoPreview"
-class="photo-preview"
->
-🐱
-</div>
-
-<input
-id="catPhoto"
-class="file-input"
-type="file"
-accept="image/*"
-onchange="previewCatPhoto(event)"
->
+<div style="margin-top:15px">
 
 <button
-class="action-button blue"
+class="action-button pink"
 type="button"
-onclick="document.getElementById('catPhoto').click()"
+onclick="saveNewCat()"
 >
-
-PRIDAŤ FOTOGRAFIU
-
+ULOŽIŤ MAČKU
 </button>
 
 </div>
-
-</div>
-
-
-<button
-class="action-button"
-type="button"
-onclick="saveCat()"
->
-
-ULOŽIŤ MAČKU / PÁCHATEĽA
-
-</button>
 
 </div>
 
 </section>
 
 
-<!-- =========================================================
-   SCAN
-========================================================= -->
+<section id="catFile" class="screen">
 
-<section
-id="scan"
-class="screen"
->
-
-<div class="back-row">
+<div class="card profile">
 
 <button
-class="back"
+class="back-button"
 type="button"
 onclick="goBack()"
 >
-‹
+← SPÄŤ
 </button>
-
-<div class="back-title">
-
-<h2>
-Skenovanie
-</h2>
-
-<small>
-Mačka / páchateľ
-</small>
-
-</div>
-
-</div>
-
-
-<div class="card scan-card">
-
-<div class="camera">
-
-<div class="camera-placeholder">
-
-<div class="camera-placeholder-content">
-
-<svg
-class="line-cat"
-viewBox="0 0 360 300"
->
-
-<path d="
-M112 245
-Q76 228 79 187
-L84 133
-L69 79
-L111 101
-Q135 76 166 77
-Q197 76 222 101
-L264 79
-L249 133
-L254 185
-Q257 226 221 245
-Q183 266 145 256
-Q126 252 112 245
-"/>
-
-<path
-class="blue"
-d="
-M218 239
-Q288 245 300 191
-Q307 156 279 151
-Q259 147 257 165
-"/>
-
-<circle cx="132" cy="145" r="4"/>
-<circle cx="201" cy="145" r="4"/>
-
-<path
-class="pink"
-d="
-M160 159
-Q166 151 172 159
-Q166 168 160 159Z
-"/>
-
-<path d="
-M166 166
-Q166 181 150 184
-M166 166
-Q166 181 182 184
-"/>
-
-</svg>
-
-<strong>
-SKENER ČAKÁ NA AI
-</strong>
-
-<span>
-Skutočné rozpoznávanie mačiek
-bude pripojené v ďalšej technickej fáze.
-</span>
-
-</div>
-
-</div>
-
-<div class="scan-frame"></div>
-
-<div class="scan-label">
-ZÓNA MAČKA / PÁCHATEĽ
-</div>
-
-<div
-id="scanMessage"
-class="scan-message"
->
-AI modul zatiaľ nie je pripojený.
-</div>
-
-</div>
-
-
-<div class="ai-waiting">
-
-<strong>
-🔵 SKENOVANIE JE PRIPRAVENÉ
-</strong>
-
-<br>
-
-Kamera a AI budú neskôr napojené priamo na tento modul.
-Aplikácia nebude vytvárať falošné výsledky,
-kým nebude k dispozícii skutočné rozpoznávanie.
-
-</div>
-
-</div>
-
-
-<div class="card section">
-
-<h3 style="margin-top:0">
-Ako na to?
-</h3>
-
-<p class="muted">
-
-Nasmeruj mačku / páchateľa do kruhu.
-Po pripojení AI systém nájde nos,
-vyberie vhodný záber
-a porovná ho s registrovanými profilmi.
-
-</p>
-
-
-<button
-class="action-button secondary"
-type="button"
-onclick="showFun(
-'🔵 AI MODUL',
-'Skutočné skenovanie zatiaľ nie je aktívne. Táto obrazovka je pripravená na napojenie kamery a AI.',
-[]
-)"
->
-
-AI ZATIAĽ NIE JE PRIPOJENÁ
-
-</button>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-   CAT FILE
-========================================================= -->
-
-<section
-id="catFile"
-class="screen"
->
-
-<div class="back-row">
-
-<button
-class="back"
-type="button"
-onclick="goBack()"
->
-‹
-</button>
-
-<div class="back-title">
-
-<h2>
-CAT FILE
-</h2>
-
-<small>
-Profil mačky / páchateľa
-</small>
-
-</div>
-
-</div>
-
-
-<div
-id="profileCard"
-class="card profile"
->
-
-<div class="peek-cat peek-right">
-
-<svg
-class="line-cat"
-viewBox="0 0 260 300"
->
-
-<path d="
-M91 241
-Q62 225 63 189
-L67 137
-L54 94
-L89 111
-Q109 91 132 91
-Q156 91 176 111
-L211 94
-L198 137
-L202 187
-Q204 226 175 241
-Q143 259 110 250
-Q98 247 91 241
-"/>
-
-<path d="
-M95 241
-Q79 270 62 280
-M174 241
-Q194 267 217 276
-"/>
-
-<circle cx="108" cy="148" r="3"/>
-<circle cx="168" cy="148" r="3"/>
-
-<path
-class="pink"
-d="M133 163 Q138 170 144 163"
-/>
-
-</svg>
-
-</div>
-
 
 <div
 id="profilePhoto"
@@ -2478,397 +1335,229 @@ class="profile-photo"
 🐱
 </div>
 
-
 <h2 id="profileName">
-Muro
+—
 </h2>
 
-
-<div
-class="badge"
-id="profileBadge"
->
-AKTÍVNY PÁCHATEĽ
+<div class="profile-subtitle">
+CAT NOSE ID PROFILE
 </div>
-
 
 <div class="stats">
 
 <div class="stat">
-
-<strong id="totalIncidents">
+<div
+id="totalIncidents"
+class="stat-value"
+>
 0
-</strong>
-
-<span>
-incidentov
-</span>
-
 </div>
-
+<div class="stat-label">
+INCIDENTY
+</div>
+</div>
 
 <div class="stat">
-
-<strong id="confidenceValue">
+<div
+id="confidenceValue"
+class="stat-value"
+>
 —
-</strong>
+</div>
+<div class="stat-label">
+POSLEDNÁ ZHODA
+</div>
+</div>
 
-<span>
-posledná zhoda
-</span>
-
+<div class="stat">
+<div
+id="wantedLevel"
+class="stat-value"
+style="font-size:13px"
+>
+BEZÚHONNÁ
+</div>
+<div class="stat-label">
+WANTED LEVEL
+</div>
 </div>
 
 </div>
-
 
 <div class="extra-stats">
 
-<div class="mini-stat">
-
-<b id="wantedLevel">
-BEZÚHONNÁ
-</b>
-
-<span>
-WANTED LEVEL
-</span>
-
+<div class="extra-stat">
+<b>NAJČASTEJŠÍ ZLOČIN</b>
+<span id="topCrime">—</span>
 </div>
 
-
-<div class="mini-stat">
-
-<b id="topCrime">
-—
-</b>
-
-<span>
-NAJČASTEJŠÍ ZLOČIN
-</span>
-
+<div class="extra-stat">
+<b>LOKÁLNE ÚLOŽISKO</b>
+<span>AKTÍVNE</span>
 </div>
 
 </div>
 
-</div>
-
-
-<div class="card section">
-
-<div class="register-title">
-
-<h3>
-Trestný register
-</h3>
-
-<span class="muted">
-CAT FILE
-</span>
-
-</div>
-
-
-<div
-id="incidentList"
-class="incident-list"
-></div>
-
+<div class="button-row">
 
 <button
-id="addIncidentButton"
-class="action-button"
+class="action-button pink"
 type="button"
+onclick="openIncident()"
 >
-
-PRIDAŤ NOVÝ INCIDENT
-
+＋ PRIDAŤ INCIDENT
 </button>
-
 
 <button
 class="action-button blue"
 type="button"
 onclick="showProfileFun()"
 >
-
 🕵️ VYŠETROVACÍ PROFIL
-
 </button>
 
+</div>
 
-<button
-class="action-button"
-type="button"
-onclick="generateCriminalFile()"
->
-
-STIAHNUŤ KRIMINÁLNY SPIS
-
-</button>
-
-
-<button
-class="action-button blue"
-type="button"
-onclick="shareCriminalFile()"
->
-
-📤 ZDIEĽAŤ KRIMINÁLNY SPIS
-
-<small>
-WhatsApp, e-mail alebo iná aplikácia v telefóne.
-</small>
-
-</button>
-
+<div style="margin-top:10px">
 
 <button
 class="action-button secondary"
 type="button"
-onclick="deleteCurrentCat()"
+onclick="generateCriminalFile()"
 >
-
-ODSTRÁNIŤ PÁCHATEĽA
-
+📄 KRIMINÁLNY SPIS
 </button>
+
+</div>
+
+<div
+id="incidentList"
+class="incident-list"
+>
+</div>
 
 </div>
 
 </section>
 
 
-<!-- =========================================================
-   INCIDENT
-========================================================= -->
+<section id="incident" class="screen">
 
-<section
-id="incident"
-class="screen"
->
-
-<div class="back-row">
+<div class="card section">
 
 <button
-class="back"
+class="back-button"
 type="button"
 onclick="goBack()"
 >
-‹
+← SPÄŤ
 </button>
 
-<div class="back-title">
-
-<h2>
-Nový mačací zločin
+<h2 class="screen-title">
+NOVÝ INCIDENT
 </h2>
-
-<small id="incidentCatName">
-Čo dnes páchateľ spáchal?
-</small>
-
-</div>
-
-</div>
-
-
-<div class="card form">
-
-<div style="max-width:250px;margin:auto">
-
-<svg
-class="line-cat"
-viewBox="0 0 360 300"
->
-
-<path d="
-M112 245
-Q76 228 79 187
-L84 133
-L69 79
-L111 101
-Q135 76 166 77
-Q197 76 222 101
-L264 79
-L249 133
-L254 185
-Q257 226 221 245
-Q183 266 145 256
-Q126 252 112 245
-"/>
-
-<path
-class="blue"
-d="
-M218 239
-Q288 245 300 191
-Q307 156 279 151
-Q259 147 257 165
-"/>
-
-<circle cx="132" cy="145" r="4"/>
-<circle cx="201" cy="145" r="4"/>
-
-<path
-class="pink"
-d="
-M160 159
-Q166 151 172 159
-Q166 168 160 159Z
-"/>
-
-<path d="
-M166 166
-Q166 181 150 184
-M166 166
-Q166 181 182 184
-"/>
-
-</svg>
-
-</div>
-
-
-<h2 style="text-align:center;margin:0">
-ČO DNES SPÁCHAL/A?
-</h2>
-
 
 <p
-class="muted"
-style="text-align:center"
+id="incidentCatName"
+class="screen-description"
 >
-Vyber jeden mačací priestupok.
-Dátum a čas sa pridajú automaticky.
+Čo dnes spáchal/a?
 </p>
-
 
 <div
 id="incidentOptions"
 class="incident-grid"
-></div>
-
-
-<div
-class="field"
-style="margin-top:18px"
 >
+</div>
 
-<label>
-Dátum a čas
+<div class="form-group">
+
+<label for="incidentDate">
+DÁTUM A ČAS
 </label>
 
 <input
 id="incidentDate"
+class="text-input"
 type="text"
 readonly
 >
 
 </div>
 
+<div class="form-group">
 
-<div class="field">
-
-<label>
-Dodatočná poznámka
+<label for="incidentNote">
+POZNÁMKA VYŠETROVATEĽA
 </label>
 
 <textarea
 id="incidentNote"
-placeholder="Čokoľvek, čo by mal vyšetrovateľ vedieť..."
+class="textarea"
+placeholder="Čo sa stalo?"
 ></textarea>
 
 </div>
 
-
 <div class="evidence-panel">
 
 <h3>
-📁 ZADOKUMENTOVAŤ SKUTOK?
+📎 DÔKAZOVÝ MATERIÁL
 </h3>
 
 <p>
-Chceš pridať fotodôkaz alebo krátky videodôkaz k tomuto incidentu?
-Kamera sa použije iba vtedy, keď ju výslovne spustíš.
+Chceš zadokumentovať skutok? Fotografia alebo video sa uložia iba lokálne do zariadenia.
 </p>
-
 
 <div class="evidence-actions">
 
 <button
-class="evidence-choice"
 id="evidencePhotoChoice"
-type="button"
-onclick="requestIncidentEvidence('photo')"
->
-
-<strong>
-📷 FOTO
-</strong>
-
-<span>
-Odfotiť dôkaz
-</span>
-
-</button>
-
-
-<button
 class="evidence-choice"
-id="evidenceVideoChoice"
 type="button"
-onclick="requestIncidentEvidence('video')"
+onclick="selectIncidentEvidence('photo')"
 >
-
-<strong>
-🎥 VIDEO
-</strong>
-
-<span>
-Natočiť dôkaz
-</span>
-
+<strong>📷 FOTO</strong>
+<span>Fotodôkaz</span>
 </button>
 
+<button
+id="evidenceVideoChoice"
+class="evidence-choice"
+type="button"
+onclick="selectIncidentEvidence('video')"
+>
+<strong>🎥 VIDEO</strong>
+<span>Videodôkaz</span>
+</button>
 
 <button
-class="evidence-choice selected"
 id="evidenceNoneChoice"
+class="evidence-choice selected"
 type="button"
-onclick="selectIncidentEvidenceNone()"
+onclick="selectIncidentEvidence('none')"
 >
-
-<strong>
-✕ NIE
-</strong>
-
-<span>
-Stačí záznam
-</span>
-
+<strong>✕ NIE</strong>
+<span>Bez dôkazu</span>
 </button>
 
 </div>
-
 
 <div
 id="evidenceStatus"
 class="evidence-status"
 >
-Bez fotografického alebo video dôkazu.
+Nebude priložený žiadny dôkaz.
 </div>
 
 </div>
-
 
 <button
-class="action-button"
+class="action-button pink"
 type="button"
 onclick="registerIncident()"
 >
-
-ZAREGISTROVAŤ ZLOČIN
-
+ZAREGISTROVAŤ INCIDENT
 </button>
 
 </div>
@@ -2876,208 +1565,50 @@ ZAREGISTROVAŤ ZLOČIN
 </section>
 
 
-<!-- =========================================================
-   IDENTIFIED - ONLY REAL AI WILL OPEN THIS
-========================================================= -->
+<section id="identified" class="screen">
 
-<section
-id="identified"
-class="screen"
->
+<div class="card section" style="text-align:center">
 
-<div class="back-row">
-
-<button
-class="back"
-type="button"
-onclick="goBack()"
->
-‹
-</button>
-
-<div class="back-title">
-
-<h2>
-Páchateľ identifikovaný
+<h2 class="screen-title">
+PÁCHATEĽ IDENTIFIKOVANÝ
 </h2>
-
-<small>
-Výsledok AI
-</small>
-
-</div>
-
-</div>
-
-
-<div class="card result">
-
-<div class="result-cat">
-
-<svg
-class="line-cat"
-viewBox="0 0 360 300"
->
-
-<path d="
-M112 245
-Q76 228 79 187
-L84 133
-L69 79
-L111 101
-Q135 76 166 77
-Q197 76 222 101
-L264 79
-L249 133
-L254 185
-Q257 226 221 245
-Q183 266 145 256
-Q126 252 112 245
-"/>
-
-<path
-class="blue"
-d="
-M218 239
-Q288 245 300 191
-Q307 156 279 151
-Q259 147 257 165
-"/>
-
-<circle cx="132" cy="145" r="4"/>
-<circle cx="201" cy="145" r="4"/>
-
-<path
-class="pink"
-d="
-M160 159
-Q166 151 172 159
-Q166 168 160 159Z
-"/>
-
-<path d="
-M166 166
-Q166 181 150 184
-M166 166
-Q166 181 182 184
-"/>
-
-</svg>
-
-</div>
-
-
-<h2>
-MÁME HO!
-</h2>
-
 
 <div
-id="identifiedConfidence"
-class="confidence"
+id="identifiedName"
+style="font-family:'Baloo 2';font-size:36px;font-weight:900"
 >
 —
 </div>
 
-
-<h2 id="identifiedName">
-—
-</h2>
-
-
-<p class="muted">
-Výsledok bude zobrazený až po skutočnom vyhodnotení
-obrazovej AI.
+<p>
+Zhoda nosa:
+<strong id="identifiedConfidence">—</strong>
 </p>
 
-
 <button
-class="action-button"
+class="action-button pink"
 type="button"
 onclick="openCurrentCatFile()"
 >
-
 OTVORIŤ CAT FILE
-
 </button>
 
-</div>
-
-</section>
-
-
-<!-- =========================================================
-   ERROR
-========================================================= -->
-
-<section
-id="error"
-class="screen"
->
-
-<div class="back-row">
+<div style="margin-top:10px">
 
 <button
-class="back"
+class="action-button secondary"
 type="button"
 onclick="goBack()"
 >
-‹
+← SPÄŤ
 </button>
 
-<div class="back-title">
-
-<h2>
-Mačací problém
-</h2>
-
-<small>
-Niečo sa pokazilo.
-</small>
-
 </div>
-
-</div>
-
-
-<div class="card error">
-
-<div class="error-icon">
-🐾
-</div>
-
-
-<h2 id="errorTitle">
-Niečo sa pokazilo.
-</h2>
-
-
-<p
-id="errorText"
-class="muted"
->
-Skús to ešte raz.
-</p>
-
-
-<button
-class="action-button"
-type="button"
-onclick="openScreen('home')"
->
-
-SPÄŤ NA HLAVNÚ
-
-</button>
 
 </div>
 
 </section>
 
-
-<!-- =========================================================
-   FUN MODAL
-========================================================= -->
 
 <div
 id="funModal"
@@ -3087,35 +1618,29 @@ class="modal-backdrop"
 <div class="modal">
 
 <h2 id="funTitle">
-Vyšetrovací profil
+—
 </h2>
 
-<p id="funText"></p>
+<div id="funText"></div>
 
 <div
 id="funChoices"
-class="choice-grid"
+class="fun-choices"
 ></div>
-
 
 <button
 class="action-button secondary"
 type="button"
 onclick="closeModal()"
+style="margin-top:10px"
 >
-
 ZATVORIŤ
-
 </button>
 
 </div>
 
 </div>
 
-
-<!-- =========================================================
-   AFTER INCIDENT
-========================================================= -->
 
 <div
 id="afterIncidentModal"
@@ -3125,67 +1650,37 @@ class="modal-backdrop"
 <div class="modal">
 
 <h2>
-🚨 ČO TERAZ?
+ČO TERAZ?
 </h2>
 
-<p id="afterIncidentText">
-Incident bol úspešne zapísaný do registra.
+<p>
+Chceš podniknúť ďalšie kroky proti páchateľovi?
 </p>
 
-
-<div class="choice-grid">
+<div class="fun-choices">
 
 <button
-class="choice"
+class="fun-choice"
 type="button"
 onclick="afterIncident('vet')"
 >
-
-<strong>
-🐾 Zavolať veterinára
-</strong>
-
-<span>
-Ak páchateľ zjedol niečo,
-čo rozhodne nemal.
-</span>
-
+🐾 ZAVOLAŤ VETERINÁRA
 </button>
 
-
 <button
-class="choice"
+class="fun-choice"
 type="button"
 onclick="afterIncident('police')"
 >
-
-<strong>
-👮 Zavolať políciu
-</strong>
-
-<span>
-Ak išlo o obzvlášť závažný prípad.
-Napríklad posledný kúsok pizze.
-</span>
-
+🚓 ZAVOLAŤ POLÍCIU
 </button>
 
-
 <button
-class="choice"
+class="fun-choice"
 type="button"
 onclick="afterIncident('ignore')"
 >
-
-<strong>
-😹 Nechať to tak
-</strong>
-
-<span>
-Je to mačka.
-Pravdepodobne vyhrá.
-</span>
-
+😼 NECHAŤ TO TAK
 </button>
 
 </div>
@@ -3194,10 +1689,6 @@ Pravdepodobne vyhrá.
 
 </div>
 
-
-<!-- =========================================================
-   EVIDENCE CAMERA
-========================================================= -->
 
 <div
 id="evidenceCameraModal"
@@ -3207,17 +1698,10 @@ class="modal-backdrop"
 <div class="modal">
 
 <h2 id="evidenceCameraTitle">
-📷 FOTODÔKAZ
+DÔKAZOVÝ MATERIÁL
 </h2>
 
-
-<p id="evidenceCameraText">
-Kamera sa použije iba počas tohto záznamu.
-O presnom oprávnení rozhoduje Android/iOS.
-</p>
-
-
-<div class="evidence-camera-wrap">
+<div class="evidence-camera">
 
 <video
 id="evidenceCameraVideo"
@@ -3230,7 +1714,6 @@ autoplay
 
 </div>
 
-
 <div
 id="evidenceCameraStatus"
 class="evidence-camera-status"
@@ -3238,13 +1721,11 @@ class="evidence-camera-status"
 Pripravujem kameru…
 </div>
 
-
 <div
 id="evidencePreview"
 class="evidence-preview"
 style="display:none"
 ></div>
-
 
 <div
 class="modal-actions"
@@ -3257,20 +1738,15 @@ class="action-button"
 type="button"
 onclick="captureIncidentEvidence()"
 >
-
 📷 ODFOTIŤ DÔKAZ
-
 </button>
-
 
 <button
 class="action-button secondary"
 type="button"
 onclick="closeEvidenceCamera()"
 >
-
 ZRUŠIŤ
-
 </button>
 
 </div>
@@ -3279,10 +1755,6 @@ ZRUŠIŤ
 
 </div>
 
-
-<!-- =========================================================
-   CRIMINAL FILE
-========================================================= -->
 
 <div
 id="fileModal"
@@ -3296,16 +1768,10 @@ KRIMINÁLNY SPIS PÁCHATEĽA
 </h2>
 
 <p>
-Spis je pripravený.
-Vyzerá oficiálne.
-To je dôležité.
+Spis je pripravený. Vyzerá oficiálne. To je dôležité.
 </p>
 
-
-<div
-id="paperContainer"
-></div>
-
+<div id="paperContainer"></div>
 
 <div class="modal-actions">
 
@@ -3314,31 +1780,23 @@ class="action-button"
 type="button"
 onclick="downloadCriminalFile()"
 >
-
 STIAHNUŤ SPIS
-
 </button>
-
 
 <button
 class="action-button blue"
 type="button"
 onclick="shareCriminalFile()"
 >
-
 📤 ZDIEĽAŤ SPIS
-
 </button>
-
 
 <button
 class="action-button secondary"
 type="button"
 onclick="closeFileModal()"
 >
-
 ZATVORIŤ
-
 </button>
 
 </div>
@@ -3351,16 +1809,12 @@ ZATVORIŤ
 <div class="footer">
 
 <strong>CAT NOSE ID</strong>
-
 <br>
-
 Aplikáciu pre vašu zábavu vytvorila spoločnosť
 <strong>FUN ON</strong>
 v súvislosti s projektom
 <strong>FunOn Park Bratislava</strong>.
-
 <br><br>
-
 Žiadne reklamy. Žiadne platby.
 
 </div>
@@ -3371,46 +1825,642 @@ v súvislosti s projektom
 <script>
 
 /* =========================================================
+   INTERNATIONALIZATION
+========================================================= */
+
+const LANGUAGE_STORAGE_KEY = "catNoseLanguage";
+
+const translations = {
+
+sk:{},
+
+en:{
+"Najzbytočnejší biometrický skener na planéte.":"The most useless biometric scanner on the planet.",
+"KTO JE TEN":"WHO IS THE",
+"PÁCHATEĽ?":"CULPRIT?",
+"Nasmeruj kameru na mačku / páchateľa a nechaj náš úplne zbytočný biometrický systém pokúsiť sa zistiť, kto to je.":"Point the camera at the cat / culprit and let our completely useless biometric system try to find out who it is.",
+"MOJE MAČKY":"MY CATS",
+"PRIDAŤ NOVÚ MAČKU":"ADD NEW CAT",
+"NOVÁ MAČKA":"NEW CAT",
+"MENO MAČKY":"CAT NAME",
+"VYBRAŤ FOTOGRAFIU":"CHOOSE PHOTO",
+"ULOŽIŤ MAČKU":"SAVE CAT",
+"INCIDENTY":"INCIDENTS",
+"POSLEDNÁ ZHODA":"LAST MATCH",
+"BEZÚHONNÁ":"INNOCENT",
+"RECIDIVISTA":"RECIDIVIST",
+"PODOZRIVÝ":"SUSPECT",
+"VEREJNÝ NEPRIATEĽ DOMÁCNOSTI":"PUBLIC ENEMY OF THE HOUSEHOLD",
+"NAJČASTEJŠÍ ZLOČIN":"MOST COMMON CRIME",
+"LOKÁLNE ÚLOŽISKO":"LOCAL STORAGE",
+"AKTÍVNE":"ACTIVE",
+"PRIDAŤ INCIDENT":"ADD INCIDENT",
+"VYŠETROVACÍ PROFIL":"INVESTIGATION PROFILE",
+"KRIMINÁLNY SPIS":"CRIMINAL FILE",
+"NOVÝ INCIDENT":"NEW INCIDENT",
+"DÁTUM A ČAS":"DATE AND TIME",
+"POZNÁMKA VYŠETROVATEĽA":"INVESTIGATOR NOTE",
+"Čo sa stalo?":"What happened?",
+"DÔKAZOVÝ MATERIÁL":"EVIDENCE",
+"Chceš zadokumentovať skutok? Fotografia alebo video sa uložia iba lokálne do zariadenia.":"Do you want to document the incident? Photos and videos are stored only locally on the device.",
+"Fotodôkaz":"Photo evidence",
+"Videodôkaz":"Video evidence",
+"Bez dôkazu":"No evidence",
+"Nebude priložený žiadny dôkaz.":"No evidence will be attached.",
+"ZAREGISTROVAŤ INCIDENT":"REGISTER INCIDENT",
+"PÁCHATEĽ IDENTIFIKOVANÝ":"CULPRIT IDENTIFIED",
+"Zhoda nosa:":"Nose match:",
+"OTVORIŤ CAT FILE":"OPEN CAT FILE",
+"SPÄŤ":"BACK",
+"ZATVORIŤ":"CLOSE",
+"ČO TERAZ?":"WHAT NOW?",
+"Chceš podniknúť ďalšie kroky proti páchateľovi?":"Do you want to take further action against the culprit?",
+"ZAVOLAŤ VETERINÁRA":"CALL THE VET",
+"ZAVOLAŤ POLÍCIU":"CALL THE POLICE",
+"NECHAŤ TO TAK":"LET IT GO",
+"DÔKAZOVÝ MATERIÁL":"EVIDENCE",
+"Pripravujem kameru…":"Preparing camera…",
+"ODFOTIŤ DÔKAZ":"TAKE EVIDENCE PHOTO",
+"ZRUŠIŤ":"CANCEL",
+"KRIMINÁLNY SPIS PÁCHATEĽA":"CRIMINAL FILE OF THE CULPRIT",
+"Spis je pripravený. Vyzerá oficiálne. To je dôležité.":"The file is ready. It looks official. That is important.",
+"STIAHNUŤ SPIS":"DOWNLOAD FILE",
+"📤 ZDIEĽAŤ SPIS":"📤 SHARE FILE",
+"Žiadne reklamy. Žiadne platby.":"No ads. No payments.",
+"Ukradla jedlo":"Stole food",
+"Neoprávnené získanie cudzej potravy":"Unauthorized acquisition of someone else's food",
+"Mačací incident":"Cat incident",
+"Profil sa nenašiel":"Profile not found",
+"Tento profil už neexistuje.":"This profile no longer exists.",
+"Nie je vybraná mačka":"No cat selected",
+"Najprv otvor konkrétny CAT FILE.":"First open a specific CAT FILE.",
+"Čo dnes spáchal/a":"What did",
+"spáchal/a":"commit today",
+"Veterinár bol upozornený. Páchateľ tvrdí, že nič nezjedol.":"The vet has been notified. The culprit claims to have eaten nothing.",
+"Polícia bola imaginárne kontaktovaná. Operátor odporučil mačku nestrácať z dohľadu.":"The police were imaginatively contacted. The operator recommends keeping an eye on the cat.",
+"Rozumné rozhodnutie. Páchateľ už pravdepodobne plánuje ďalší incident.":"A sensible decision. The culprit is probably already planning another incident.",
+"ŽIADNY":"NONE",
+"Prípad, ktorý nikto neobjednal, ale niekto ho musel vyšetriť.":"A case nobody ordered, but somebody had to investigate it."
+},
+
+cs:{
+"Najzbytočnejší biometrický skener na planéte.":"Nejzbytečnější biometrický skener na planetě.",
+"MOJE MAČKY":"MOJE KOČKY",
+"PRIDAŤ NOVÚ MAČKU":"PŘIDAT NOVOU KOČKU",
+"NOVÁ MAČKA":"NOVÁ KOČKA",
+"MENO MAČKY":"JMÉNO KOČKY",
+"VYBRAŤ FOTOGRAFIU":"VYBRAT FOTOGRAFII",
+"ULOŽIŤ MAČKU":"ULOŽIT KOČKU",
+"INCIDENTY":"INCIDENTY",
+"POSLEDNÁ ZHODA":"POSLEDNÍ SHODA",
+"BEZÚHONNÁ":"BEZÚHONNÁ",
+"RECIDIVISTA":"RECIDIVISTA",
+"PODOZRIVÝ":"PODEZŘELÝ",
+"NAJČASTEJŠÍ ZLOČIN":"NEJČASTĚJŠÍ ZLOČIN",
+"LOKÁLNE ÚLOŽISKO":"LOKÁLNÍ ÚLOŽIŠTĚ",
+"AKTÍVNE":"AKTIVNÍ",
+"PRIDAŤ INCIDENT":"PŘIDAT INCIDENT",
+"VYŠETROVACÍ PROFIL":"VYŠETŘOVACÍ PROFIL",
+"KRIMINÁLNY SPIS":"KRIMINÁLNÍ SPIS",
+"NOVÝ INCIDENT":"NOVÝ INCIDENT",
+"DÁTUM A ČAS":"DATUM A ČAS",
+"POZNÁMKA VYŠETROVATEĽA":"POZNÁMKA VYŠETŘOVATELE",
+"Čo sa stalo?":"Co se stalo?",
+"DÔKAZOVÝ MATERIÁL":"DŮKAZNÍ MATERIÁL",
+"Fotodôkaz":"Fotodůkaz",
+"Videodôkaz":"Videodůkaz",
+"Bez dôkazu":"Bez důkazu",
+"Nebude priložený žiadny dôkaz.":"Nebude přiložen žádný důkaz.",
+"ZAREGISTROVAŤ INCIDENT":"ZAREGISTROVAT INCIDENT",
+"PÁCHATEĽ IDENTIFIKOVANÝ":"PACHATEL IDENTIFIKOVÁN",
+"OTVORIŤ CAT FILE":"OTEVŘÍT CAT FILE",
+"SPÄŤ":"ZPĚT",
+"ZATVORIŤ":"ZAVŘÍT",
+"ČO TERAZ?":"CO TEĎ?",
+"ZAVOLAŤ VETERINÁRA":"ZAVOLAT VETERINÁŘE",
+"ZAVOLAŤ POLÍCIU":"ZAVOLAT POLICII",
+"NECHAŤ TO TAK":"NECHAT TO BÝT",
+"Pripravujem kameru…":"Připravuji kameru…",
+"ODFOTIŤ DÔKAZ":"VYFOTIT DŮKAZ",
+"ZRUŠIŤ":"ZRUŠIT",
+"KRIMINÁLNY SPIS PÁCHATEĽA":"KRIMINÁLNÍ SPIS PACHATELE",
+"STIAHNUŤ SPIS":"STÁHNOUT SPIS",
+"📤 ZDIEĽAŤ SPIS":"📤 SDÍLET SPIS",
+"Žiadne reklamy. Žiadne platby.":"Žádné reklamy. Žádné platby.",
+"Ukradla jedlo":"Ukradla jídlo",
+"Mačací incident":"Kočičí incident"
+},
+
+de:{
+"Najzbytočnejší biometrický skener na planéte.":"Der nutzloseste biometrische Scanner der Welt.",
+"MOJE MAČKY":"MEINE KATZEN",
+"PRIDAŤ NOVÚ MAČKU":"NEUE KATZE HINZUFÜGEN",
+"NOVÁ MAČKA":"NEUE KATZE",
+"MENO MAČKY":"KATZENNAME",
+"VYBRAŤ FOTOGRAFIU":"FOTO AUSWÄHLEN",
+"ULOŽIŤ MAČKU":"KATZE SPEICHERN",
+"INCIDENTY":"VORFÄLLE",
+"POSLEDNÁ ZHODA":"LETZTE ÜBEREINSTIMMUNG",
+"BEZÚHONNÁ":"UNBESCHOLTEN",
+"RECIDIVISTA":"WIEDERHOLUNGSTÄTER",
+"PODOZRIVÝ":"VERDÄCHTIG",
+"NAJČASTEJŠÍ ZLOČIN":"HÄUFIGSTES VERBRECHEN",
+"LOKÁLNE ÚLOŽISKO":"LOKALER SPEICHER",
+"AKTÍVNE":"AKTIV",
+"PRIDAŤ INCIDENT":"VORFALL HINZUFÜGEN",
+"VYŠETROVACÍ PROFIL":"ERMITTLUNGSPROFIL",
+"KRIMINÁLNY SPIS":"STRAKTE",
+"NOVÝ INCIDENT":"NEUER VORFALL",
+"DÁTUM A ČAS":"DATUM UND UHRZEIT",
+"POZNÁMKA VYŠETROVATEĽA":"ERMITTLERNOTIZ",
+"Čo sa stalo?":"Was ist passiert?",
+"DÔKAZOVÝ MATERIÁL":"BEWEISMATERIAL",
+"Fotodôkaz":"Fotobeweis",
+"Videodôkaz":"Videobeweis",
+"Bez dôkazu":"Kein Beweis",
+"Nebude priložený žiadny dôkaz.":"Es wird kein Beweis angehängt.",
+"ZAREGISTROVAŤ INCIDENT":"VORFALL REGISTRIEREN",
+"PÁCHATEĽ IDENTIFIKOVANÝ":"TÄTER IDENTIFIZIERT",
+"OTVORIŤ CAT FILE":"CAT FILE ÖFFNEN",
+"SPÄŤ":"ZURÜCK",
+"ZATVORIŤ":"SCHLIESSEN",
+"ČO TERAZ?":"WAS JETZT?",
+"ZAVOLAŤ VETERINÁRA":"TIERARZT RUFEN",
+"ZAVOLAŤ POLÍCIU":"POLIZEI RUFEN",
+"NECHAŤ TO TAK":"IGNORIEREN",
+"Pripravujem kameru…":"Kamera wird vorbereitet…",
+"ODFOTIŤ DÔKAZ":"BEWEISFOTO AUFNEHMEN",
+"ZRUŠIŤ":"ABBRECHEN",
+"KRIMINÁLNY SPIS PÁCHATEĽA":"STRAKTE DES TÄTERS",
+"STIAHNUŤ SPIS":"AKTE HERUNTERLADEN",
+"📤 ZDIEĽAŤ SPIS":"📤 AKTE TEILEN",
+"Žiadne reklamy. Žiadne platby.":"Keine Werbung. Keine Zahlungen.",
+"Ukradla jedlo":"Futter gestohlen",
+"Mačací incident":"Katzenvorfall"
+},
+
+it:{
+"Najzbytočnejší biometrický skener na planéte.":"Lo scanner biometrico più inutile del pianeta.",
+"MOJE MAČKY":"I MIEI GATTI",
+"PRIDAŤ NOVÚ MAČKU":"AGGIUNGI NUOVO GATTO",
+"NOVÁ MAČKA":"NUOVO GATTO",
+"MENO MAČKY":"NOME DEL GATTO",
+"VYBRAŤ FOTOGRAFIU":"SCEGLI FOTO",
+"ULOŽIŤ MAČKU":"SALVA GATTO",
+"INCIDENTY":"INCIDENTI",
+"POSLEDNÁ ZHODA":"ULTIMA CORRISPONDENZA",
+"BEZÚHONNÁ":"INCENSURATO",
+"RECIDIVISTA":"RECIDIVO",
+"PODOZRIVÝ":"SOSPETTO",
+"NAJČASTEJŠÍ ZLOČIN":"CRIMINE PIÙ FREQUENTE",
+"LOKÁLNE ÚLOŽISKO":"MEMORIA LOCALE",
+"AKTÍVNE":"ATTIVA",
+"PRIDAŤ INCIDENT":"AGGIUNGI INCIDENTE",
+"VYŠETROVACÍ PROFIL":"PROFILO INVESTIGATIVO",
+"KRIMINÁLNY SPIS":"FASCICOLO CRIMINALE",
+"NOVÝ INCIDENT":"NUOVO INCIDENTE",
+"DÁTUM A ČAS":"DATA E ORA",
+"POZNÁMKA VYŠETROVATEĽA":"NOTA DELL'INVESTIGATORE",
+"Čo sa stalo?":"Cosa è successo?",
+"DÔKAZOVÝ MATERIÁL":"PROVE",
+"Fotodôkaz":"Prova fotografica",
+"Videodôkaz":"Prova video",
+"Bez dôkazu":"Nessuna prova",
+"Nebude priložený žiadny dôkaz.":"Nessuna prova verrà allegata.",
+"ZAREGISTROVAŤ INCIDENT":"REGISTRA INCIDENTE",
+"PÁCHATEĽ IDENTIFIKOVANÝ":"COLPEVOLE IDENTIFICATO",
+"OTVORIŤ CAT FILE":"APRI CAT FILE",
+"SPÄŤ":"INDIETRO",
+"ZATVORIŤ":"CHIUDI",
+"ČO TERAZ?":"E ADESSO?",
+"ZAVOLAŤ VETERINÁRA":"CHIAMA IL VETERINARIO",
+"ZAVOLAŤ POLÍCIU":"CHIAMA LA POLIZIA",
+"NECHAŤ TO TAK":"LASCIAR PERDERE",
+"Pripravujem kameru…":"Preparazione della fotocamera…",
+"ODFOTIŤ DÔKAZ":"SCATTA FOTO PROVA",
+"ZRUŠIŤ":"ANNULLA",
+"KRIMINÁLNY SPIS PÁCHATEĽA":"FASCICOLO CRIMINALE DEL COLPEVOLE",
+"STIAHNUŤ SPIS":"SCARICA FASCICOLO",
+"📤 ZDIEĽAŤ SPIS":"📤 CONDIVIDI FASCICOLO",
+"Žiadne reklamy. Žiadne platby.":"Nessuna pubblicità. Nessun pagamento.",
+"Ukradla jedlo":"Ha rubato il cibo",
+"Mačací incident":"Incidente felino"
+}
+
+};
+
+let currentLanguage="sk";
+
+const i18nOriginalText=new WeakMap();
+const i18nOriginalAttribute=new WeakMap();
+
+function detectAppLanguage(){
+
+    const saved=
+        localStorage.getItem(
+            LANGUAGE_STORAGE_KEY
+        );
+
+    if(
+        saved &&
+        translations[saved]
+    ){
+        return saved;
+    }
+
+    const raw=(
+        navigator.language ||
+        navigator.userLanguage ||
+        "sk"
+    ).toLowerCase();
+
+    const code=
+        raw
+        .split("-")[0]
+        .split("_")[0];
+
+    return translations[code]
+        ? code
+        : "en";
+}
+
+function getSlovakSource(value){
+
+    const text=
+        (value || "")
+        .replace(/\s+/g," ")
+        .trim();
+
+    if(!text){
+        return text;
+    }
+
+    if(
+        translations[currentLanguage] &&
+        Object.prototype.hasOwnProperty.call(
+            translations[currentLanguage],
+            text
+        )
+    ){
+        return text;
+    }
+
+    const currentMap=
+        translations[currentLanguage] || {};
+
+    for(
+        const [source,target]
+        of Object.entries(currentMap)
+    ){
+        if(
+            target &&
+            target===text
+        ){
+            return source;
+        }
+    }
+
+    return text;
+}
+
+function translateTextNode(node){
+
+    if(
+        !node ||
+        node.nodeType!==Node.TEXT_NODE
+    ){
+        return;
+    }
+
+    const stored=
+        i18nOriginalText.get(node);
+
+    const original=
+        stored ||
+        getSlovakSource(
+            node.nodeValue
+        );
+
+    if(!original){
+        return;
+    }
+
+    i18nOriginalText.set(
+        node,
+        original
+    );
+
+    const langMap=
+        translations[currentLanguage] || {};
+
+    const translated=
+        langMap[original] ||
+        original;
+
+    const leading=
+        node.nodeValue.match(/^\s*/)?.[0] ||
+        "";
+
+    const trailing=
+        node.nodeValue.match(/\s*$/)?.[0] ||
+        "";
+
+    node.nodeValue=
+        leading+
+        translated+
+        trailing;
+}
+
+function translateDynamicTextNode(node){
+
+    if(
+        !node ||
+        node.nodeType!==Node.TEXT_NODE
+    ){
+        return;
+    }
+
+    const current=
+        node.nodeValue || "";
+
+    const stored=
+        i18nOriginalText.get(node);
+
+    const source=
+        stored ||
+        getSlovakSource(current);
+
+    if(!source.trim()){
+        return;
+    }
+
+    i18nOriginalText.set(
+        node,
+        source
+    );
+
+    const langMap=
+        translations[currentLanguage] || {};
+
+    let value=
+        langMap[source] ||
+        source;
+
+    const leading=
+        current.match(/^\s*/)?.[0] ||
+        "";
+
+    const trailing=
+        current.match(/\s*$/)?.[0] ||
+        "";
+
+    node.nodeValue=
+        leading+
+        value+
+        trailing;
+}
+
+function translateApp(){
+
+    document.documentElement.lang=
+        currentLanguage;
+
+    document
+        .querySelectorAll(
+            "body *:not(script):not(style):not(option)"
+        )
+        .forEach(
+            element=>{
+                element.childNodes.forEach(
+                    node=>{
+                        translateTextNode(node);
+                    }
+                );
+            }
+        );
+
+    document
+        .querySelectorAll(
+            "body *:not(script):not(style)"
+        )
+        .forEach(
+            element=>{
+
+                element.childNodes.forEach(
+                    node=>{
+                        translateDynamicTextNode(node);
+                    }
+                );
+
+                [
+                    "placeholder",
+                    "title",
+                    "aria-label"
+                ].forEach(
+                    attribute=>{
+
+                        if(
+                            !element.hasAttribute(
+                                attribute
+                            )
+                        ){
+                            return;
+                        }
+
+                        let store=
+                            i18nOriginalAttribute
+                            .get(element);
+
+                        if(!store){
+                            store={};
+                        }
+
+                        let original=
+                            store[attribute] ||
+                            getSlovakSource(
+                                element.getAttribute(
+                                    attribute
+                                )
+                            );
+
+                        store[attribute]=
+                            original;
+
+                        i18nOriginalAttribute.set(
+                            element,
+                            store
+                        );
+
+                        const translated=
+                            (
+                                translations[currentLanguage] ||
+                                {}
+                            )[original] ||
+                            original;
+
+                        element.setAttribute(
+                            attribute,
+                            translated
+                        );
+
+                    }
+                );
+
+            }
+        );
+}
+
+function setLanguage(
+    language,
+    persist=true
+){
+
+    if(
+        !translations[language]
+    ){
+        language="en";
+    }
+
+    currentLanguage=
+        language;
+
+    if(persist){
+        localStorage.setItem(
+            LANGUAGE_STORAGE_KEY,
+            language
+        );
+    }
+
+    const select=
+        document.getElementById(
+            "languageSelect"
+        );
+
+    if(select){
+        select.value=
+            language;
+    }
+
+    translateApp();
+
+    renderCatList();
+    renderIncidentOptions();
+
+    if(currentCatId){
+        renderCurrentCat();
+    }
+}
+
+function getLocale(){
+
+    const locales={
+        sk:"sk-SK",
+        en:"en-US",
+        cs:"cs-CZ",
+        de:"de-DE",
+        it:"it-IT"
+    };
+
+    return locales[currentLanguage] ||
+        "en-US";
+}
+
+function initializeLanguage(){
+
+    currentLanguage=
+        detectAppLanguage();
+
+    const select=
+        document.getElementById(
+            "languageSelect"
+        );
+
+    if(select){
+
+        select.value=
+            currentLanguage;
+
+        select.addEventListener(
+            "change",
+            event=>{
+                setLanguage(
+                    event.target.value,
+                    true
+                );
+            }
+        );
+
+    }
+
+    setLanguage(
+        currentLanguage,
+        false
+    );
+}
+
+
+/* =========================================================
    CORE DATA
 ========================================================= */
 
-const STORAGE_KEY = "catNoseDatabase";
+const STORAGE_KEY=
+    "catNoseDatabase";
 
-const EVIDENCE_DB_NAME = "catNoseEvidenceDB";
-const EVIDENCE_DB_VERSION = 1;
-const EVIDENCE_STORE = "evidence";
+const EVIDENCE_DB_NAME=
+    "catNoseEvidenceDB";
 
-const MAX_PROFILE_PHOTO_SIDE = 800;
-const PROFILE_PHOTO_QUALITY = 0.72;
+const EVIDENCE_DB_VERSION=1;
 
-const MAX_EVIDENCE_PHOTO_SIDE = 1280;
-const EVIDENCE_PHOTO_QUALITY = 0.65;
+const EVIDENCE_STORE=
+    "evidence";
 
-const MAX_EVIDENCE_VIDEO_SECONDS = 15;
-const EVIDENCE_VIDEO_WIDTH = 1280;
-const EVIDENCE_VIDEO_HEIGHT = 720;
-const EVIDENCE_VIDEO_BITRATE = 500000;
+const MAX_PROFILE_PHOTO_SIDE=800;
 
-let cats = [];
-let currentCatId = null;
-let catPhotoData = "";
-let selectedIncidentType = "ukradla jedlo";
+const PROFILE_PHOTO_QUALITY=.72;
 
-let evidenceDbPromise = null;
-let evidenceStream = null;
-let evidenceRecorder = null;
-let evidenceChunks = [];
-let evidenceMode = null;
-let evidenceTimer = null;
-let pendingIncidentEvidence = null;
-let evidenceCaptureBusy = false;
+const MAX_EVIDENCE_PHOTO_SIDE=1280;
+
+const EVIDENCE_PHOTO_QUALITY=.65;
+
+const MAX_EVIDENCE_VIDEO_SECONDS=15;
+
+const EVIDENCE_VIDEO_WIDTH=1280;
+
+const EVIDENCE_VIDEO_HEIGHT=720;
+
+const EVIDENCE_VIDEO_BITRATE=500000;
+
+let cats=[];
+
+let currentCatId=null;
+
+let catPhotoData="";
+
+let selectedIncidentType=
+    "ukradla jedlo";
+
+let evidenceDbPromise=null;
+
+let evidenceStream=null;
+
+let evidenceRecorder=null;
+
+let evidenceChunks=[];
+
+let evidenceMode=null;
+
+let evidenceTimer=null;
+
+let pendingIncidentEvidence=null;
+
+let evidenceCaptureBusy=false;
 
 
 /* =========================================================
    INCIDENT DEFINITIONS
 ========================================================= */
 
-const incidents = [
+const incidents=[
 
 {
     id:"ukradla jedlo",
@@ -3428,130 +2478,39 @@ const incidents = [
 },
 
 {
-    id:"poškodila zariadenie",
-    title:"Poškodila zariadenie",
-    description:"Útok na majetok domácnosti",
+    id:"zhodila predmet",
+    title:"Zhodila predmet",
+    description:"Podozrivá manipulácia s predmetmi",
     icon:`
     <svg viewBox="0 0 70 60">
-        <rect x="12" y="11" width="46" height="37" rx="5"/>
-        <path class="pink"
-            d="M38 12 L29 27 L37 28 L28 46"/>
-        <path class="blue" d="M18 52 L52 52"/>
+        <rect x="23" y="9" width="24" height="31" rx="3"/>
+        <path class="blue" d="M15 45 Q35 37 55 45"/>
+        <path class="pink" d="M20 13 L13 6 M50 13 L57 6"/>
     </svg>`
 },
 
 {
-    id:"poškriabala ma",
-    title:"Poškrabala ma",
-    description:"Neoprávnené použitie pazúrov",
+    id:"znicila majetok",
+    title:"Zničila majetok",
+    description:"Úmyselné poškodenie domácnosti",
     icon:`
     <svg viewBox="0 0 70 60">
-        <path class="pink"
-            d="M20 12 L14 43
-               M33 10 L29 43
-               M46 12 L44 43"/>
-        <path d="M12 47 Q35 31 58 47"/>
-        <path class="blue" d="M19 52 Q35 45 51 52"/>
+        <path d="M12 45 L58 45"/>
+        <path class="yellow" d="M21 43 L28 20 L42 28 L50 15"/>
+        <path class="pink" d="M27 10 L31 18 M40 8 L42 18"/>
     </svg>`
 },
 
 {
-    id:"uhryzla ma",
-    title:"Uhryzla ma",
-    description:"Neautorizovaný zubný útok",
+    id:"napadla cloveka",
+    title:"Napadla človeka",
+    description:"Agresívne správanie voči osobe",
     icon:`
     <svg viewBox="0 0 70 60">
-        <path d="
-            M10 28
-            Q35 8 60 28
-            Q35 50 10 28
-            Z"/>
-        <path class="pink"
-            d="
-            M20 25 L23 37
-            M30 20 L32 38
-            M40 20 L39 38
-            M50 25 L47 37"/>
-    </svg>`
-},
-
-{
-    id:"obsadila cudziu posteľ",
-    title:"Obsadila cudziu posteľ",
-    description:"Neoprávnené zabratie lôžka",
-    icon:`
-    <svg viewBox="0 0 70 60">
-        <path d="
-            M10 38
-            L60 38
-            L60 50
-            L10 50
-            Z"/>
-        <path d="
-            M14 38
-            L14 27
-            Q22 17 33 27
-            L33 38"/>
-        <path class="pink"
-            d="M39 27 Q48 17 58 27"/>
-        <path class="blue" d="M10 52 L60 52"/>
-    </svg>`
-},
-
-{
-    id:"netrafila sa do záchoda",
-    title:"Netrafila sa do záchoda",
-    description:"Incident s nejasným motívom",
-    icon:`
-    <svg viewBox="0 0 70 60">
-        <path d="
-            M14 23
-            Q35 17 56 23
-            L53 45
-            Q35 53 17 45
-            Z"/>
-        <path class="blue"
-            d="M23 31 Q35 38 47 31"/>
-        <path class="pink"
-            d="
-            M35 11 L35 18
-            M29 15 L35 21
-            M41 15 L35 21"/>
-    </svg>`
-},
-
-{
-    id:"rozbila predmet",
-    title:"Rozbila predmet",
-    description:"Poškodenie cudzieho majetku",
-    icon:`
-    <svg viewBox="0 0 70 60">
-        <path d="
-            M14 12 L56 48
-            M56 12 L14 48"/>
-        <path class="pink"
-            d="
-            M35 5
-            L29 22
-            L38 24
-            L30 42"/>
-    </svg>`
-},
-
-{
-    id:"neznámy mačací zločin",
-    title:"Neznámy zločin",
-    description:"Vyšetrovanie stále prebieha",
-    icon:`
-    <svg viewBox="0 0 70 60">
-        <circle class="blue" cx="35" cy="30" r="23"/>
-        <path class="pink"
-            d="
-            M29 24
-            Q35 18 41 24
-            Q43 29 38 33
-            Q35 35 35 39
-            M35 46 L35 47"/>
+        <circle cx="35" cy="19" r="10"/>
+        <path d="M18 52 Q35 30 52 52"/>
+        <path class="pink" d="M21 20 L13 12 M49 20 L57 12"/>
+        <path class="yellow" d="M28 21 L32 24 L28 27"/>
     </svg>`
 }
 
@@ -3559,61 +2518,55 @@ const incidents = [
 
 
 /* =========================================================
-   FUN CONTENT
+   FUN TEXT
 ========================================================= */
 
-const excuses = [
-
-"V čase incidentu som spal/a. Ako obvykle.",
-
-"Jedlo už bolo ukradnuté, keď som prišiel/prišla.",
-
-"Posteľ vyzerala opustená.",
-
-"To nebol škrabanec. To je nový dizajn.",
-
-"Záchod bol príliš ďaleko.",
-
-"Neviem, čo sa stalo. Bol/a som mačka.",
-
-"Nemám právnika. Mám iba človeka, ktorý mi otvára konzervu.",
-
-"Vznášam námietku. Mňau."
-
+const excuses=[
+"Bol to len experiment.",
+"Jedlo bolo príliš blízko.",
+"Ja som si myslel/a, že je to moje.",
+"Zákon mačiek to povoľuje.",
+"Nemám k tomu čo povedať.",
+"Môj právnik odporučil mlčať.",
+"To už bolo ukradnuté predo mnou.",
+"Spala som.",
+"To bola iná mačka."
 ];
 
-const alibis = [
-
-"Alibi nepotvrdené. Páchateľ odmieta odpovedať.",
-
-"Alibi je podozrivo pohodlné.",
-
-"Tri svedkovia tvrdia, že páchateľ spal. Páchateľ tvrdí, že to dokazuje nevinu.",
-
-"Alibi preverované. Zatiaľ nájdené iba chlpy.",
-
-"Vyšetrovateľ odporúča ďalšie sledovanie."
-
+const alibis=[
+"Sedela pri okne.",
+"Tvári sa, že nič nevie.",
+"Tvrdí, že bola v inej izbe.",
+"Má veľmi podozrivo pokojný výraz.",
+"Odvoláva sa na právo mlčať.",
+"Alibi zatiaľ nebolo potvrdené."
 ];
 
-const verdicts = [
-
-"Vinný/á. Trest: 3× pohladenie a okamžité prepustenie.",
-
-"Vinný/á v mačacom zmysle slova. Páchateľ protestuje.",
-
-"Rozsudok: mačka. Trest: vysvetliť jej, prečo to nesmie. Očakávaný výsledok: 0 %.",
-
-"Prípad uzavretý pre nedostatok spolupráce zo strany páchateľa.",
-
-"Vinný/á. Odvolanie zamietnuté. Páchateľ odišiel spať."
-
+const verdicts=[
+"Páchateľ je uznaný za extrémne podozrivého.",
+"Odporúča sa zvýšený dohľad nad miskou.",
+"Prípad zostáva otvorený.",
+"Mačka dostáva podmienečný zákaz kuchyne.",
+"Rozsudok: vinná z toho, že vyzerá vinná.",
+"Pre nedostatok dôkazov sa mačka prepúšťa. Zatiaľ."
 ];
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+function randomItem(array){
+    return array[
+        Math.floor(
+            Math.random()*array.length
+        )
+    ];
+}
 
 function escapeHtml(value){
 
@@ -3625,11 +2578,15 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 }
 
-function randomItem(array){
+function safeFileName(value){
 
-    return array[
-        Math.floor(Math.random()*array.length)
-    ];
+    return String(value || "cat")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/[^a-z0-9]+/gi,"-")
+        .replace(/^-+|-+$/g,"")
+        .toLowerCase() ||
+        "cat";
 }
 
 function formatBytes(bytes){
@@ -3638,33 +2595,103 @@ function formatBytes(bytes){
         return "0 B";
     }
 
-    const units=["B","KB","MB","GB"];
+    const units=[
+        "B",
+        "KB",
+        "MB",
+        "GB"
+    ];
 
-    const index=Math.min(
-        units.length-1,
+    const index=
         Math.floor(
             Math.log(bytes)/Math.log(1024)
-        )
-    );
+        );
 
     return (
-        bytes /
+        bytes/
         Math.pow(1024,index)
-    ).toFixed(index===0 ? 0 : 1)
-    +" "+
+    ).toFixed(
+        index ? 1 : 0
+    )+
+    " "+
     units[index];
 }
 
-function safeFileName(name){
 
-    return (
-        String(name || "cat")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .replace(/[^a-z0-9]+/gi,"-")
-        .replace(/^-+|-+$/g,"")
-        || "cat"
-    );
+/* =========================================================
+   LOCAL DATABASE
+========================================================= */
+
+function loadDatabase(){
+
+    try{
+
+        const raw=
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+        cats=
+            raw
+            ? JSON.parse(raw)
+            : [];
+
+        if(!Array.isArray(cats)){
+            cats=[];
+        }
+
+        cats.forEach(
+            cat=>{
+
+                if(!Array.isArray(cat.incidents)){
+                    cat.incidents=[];
+                }
+
+                if(
+                    typeof cat.lastMatch!=="number"
+                ){
+                    cat.lastMatch=null;
+                }
+
+            }
+        );
+
+    }catch(error){
+
+        console.error(
+            "DATABASE LOAD ERROR",
+            error
+        );
+
+        cats=[];
+
+    }
+
+}
+
+function saveDatabase(){
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(cats)
+        );
+
+    }catch(error){
+
+        console.error(
+            "DATABASE SAVE ERROR",
+            error
+        );
+
+        showError(
+            "Úložisko je plné",
+            "Údaje sa nepodarilo uložiť. Skús odstrániť niektoré fotografie alebo údaje."
+        );
+
+    }
+
 }
 
 
@@ -3681,616 +2708,101 @@ function compressImage(
     return new Promise(
         (resolve,reject)=>{
 
-            const reader=new FileReader();
+            const reader=
+                new FileReader();
 
-            reader.onload=event=>{
+            reader.onload=
+                event=>{
 
-                const image=new Image();
+                    const image=
+                        new Image();
 
-                image.onload=()=>{
+                    image.onload=
+                        ()=>{
 
-                    let width=image.naturalWidth;
-                    let height=image.naturalHeight;
+                            let width=
+                                image.naturalWidth;
 
-                    const scale=Math.min(
-                        1,
-                        maxSide /
-                        Math.max(width,height)
-                    );
+                            let height=
+                                image.naturalHeight;
 
-                    width=Math.max(
-                        1,
-                        Math.round(width*scale)
-                    );
-
-                    height=Math.max(
-                        1,
-                        Math.round(height*scale)
-                    );
-
-                    const canvas=
-                        document.createElement("canvas");
-
-                    canvas.width=width;
-                    canvas.height=height;
-
-                    const context=
-                        canvas.getContext("2d");
-
-                    context.drawImage(
-                        image,
-                        0,
-                        0,
-                        width,
-                        height
-                    );
-
-                    canvas.toBlob(
-                        blob=>{
-
-                            if(!blob){
-                                reject(
-                                    new Error(
-                                        "Fotografiu sa nepodarilo spracovať."
+                            const scale=
+                                Math.min(
+                                    1,
+                                    maxSide/
+                                    Math.max(
+                                        width,
+                                        height
                                     )
                                 );
-                                return;
-                            }
 
-                            resolve(blob);
+                            width=
+                                Math.round(
+                                    width*scale
+                                );
 
-                        },
-                        "image/jpeg",
-                        quality
-                    );
+                            height=
+                                Math.round(
+                                    height*scale
+                                );
+
+                            const canvas=
+                                document.createElement(
+                                    "canvas"
+                                );
+
+                            canvas.width=
+                                width;
+
+                            canvas.height=
+                                height;
+
+                            const context=
+                                canvas.getContext(
+                                    "2d"
+                                );
+
+                            context.drawImage(
+                                image,
+                                0,
+                                0,
+                                width,
+                                height
+                            );
+
+                            resolve(
+                                canvas.toDataURL(
+                                    "image/jpeg",
+                                    quality
+                                )
+                            );
+
+                        };
+
+                    image.onerror=
+                        ()=>reject(
+                            new Error(
+                                "IMAGE_LOAD_ERROR"
+                            )
+                        );
+
+                    image.src=
+                        event.target.result;
 
                 };
 
-                image.onerror=()=>{
-                    reject(
-                        new Error(
-                            "Fotografiu sa nepodarilo načítať."
-                        )
-                    );
-                };
-
-                image.src=event.target.result;
-            };
-
-            reader.onerror=()=>{
-                reject(
+            reader.onerror=
+                ()=>reject(
                     new Error(
-                        "Fotografiu sa nepodarilo načítať."
+                        "FILE_READ_ERROR"
                     )
                 );
-            };
 
             reader.readAsDataURL(file);
+
         }
     );
-}
 
-
-/* =========================================================
-   DATABASE
-========================================================= */
-
-function normalizeIncident(incident){
-
-    if(
-        !incident ||
-        typeof incident!=="object"
-    ){
-        return null;
-    }
-
-    return {
-
-        id:String(
-            incident.id ||
-            (
-                "incident_"+
-                Date.now()+
-                "_"+
-                Math.random()
-                    .toString(36)
-                    .slice(2,7)
-            )
-        ),
-
-        type:String(
-            incident.type ||
-            "neznámy mačací zločin"
-        ),
-
-        note:String(
-            incident.note || ""
-        ),
-
-        date:
-            incident.date ||
-            new Date().toISOString(),
-
-        evidenceId:
-            incident.evidenceId
-            ? String(incident.evidenceId)
-            : "",
-
-        evidenceType:
-            incident.evidenceType==="photo" ||
-            incident.evidenceType==="video"
-            ? incident.evidenceType
-            : "",
-
-        evidenceSize:
-            Number.isFinite(
-                Number(incident.evidenceSize)
-            )
-            ? Number(incident.evidenceSize)
-            : 0
-
-    };
-}
-
-function normalizeCat(cat){
-
-    if(
-        !cat ||
-        typeof cat!=="object"
-    ){
-        return null;
-    }
-
-    return {
-
-        id:String(
-            cat.id ||
-            (
-                "cat_"+
-                Date.now()+
-                "_"+
-                Math.random()
-                    .toString(36)
-                    .slice(2,7)
-            )
-        ),
-
-        name:String(
-            cat.name ||
-            "Neznámy páchateľ"
-        ),
-
-        photo:
-            typeof cat.photo==="string"
-            ? cat.photo
-            : "",
-
-        createdAt:
-            cat.createdAt ||
-            new Date().toISOString(),
-
-        lastMatch:
-            cat.lastMatch ??
-            null,
-
-        incidents:
-            Array.isArray(cat.incidents)
-            ? cat.incidents
-                .map(normalizeIncident)
-                .filter(Boolean)
-            : []
-
-    };
-}
-
-function loadDatabase(){
-
-    try{
-
-        const raw=
-            localStorage.getItem(
-                STORAGE_KEY
-            );
-
-        if(!raw){
-
-            cats=[];
-            return;
-        }
-
-        const parsed=
-            JSON.parse(raw);
-
-        cats=
-            Array.isArray(parsed)
-            ? parsed
-                .map(normalizeCat)
-                .filter(Boolean)
-            : [];
-
-    }catch(error){
-
-        console.error(
-            "DATABASE LOAD ERROR",
-            error
-        );
-
-        cats=[];
-    }
-}
-
-function saveDatabase(){
-
-    try{
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(cats)
-        );
-
-        return true;
-
-    }catch(error){
-
-        console.error(
-            "DATABASE SAVE ERROR",
-            error
-        );
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   NAVIGATION
-   Jeden jediný history systém.
-========================================================= */
-
-let navigationInitialized=false;
-let navigationBusy=false;
-
-function currentScreenId(){
-
-    const active=
-        document.querySelector(
-            ".screen.active"
-        );
-
-    return active
-        ? active.id
-        : "home";
-}
-
-function showScreen(id){
-
-    const target=
-        document.getElementById(id);
-
-    if(!target){
-        return;
-    }
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(
-            screen=>{
-                screen.classList.remove("active");
-            }
-        );
-
-    target.classList.add("active");
-
-    window.scrollTo({
-        top:0,
-        behavior:"instant"
-    });
-
-    if(id==="home"){
-        renderCatList();
-    }
-
-    if(id==="catFile"){
-        renderCurrentCat();
-    }
-
-    if(id==="incident"){
-        updateIncidentDate();
-        renderIncidentOptions();
-    }
-}
-
-function openScreen(
-    id,
-    options={}
-){
-
-    if(!document.getElementById(id)){
-        return;
-    }
-
-    const current=
-        currentScreenId();
-
-    if(
-        current===id &&
-        !options.force
-    ){
-        return;
-    }
-
-    if(!navigationInitialized){
-
-        showScreen(id);
-        return;
-    }
-
-    const state={
-        catNose:true,
-        screen:id
-    };
-
-    if(options.replace){
-
-        history.replaceState(
-            state,
-            "",
-            "#"+id
-        );
-
-    }else{
-
-        history.pushState(
-            state,
-            "",
-            "#"+id
-        );
-    }
-
-    showScreen(id);
-}
-
-function initializeNavigation(){
-
-    const hash=
-        window.location.hash
-        .replace("#","")
-        .trim();
-
-    const initial=
-        document.getElementById(hash)
-        ? hash
-        : "home";
-
-    history.replaceState(
-        {
-            catNose:true,
-            screen:initial,
-            root:true
-        },
-        "",
-        "#"+initial
-    );
-
-    /*
-       Guard entry:
-       Android/browser Back najprv narazí
-       na bezpečný bod aplikácie.
-    */
-
-    history.pushState(
-        {
-            catNose:true,
-            screen:initial,
-            guard:true
-        },
-        "",
-        "#"+initial
-    );
-
-    navigationInitialized=true;
-
-    showScreen(initial);
-
-    window.addEventListener(
-        "popstate",
-        handleBrowserBack
-    );
-}
-
-function handleBrowserBack(event){
-
-    if(
-        document
-        .getElementById("evidenceCameraModal")
-        ?.classList.contains("show")
-    ){
-
-        closeEvidenceCamera();
-
-        history.pushState(
-            {
-                catNose:true,
-                screen:currentScreenId(),
-                guard:true
-            },
-            "",
-            "#"+currentScreenId()
-        );
-
-        return;
-    }
-
-    if(
-        document
-        .getElementById("funModal")
-        ?.classList.contains("show")
-    ){
-
-        closeModal();
-
-        history.pushState(
-            {
-                catNose:true,
-                screen:currentScreenId(),
-                guard:true
-            },
-            "",
-            "#"+currentScreenId()
-        );
-
-        return;
-    }
-
-    if(
-        document
-        .getElementById("afterIncidentModal")
-        ?.classList.contains("show")
-    ){
-
-        document
-            .getElementById("afterIncidentModal")
-            .classList.remove("show");
-
-        history.pushState(
-            {
-                catNose:true,
-                screen:currentScreenId(),
-                guard:true
-            },
-            "",
-            "#"+currentScreenId()
-        );
-
-        return;
-    }
-
-    if(
-        document
-        .getElementById("fileModal")
-        ?.classList.contains("show")
-    ){
-
-        closeFileModal();
-
-        history.pushState(
-            {
-                catNose:true,
-                screen:currentScreenId(),
-                guard:true
-            },
-            "",
-            "#"+currentScreenId()
-        );
-
-        return;
-    }
-
-    const state=event.state;
-
-    if(
-        state &&
-        state.catNose
-    ){
-
-        showScreen(
-            state.screen || "home"
-        );
-
-        if(state.root){
-
-            history.pushState(
-                {
-                    catNose:true,
-                    screen:"home",
-                    guard:true
-                },
-                "",
-                "#home"
-            );
-        }
-
-        return;
-    }
-
-    /*
-       Bezpečnostná poistka.
-       Aplikácia sa pri neznámom popstate
-       neotvorí mimo svojej hlavnej obrazovky.
-    */
-
-    history.pushState(
-        {
-            catNose:true,
-            screen:"home",
-            guard:true
-        },
-        "",
-        "#home"
-    );
-
-    showScreen("home");
-}
-
-function goBack(){
-
-    if(
-        document
-        .getElementById("evidenceCameraModal")
-        ?.classList.contains("show")
-    ){
-
-        closeEvidenceCamera();
-        return;
-    }
-
-    if(
-        document
-        .getElementById("funModal")
-        ?.classList.contains("show")
-    ){
-
-        closeModal();
-        return;
-    }
-
-    if(
-        document
-        .getElementById("afterIncidentModal")
-        ?.classList.contains("show")
-    ){
-
-        document
-            .getElementById("afterIncidentModal")
-            .classList.remove("show");
-
-        return;
-    }
-
-    if(
-        document
-        .getElementById("fileModal")
-        ?.classList.contains("show")
-    ){
-
-        closeFileModal();
-        return;
-    }
-
-    if(navigationBusy){
-        return;
-    }
-
-    navigationBusy=true;
-
-    history.back();
-
-    setTimeout(
-        ()=>{
-            navigationBusy=false;
-        },
-        250
-    );
 }
 
 
@@ -4301,7 +2813,7 @@ function goBack(){
 function renderCatList(){
 
     const container=
-        document.getElementById("catList");
+        $("catList");
 
     if(!container){
         return;
@@ -4310,88 +2822,51 @@ function renderCatList(){
     if(!cats.length){
 
         container.innerHTML=`
-        <div class="cat-empty">
-
-            Zatiaľ nemáš registrovaného
-            žiadneho mačacieho páchateľa.
-
+        <div class="no-incidents">
+            Zatiaľ nemáš uloženú žiadnu mačku.
             <br><br>
-
-            Pridaj prvého.
-
+            To je veľmi podozrivé.
         </div>`;
 
         return;
     }
 
     container.innerHTML=
-        cats
-        .map(cat=>{
-
-            const count=
-                Array.isArray(cat.incidents)
-                ? cat.incidents.length
-                : 0;
-
-            return `
+        cats.map(
+            cat=>`
 
             <button
                 class="cat-item"
                 type="button"
-                data-cat-id="${escapeHtml(cat.id)}"
+                onclick="openCatFile('${escapeHtml(cat.id)}')"
             >
 
-                <div class="cat-photo">
-
+                <div class="cat-item-photo">
                     ${
                         cat.photo
-                        ? `<img
-                            src="${cat.photo}"
-                            alt="Fotografia mačky"
-                           >`
+                        ? `<img src="${cat.photo}" alt="">`
                         : "🐱"
                     }
-
                 </div>
 
-                <div class="cat-info">
-
-                    <strong>
+                <div>
+                    <div class="cat-item-name">
                         ${escapeHtml(cat.name)}
-                    </strong>
+                    </div>
 
-                    <span>
-                        ${count}
-                        registrovaných incidentov
-                    </span>
-
+                    <div class="cat-item-info">
+                        ${cat.incidents.length} incidentov
+                    </div>
                 </div>
 
-                <div class="cat-arrow">
+                <div class="cat-item-arrow">
                     ›
                 </div>
 
             </button>
+        `
+        ).join("");
 
-            `;
-
-        })
-        .join("");
-
-    container
-        .querySelectorAll("[data-cat-id]")
-        .forEach(button=>{
-
-            button.addEventListener(
-                "click",
-                ()=>{
-                    openCatFile(
-                        button.dataset.catId
-                    );
-                }
-            );
-
-        });
 }
 
 
@@ -4399,101 +2874,69 @@ function renderCatList(){
    NEW CAT
 ========================================================= */
 
-async function previewCatPhoto(event){
+function openNewCat(){
 
-    const file=
-        event.target.files &&
-        event.target.files[0];
+    catPhotoData="";
 
-    if(!file){
-        return;
-    }
+    $("catName").value="";
 
-    if(
-        !file.type.startsWith("image/")
-    ){
+    $("catPhoto").value="";
 
-        showError(
-            "Neplatný súbor",
-            "Vyber prosím obrázok mačky."
-        );
+    $("photoPreview").innerHTML="🐱";
 
-        return;
-    }
+    openScreen(
+        "newCat"
+    );
 
-    try{
-
-        const blob=
-            await compressImage(
-                file,
-                MAX_PROFILE_PHOTO_SIDE,
-                PROFILE_PHOTO_QUALITY
-            );
-
-        const reader=
-            new FileReader();
-
-        reader.onload=
-            e=>{
-
-                catPhotoData=
-                    e.target.result;
-
-                document
-                    .getElementById(
-                        "photoPreview"
-                    )
-                    .innerHTML=
-                    `<img
-                        src="${e.target.result}"
-                        alt="Profilová fotografia"
-                    >`;
-
-            };
-
-        reader.readAsDataURL(blob);
-
-    }catch(error){
-
-        showError(
-            "Fotografia sa nepodarila spracovať",
-            error.message ||
-            "Skús inú fotografiu."
-        );
-    }
 }
 
-function saveCat(){
+$("catPhoto")?.addEventListener(
+    "change",
+    async event=>{
 
-    const input=
-        document.getElementById("catName");
+        const file=
+            event.target.files?.[0];
+
+        if(!file){
+            return;
+        }
+
+        try{
+
+            catPhotoData=
+                await compressImage(
+                    file,
+                    MAX_PROFILE_PHOTO_SIDE,
+                    PROFILE_PHOTO_QUALITY
+                );
+
+            $("photoPreview").innerHTML=
+                `<img src="${catPhotoData}" alt="">`;
+
+        }catch(error){
+
+            showError(
+                "Fotografiu sa nepodarilo načítať",
+                "Skús vybrať inú fotografiu."
+            );
+
+        }
+
+    }
+);
+
+function saveNewCat(){
 
     const name=
-        input.value.trim();
+        $("catName")
+        .value
+        .trim();
 
     if(!name){
 
         showError(
             "Chýba meno",
-            "Najprv zadaj meno mačky / páchateľa."
-        );
-
-        return;
-    }
-
-    if(
-        cats.some(
-            cat=>
-                String(cat.name)
-                    .toLowerCase()
-                ===
-                name.toLowerCase()
-        )
-    ){
-
-        showError(
-            "Páchateľ už existuje",
-            "V registri už máme mačku s týmto menom."
+            "Najprv zadaj meno mačky."
         );
 
         return;
@@ -4507,50 +2950,37 @@ function saveCat(){
             "_"+
             Math.random()
                 .toString(36)
-                .slice(2,7),
+                .slice(2,8),
 
-        name:name,
+        name,
 
-        photo:catPhotoData,
+        photo:
+            catPhotoData || "",
 
-        createdAt:
-            new Date().toISOString(),
+        incidents:[],
 
         lastMatch:null,
 
-        incidents:[]
+        createdAt:
+            new Date().toISOString()
 
     };
 
     cats.push(cat);
 
-    if(!saveDatabase()){
+    saveDatabase();
 
-        cats.pop();
+    currentCatId=
+        cat.id;
 
-        showError(
-            "Mačku sa nepodarilo uložiť",
-            "Úložisko zariadenia odmietlo uloženie."
-        );
+    renderCatList();
 
-        return;
-    }
+    renderCurrentCat();
 
-    currentCatId=cat.id;
+    openScreen(
+        "catFile"
+    );
 
-    input.value="";
-
-    document
-        .getElementById("catPhoto")
-        .value="";
-
-    document
-        .getElementById("photoPreview")
-        .innerHTML="🐱";
-
-    catPhotoData="";
-
-    openScreen("catFile");
 }
 
 
@@ -4577,7 +3007,12 @@ function openCatFile(id){
 
     currentCatId=id;
 
-    openScreen("catFile");
+    renderCurrentCat();
+
+    openScreen(
+        "catFile"
+    );
+
 }
 
 function openCurrentCatFile(){
@@ -4591,12 +3026,21 @@ function openCurrentCatFile(){
 
         }else{
 
-            openScreen("newCat");
+            openScreen(
+                "newCat"
+            );
+
             return;
         }
+
     }
 
-    openScreen("catFile");
+    renderCurrentCat();
+
+    openScreen(
+        "catFile"
+    );
+
 }
 
 function getProfileStats(cat){
@@ -4606,10 +3050,13 @@ function getProfileStats(cat){
     cat.incidents.forEach(
         incident=>{
 
-            counts[incident.type]=
+            counts[
+                incident.type
+            ]=
                 (
-                    counts[incident.type] ||
-                    0
+                    counts[
+                        incident.type
+                    ] || 0
                 )+1;
 
         }
@@ -4618,24 +3065,24 @@ function getProfileStats(cat){
     let top=null;
     let max=0;
 
-    Object.entries(counts)
-        .forEach(
-            ([key,value])=>{
+    Object.entries(counts).forEach(
+        ([key,value])=>{
 
-                if(value>max){
+            if(value>max){
 
-                    top=key;
-                    max=value;
-
-                }
+                top=key;
+                max=value;
 
             }
-        );
+
+        }
+    );
 
     const n=
         cat.incidents.length;
 
-    let level="BEZÚHONNÁ";
+    let level=
+        "BEZÚHONNÁ";
 
     if(n>=10){
 
@@ -4644,11 +3091,14 @@ function getProfileStats(cat){
 
     }else if(n>=6){
 
-        level="RECIDIVISTA";
+        level=
+            "RECIDIVISTA";
 
     }else if(n>=3){
 
-        level="PODOZRIVÝ";
+        level=
+            "PODOZRIVÝ";
+
     }
 
     return {
@@ -4658,6 +3108,7 @@ function getProfileStats(cat){
         n,
         level
     };
+
 }
 
 function renderCurrentCat(){
@@ -4671,7 +3122,9 @@ function renderCurrentCat(){
 
         openScreen(
             "home",
-            {replace:true}
+            {
+                replace:true
+            }
         );
 
         return;
@@ -4680,64 +3133,52 @@ function renderCurrentCat(){
     const stats=
         getProfileStats(cat);
 
-    document
-        .getElementById("profileName")
-        .textContent=cat.name;
+    $("profileName").textContent=
+        cat.name;
 
-    document
-        .getElementById("incidentCatName")
-        .textContent=
-            "Čo dnes spáchal/a "+
-            cat.name+
-            "?";
+    $("incidentCatName").textContent=
+        "Čo dnes spáchal/a "+
+        cat.name+
+        "?";
 
-    document
-        .getElementById("profilePhoto")
-        .innerHTML=
-            cat.photo
-            ? `<img
-                src="${cat.photo}"
-                alt="Profilová fotografia"
-              >`
-            : "🐱";
+    $("profilePhoto").innerHTML=
+        cat.photo
+        ? `<img src="${cat.photo}" alt="">`
+        : "🐱";
 
-    document
-        .getElementById("totalIncidents")
-        .textContent=stats.n;
+    $("totalIncidents").textContent=
+        stats.n;
 
-    document
-        .getElementById("confidenceValue")
-        .textContent=
-            cat.lastMatch !== null &&
-            cat.lastMatch !== undefined
-            ? cat.lastMatch+"%"
-            : "—";
+    $("confidenceValue").textContent=
+        cat.lastMatch
+        ? cat.lastMatch+"%"
+        : "—";
 
-    document
-        .getElementById("wantedLevel")
-        .textContent=stats.level;
+    $("wantedLevel").textContent=
+        stats.level;
 
-    document
-        .getElementById("topCrime")
-        .textContent=
-            stats.top
-            ? (
-                incidents.find(
-                    i=>i.id===stats.top
-                ) || {}
-              ).title ||
-              stats.top
-            : "—";
+    $("topCrime").textContent=
+        stats.top
+        ? (
+            incidents.find(
+                i=>i.id===stats.top
+            ) || {}
+        ).title || stats.top
+        : "—";
 
     renderIncidentList(cat);
+
 }
+
+
+/* =========================================================
+   INCIDENT LIST
+========================================================= */
 
 function renderIncidentList(cat){
 
     const container=
-        document.getElementById(
-            "incidentList"
-        );
+        $("incidentList");
 
     if(!container){
         return;
@@ -4746,7 +3187,6 @@ function renderIncidentList(cat){
     if(!cat.incidents.length){
 
         container.innerHTML=`
-
         <div class="no-incidents">
 
             Tento páchateľ zatiaľ nemá
@@ -4766,10 +3206,13 @@ function renderIncidentList(cat){
     cat.incidents.forEach(
         incident=>{
 
-            counts[incident.type]=
+            counts[
+                incident.type
+            ]=
                 (
-                    counts[incident.type] ||
-                    0
+                    counts[
+                        incident.type
+                    ] || 0
                 )+1;
 
         }
@@ -4785,28 +3228,15 @@ function renderIncidentList(cat){
                         i=>i.id===type
                     );
 
-                const evidence=
-                    cat.incidents
-                    .slice()
-                    .reverse()
-                    .find(
-                        i=>
-                            i.type===type &&
-                            i.evidenceId
-                    );
-
                 return `
-
                 <div class="incident-card">
 
                     <div class="incident-icon">
-
                         ${
                             item
                             ? item.icon
                             : ""
                         }
-
                     </div>
 
                     <div class="incident-text">
@@ -4831,80 +3261,65 @@ function renderIncidentList(cat){
                             }
                         </span>
 
-                        ${
-                            evidence
-                            ? `
-                            <div class="incident-evidence">
-
-                                <button
-                                    type="button"
-                                    data-evidence-id="${escapeHtml(evidence.evidenceId)}"
-                                >
-                                    ${
-                                        evidence.evidenceType==="video"
-                                        ? "🎥 VIDEODÔKAZ"
-                                        : "📷 FOTODÔKAZ"
-                                    }
-                                </button>
-
-                            </div>
-                            `
-                            : ""
-                        }
-
                     </div>
 
                     <div class="incident-count">
                         ${count}×
                     </div>
 
-                </div>
-
-                `;
+                </div>`;
 
             }
         )
         .join("");
 
-    container
-        .querySelectorAll("[data-evidence-id]")
-        .forEach(button=>{
-
-            button.addEventListener(
-                "click",
-                event=>{
-
-                    event.stopPropagation();
-
-                    viewEvidence(
-                        button.dataset.evidenceId
-                    );
-
-                }
-            );
-
-        });
 }
 
 
 /* =========================================================
-   INCIDENT OPTIONS
+   INCIDENT
 ========================================================= */
+
+function openIncident(){
+
+    if(!currentCatId){
+
+        showError(
+            "Nie je vybraná mačka",
+            "Najprv otvor konkrétny CAT FILE."
+        );
+
+        return;
+    }
+
+    selectedIncidentType=
+        "ukradla jedlo";
+
+    $("incidentNote").value="";
+
+    updateIncidentDate();
+
+    selectIncidentEvidenceNone();
+
+    renderIncidentOptions();
+
+    openScreen(
+        "incident"
+    );
+
+}
 
 function renderIncidentOptions(){
 
     const container=
-        document.getElementById(
-            "incidentOptions"
-        );
+        $("incidentOptions");
 
     if(!container){
         return;
     }
 
     container.innerHTML=
-        incidents
-        .map(
+        incidents.map(
             incident=>{
 
                 const selected=
@@ -4914,7 +3329,6 @@ function renderIncidentOptions(){
                     : "";
 
                 return `
-
                 <button
                     type="button"
                     class="incident-option ${selected}"
@@ -4933,84 +3347,77 @@ function renderIncidentOptions(){
                         ${escapeHtml(incident.description)}
                     </span>
 
-                </button>
-
-                `;
+                </button>`;
 
             }
-        )
-        .join("");
+        ).join("");
 
     container
         .querySelectorAll(
             "[data-incident-type]"
         )
-        .forEach(button=>{
+        .forEach(
+            button=>{
 
-            button.addEventListener(
-                "click",
-                ()=>{
-                    selectIncident(
-                        button.dataset.incidentType
-                    );
-                }
-            );
+                button.addEventListener(
+                    "click",
+                    ()=>{
+                        selectIncident(
+                            button.dataset.incidentType
+                        );
+                    }
+                );
 
-        });
+            }
+        );
+
 }
 
 function selectIncident(type){
 
-    selectedIncidentType=type;
+    selectedIncidentType=
+        type;
 
     renderIncidentOptions();
+
 }
 
 function updateIncidentDate(){
 
     const input=
-        document.getElementById(
-            "incidentDate"
-        );
+        $("incidentDate");
 
     if(!input){
         return;
     }
 
-    const now=new Date();
+    const now=
+        new Date();
 
     input.value=
         now.toLocaleDateString(
-            "sk-SK"
+            getLocale()
         )+
         " "+
         now.toLocaleTimeString(
-            "sk-SK",
+            getLocale(),
             {
                 hour:"2-digit",
                 minute:"2-digit"
             }
         );
+
 }
 
 
 /* =========================================================
-   LOCAL EVIDENCE DATABASE
+   EVIDENCE DATABASE
 ========================================================= */
 
-function openEvidenceDB(){
+function openEvidenceDb(){
 
     if(evidenceDbPromise){
         return evidenceDbPromise;
-    }
-
-    if(!window.indexedDB){
-
-        return Promise.reject(
-            new Error(
-                "Toto zariadenie nepodporuje lokálne úložisko dôkazov."
-            )
-        );
     }
 
     evidenceDbPromise=
@@ -5030,10 +3437,9 @@ function openEvidenceDB(){
                             event.target.result;
 
                         if(
-                            !db.objectStoreNames
-                                .contains(
-                                    EVIDENCE_STORE
-                                )
+                            !db.objectStoreNames.contains(
+                                EVIDENCE_STORE
+                            )
                         ){
 
                             db.createObjectStore(
@@ -5044,6 +3450,7 @@ function openEvidenceDB(){
                             );
 
                         }
+
                     };
 
                 request.onsuccess=
@@ -5056,10 +3463,7 @@ function openEvidenceDB(){
                 request.onerror=
                     ()=>{
                         reject(
-                            request.error ||
-                            new Error(
-                                "IndexedDB chyba."
-                            )
+                            request.error
                         );
                     };
 
@@ -5067,383 +3471,238 @@ function openEvidenceDB(){
         );
 
     return evidenceDbPromise;
+
 }
 
-function evidencePut(record){
+async function evidencePut(record){
 
-    return openEvidenceDB()
-        .then(
-            db=>
-                new Promise(
-                    (resolve,reject)=>{
+    const db=
+        await openEvidenceDb();
 
-                        const transaction=
-                            db.transaction(
-                                EVIDENCE_STORE,
-                                "readwrite"
-                            );
+    return new Promise(
+        (resolve,reject)=>{
 
-                        transaction
-                            .objectStore(
-                                EVIDENCE_STORE
-                            )
-                            .put(record);
+            const transaction=
+                db.transaction(
+                    EVIDENCE_STORE,
+                    "readwrite"
+                );
 
-                        transaction.oncomplete=
-                            ()=>{
-                                resolve(record);
-                            };
-
-                        transaction.onerror=
-                            ()=>{
-                                reject(
-                                    transaction.error ||
-                                    new Error(
-                                        "Dôkaz sa nepodarilo uložiť."
-                                    )
-                                );
-                            };
-
-                    }
+            transaction
+                .objectStore(
+                    EVIDENCE_STORE
                 )
-        );
+                .put(record);
+
+            transaction.oncomplete=
+                ()=>resolve(record);
+
+            transaction.onerror=
+                ()=>reject(
+                    transaction.error
+                );
+
+        }
+    );
+
 }
 
-function evidenceGet(id){
+async function evidenceGet(id){
 
-    if(!id){
-        return Promise.resolve(null);
-    }
+    const db=
+        await openEvidenceDb();
 
-    return openEvidenceDB()
-        .then(
-            db=>
-                new Promise(
-                    (resolve,reject)=>{
+    return new Promise(
+        (resolve,reject)=>{
 
-                        const transaction=
-                            db.transaction(
-                                EVIDENCE_STORE,
-                                "readonly"
-                            );
+            const transaction=
+                db.transaction(
+                    EVIDENCE_STORE,
+                    "readonly"
+                );
 
-                        const request=
-                            transaction
-                            .objectStore(
-                                EVIDENCE_STORE
-                            )
-                            .get(id);
-
-                        request.onsuccess=
-                            ()=>{
-                                resolve(
-                                    request.result ||
-                                    null
-                                );
-                            };
-
-                        request.onerror=
-                            ()=>{
-                                reject(
-                                    request.error ||
-                                    new Error(
-                                        "Dôkaz sa nepodarilo načítať."
-                                    )
-                                );
-                            };
-
-                    }
+            const request=
+                transaction
+                .objectStore(
+                    EVIDENCE_STORE
                 )
-        );
-}
+                .get(id);
 
-function evidenceDelete(id){
+            request.onsuccess=
+                ()=>resolve(
+                    request.result
+                );
 
-    if(!id){
-        return Promise.resolve();
-    }
+            request.onerror=
+                ()=>reject(
+                    request.error
+                );
 
-    return openEvidenceDB()
-        .then(
-            db=>
-                new Promise(
-                    (resolve,reject)=>{
+        }
+    );
 
-                        const transaction=
-                            db.transaction(
-                                EVIDENCE_STORE,
-                                "readwrite"
-                            );
-
-                        transaction
-                            .objectStore(
-                                EVIDENCE_STORE
-                            )
-                            .delete(id);
-
-                        transaction.oncomplete=
-                            ()=>{
-                                resolve();
-                            };
-
-                        transaction.onerror=
-                            ()=>{
-                                reject(
-                                    transaction.error
-                                );
-                            };
-
-                    }
-                )
-        );
 }
 
 
 /* =========================================================
-   EVIDENCE UI
+   EVIDENCE SELECTION
 ========================================================= */
-
-function setEvidenceStatus(text){
-
-    const element=
-        document.getElementById(
-            "evidenceStatus"
-        );
-
-    if(element){
-        element.textContent=text;
-    }
-}
-
-function setEvidenceChoice(type){
-
-    const mapping={
-        photo:"evidencePhotoChoice",
-        video:"evidenceVideoChoice",
-        none:"evidenceNoneChoice"
-    };
-
-    Object.entries(mapping)
-        .forEach(
-            ([key,id])=>{
-
-                const element=
-                    document.getElementById(id);
-
-                if(element){
-
-                    element.classList.toggle(
-                        "selected",
-                        key===type
-                    );
-
-                }
-
-            }
-        );
-}
 
 function selectIncidentEvidenceNone(){
 
+    evidenceMode=
+        "none";
+
     pendingIncidentEvidence=null;
 
-    setEvidenceChoice("none");
+    $("evidencePhotoChoice")
+        ?.classList.remove(
+            "selected"
+        );
 
-    setEvidenceStatus(
-        "Bez fotografického alebo video dôkazu."
-    );
+    $("evidenceVideoChoice")
+        ?.classList.remove(
+            "selected"
+        );
+
+    $("evidenceNoneChoice")
+        ?.classList.add(
+            "selected"
+        );
+
+    if($("evidenceStatus")){
+
+        $("evidenceStatus")
+            .textContent=
+                "Nebude priložený žiadny dôkaz.";
+
+    }
+
+}
+
+function selectIncidentEvidence(mode){
+
+    evidenceMode=
+        mode;
+
+    document
+        .querySelectorAll(
+            ".evidence-choice"
+        )
+        .forEach(
+            button=>{
+                button.classList.remove(
+                    "selected"
+                );
+            }
+        );
+
+    if(mode==="none"){
+
+        selectIncidentEvidenceNone();
+
+        return;
+    }
+
+    if(mode==="photo"){
+
+        $("evidencePhotoChoice")
+            .classList.add(
+                "selected"
+            );
+
+        $("evidenceStatus")
+            .textContent=
+                "Po potvrdení sa otvorí fotoaparát.";
+
+    }
+
+    if(mode==="video"){
+
+        $("evidenceVideoChoice")
+            .classList.add(
+                "selected"
+            );
+
+        $("evidenceStatus")
+            .textContent=
+                "Po potvrdení sa otvorí kamera na krátky videozáznam.";
+
+    }
+
+    openEvidenceCamera(mode);
+
 }
 
 
 /* =========================================================
-   CAMERA STREAM
+   CAMERA
 ========================================================= */
 
-function stopEvidenceStream(){
-
-    if(evidenceTimer){
-
-        clearInterval(
-            evidenceTimer
-        );
-
-        evidenceTimer=null;
-    }
-
-    if(
-        evidenceRecorder &&
-        evidenceRecorder.state!=="inactive"
-    ){
-
-        try{
-            evidenceRecorder.stop();
-        }catch(error){}
-
-    }
-
-    evidenceRecorder=null;
-    evidenceChunks=[];
-
-    if(evidenceStream){
-
-        evidenceStream
-            .getTracks()
-            .forEach(
-                track=>{
-
-                    try{
-                        track.stop();
-                    }catch(error){}
-
-                }
-            );
-
-        evidenceStream=null;
-    }
-
-    const video=
-        document.getElementById(
-            "evidenceCameraVideo"
-        );
-
-    if(video){
-        video.srcObject=null;
-    }
-}
-
-async function requestIncidentEvidence(mode){
+async function openEvidenceCamera(mode){
 
     if(evidenceCaptureBusy){
         return;
     }
 
-    evidenceMode=mode;
     evidenceCaptureBusy=true;
-    pendingIncidentEvidence=null;
 
-    setEvidenceChoice(mode);
+    evidenceMode=
+        mode;
 
     const modal=
-        document.getElementById(
-            "evidenceCameraModal"
-        );
+        $("evidenceCameraModal");
 
-    const title=
-        document.getElementById(
-            "evidenceCameraTitle"
-        );
-
-    const text=
-        document.getElementById(
-            "evidenceCameraText"
-        );
+    const video=
+        $("evidenceCameraVideo");
 
     const status=
-        document.getElementById(
-            "evidenceCameraStatus"
-        );
+        $("evidenceCameraStatus");
 
-    const button=
-        document.getElementById(
-            "evidenceCaptureButton"
-        );
+    const capture=
+        $("evidenceCaptureButton");
 
-    const preview=
-        document.getElementById(
-            "evidencePreview"
-        );
+    if(!modal || !video){
 
-    if(title){
+        evidenceCaptureBusy=false;
 
-        title.textContent=
-            mode==="photo"
-            ? "📷 FOTODÔKAZ"
-            : "🎥 VIDEODÔKAZ";
-
+        return;
     }
 
-    if(text){
+    modal.classList.add("show");
 
-        text.textContent=
-            "Kamera sa použije iba počas tohto záznamu. O presnom oprávnení rozhoduje Android/iOS.";
+    $("evidenceCameraTitle").textContent=
+        mode==="photo"
+        ? "FOTODÔKAZ"
+        : "VIDEODÔKAZ";
 
-    }
+    capture.textContent=
+        mode==="photo"
+        ? "📷 ODFOTIŤ DÔKAZ"
+        : "🎥 NAHRAŤ VIDEO";
 
-    if(status){
-
-        status.textContent=
-            "Žiadam o prístup ku kamere…";
-
-    }
-
-    if(button){
-
-        button.disabled=false;
-
-        button.textContent=
-            mode==="photo"
-            ? "📷 ODFOTIŤ DÔKAZ"
-            : "🔴 ZAČAŤ NAHRÁVANIE";
-
-    }
-
-    if(preview){
-
-        preview.style.display="none";
-        preview.innerHTML="";
-
-    }
-
-    if(modal){
-        modal.classList.add("show");
-    }
+    status.textContent=
+        "Pripravujem kameru…";
 
     try{
 
-        if(
-            !navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia
-        ){
-
-            throw new Error(
-                "Kamera nie je v tomto prostredí dostupná."
-            );
-        }
-
         evidenceStream=
-            await navigator
-            .mediaDevices
-            .getUserMedia({
-
-                video:{
-                    facingMode:{
-                        ideal:"environment"
+            await navigator.mediaDevices.getUserMedia(
+                {
+                    video:{
+                        facingMode:{
+                            ideal:"environment"
+                        },
+                        width:{
+                            ideal:EVIDENCE_VIDEO_WIDTH
+                        },
+                        height:{
+                            ideal:EVIDENCE_VIDEO_HEIGHT
+                        }
                     },
-
-                    width:{
-                        ideal:EVIDENCE_VIDEO_WIDTH,
-                        max:EVIDENCE_VIDEO_WIDTH
-                    },
-
-                    height:{
-                        ideal:EVIDENCE_VIDEO_HEIGHT,
-                        max:EVIDENCE_VIDEO_HEIGHT
-                    },
-
-                    frameRate:{
-                        ideal:24,
-                        max:30
-                    }
-
-                },
-
-                audio:false
-
-            });
-
-        const video=
-            document.getElementById(
-                "evidenceCameraVideo"
+                    audio:
+                        mode==="video"
+                }
             );
 
         video.srcObject=
@@ -5451,241 +3710,272 @@ async function requestIncidentEvidence(mode){
 
         await video.play();
 
-        if(status){
-
-            status.textContent=
-                mode==="photo"
-                ? "Kamera je pripravená. Odfotografuj miesto činu."
-                : "Kamera je pripravená. Nahrávanie bude mať najviac 15 sekúnd.";
-
-        }
-
-        evidenceCaptureBusy=false;
+        status.textContent=
+            mode==="photo"
+            ? "Kamera je pripravená."
+            : "Video bude mať maximálne 15 sekúnd.";
 
     }catch(error){
 
         console.error(
-            "EVIDENCE CAMERA ERROR",
+            "CAMERA ERROR",
             error
         );
 
+        status.textContent=
+            "K fotoaparátu sa nepodarilo pristúpiť. Povoľ kameru v nastaveniach telefónu a skús to znova.";
+
+        modal.classList.add("show");
+
+    }finally{
+
         evidenceCaptureBusy=false;
 
-        if(status){
-
-            status.textContent=
-                "Kamera nebola povolená. Môžeš povoliť kameru v nastaveniach telefónu a skúsiť znova.";
-
-        }
-
-        if(button){
-            button.disabled=true;
-        }
     }
+
 }
 
+function closeEvidenceCamera(){
 
-/* =========================================================
-   CAPTURE PHOTO / VIDEO
-========================================================= */
+    if(evidenceTimer){
+
+        clearTimeout(
+            evidenceTimer
+        );
+
+        evidenceTimer=null;
+
+    }
+
+    if(evidenceRecorder){
+
+        try{
+            if(
+                evidenceRecorder.state!=="inactive"
+            ){
+                evidenceRecorder.stop();
+            }
+        }catch(error){}
+
+        evidenceRecorder=null;
+
+    }
+
+    if(evidenceStream){
+
+        evidenceStream
+            .getTracks()
+            .forEach(
+                track=>{
+                    track.stop();
+                }
+            );
+
+        evidenceStream=null;
+
+    }
+
+    const video=
+        $("evidenceCameraVideo");
+
+    if(video){
+
+        video.pause();
+
+        video.srcObject=null;
+
+    }
+
+    $("evidenceCameraModal")
+        ?.classList.remove(
+            "show"
+        );
+
+    evidenceChunks=[];
+
+    evidenceCaptureBusy=false;
+
+}
 
 async function captureIncidentEvidence(){
 
     if(
-        evidenceCaptureBusy ||
-        !evidenceStream
+        !evidenceStream ||
+        !evidenceMode ||
+        evidenceMode==="none"
     ){
         return;
     }
 
+    if(evidenceMode==="photo"){
+
+        await capturePhotoEvidence();
+
+        return;
+    }
+
+    if(evidenceMode==="video"){
+
+        await captureVideoEvidence();
+
+    }
+
+}
+
+async function capturePhotoEvidence(){
+
     const video=
-        document.getElementById(
-            "evidenceCameraVideo"
+        $("evidenceCameraVideo");
+
+    if(
+        !video ||
+        video.readyState<2
+    ){
+        return;
+    }
+
+    const width=
+        video.videoWidth ||
+        1280;
+
+    const height=
+        video.videoHeight ||
+        720;
+
+    const scale=
+        Math.min(
+            1,
+            MAX_EVIDENCE_PHOTO_SIDE/
+            Math.max(
+                width,
+                height
+            )
         );
 
-    const status=
-        document.getElementById(
-            "evidenceCameraStatus"
+    const canvas=
+        document.createElement(
+            "canvas"
         );
 
-    const button=
-        document.getElementById(
-            "evidenceCaptureButton"
+    canvas.width=
+        Math.round(
+            width*scale
         );
 
-    const preview=
-        document.getElementById(
-            "evidencePreview"
+    canvas.height=
+        Math.round(
+            height*scale
         );
 
-    evidenceCaptureBusy=true;
+    const context=
+        canvas.getContext(
+            "2d"
+        );
 
-    try{
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-        if(evidenceMode==="photo"){
-
-            if(!video.videoWidth){
-
-                throw new Error(
-                    "Kamera ešte nie je pripravená."
-                );
-            }
-
-            const canvas=
-                document.createElement(
-                    "canvas"
-                );
-
-            const scale=
-                Math.min(
-                    1,
-                    MAX_EVIDENCE_PHOTO_SIDE /
-                    Math.max(
-                        video.videoWidth,
-                        video.videoHeight
-                    )
-                );
-
-            canvas.width=
-                Math.round(
-                    video.videoWidth*scale
-                );
-
-            canvas.height=
-                Math.round(
-                    video.videoHeight*scale
-                );
-
-            const context=
-                canvas.getContext("2d");
-
-            context.drawImage(
-                video,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            const blob=
-                await new Promise(
-                    resolve=>{
-                        canvas.toBlob(
-                            resolve,
-                            "image/jpeg",
-                            EVIDENCE_PHOTO_QUALITY
-                        );
-                    }
-                );
+    canvas.toBlob(
+        blob=>{
 
             if(!blob){
 
-                throw new Error(
-                    "Fotografiu sa nepodarilo vytvoriť."
+                showError(
+                    "Fotografiu sa nepodarilo vytvoriť",
+                    "Skús to ešte raz."
                 );
+
+                return;
             }
 
             pendingIncidentEvidence={
-
                 type:"photo",
-
-                blob:blob,
-
+                mime:"image/jpeg",
                 size:blob.size,
-
-                mime:"image/jpeg"
-
+                blob
             };
 
-            if(preview){
+            $("evidenceStatus")
+                .textContent=
+                    "Fotodôkaz je pripravený na uloženie.";
 
-                const url=
-                    URL.createObjectURL(blob);
+            closeEvidenceCamera();
 
-                preview.innerHTML=
-                    `<img
-                        src="${url}"
-                        alt="Fotodôkaz"
-                    >`;
+        },
+        "image/jpeg",
+        EVIDENCE_PHOTO_QUALITY
+    );
 
-                preview.style.display="block";
+}
 
-                preview.dataset.objectUrl=url;
-            }
+async function captureVideoEvidence(){
 
-            if(status){
+    const video=
+        $("evidenceCameraVideo");
 
-                status.textContent=
-                    "Fotodôkaz pripravený • "+
-                    formatBytes(blob.size);
+    if(!video){
+        return;
+    }
 
-            }
+    if(
+        !window.MediaRecorder
+    ){
 
-            stopEvidenceStream();
+        showError(
+            "Video nie je podporované",
+            "Tento prehliadač nepodporuje nahrávanie videa."
+        );
 
-            evidenceCaptureBusy=false;
+        return;
+    }
 
-            if(button){
+    evidenceChunks=[];
 
-                button.disabled=false;
+    let mimeType=
+        "";
 
-                button.textContent=
-                    "📷 ODFOTIŤ ZNOVA";
+    const candidates=[
+        "video/webm;codecs=vp9",
+        "video/webm;codecs=vp8",
+        "video/webm"
+    ];
 
-            }
-
-            return;
-        }
-
-
-        /* VIDEO */
-
-        const mimeCandidates=[
-            "video/webm;codecs=vp8",
-            "video/webm"
-        ];
-
-        let mime="";
-
-        for(
-            const candidate
-            of mimeCandidates
-        ){
-
-            if(
-                window.MediaRecorder &&
-                MediaRecorder.isTypeSupported(candidate)
-            ){
-
-                mime=candidate;
-                break;
-            }
-        }
+    for(
+        const candidate
+        of candidates
+    ){
 
         if(
-            !window.MediaRecorder
+            MediaRecorder.isTypeSupported(
+                candidate
+            )
         ){
 
-            throw new Error(
-                "Nahrávanie videa nie je v tomto zariadení podporované."
-            );
+            mimeType=
+                candidate;
+
+            break;
+
         }
 
-        const options={
-            videoBitsPerSecond:
-                EVIDENCE_VIDEO_BITRATE
-        };
+    }
 
-        if(mime){
-            options.mimeType=mime;
-        }
-
-        evidenceChunks=[];
+    try{
 
         evidenceRecorder=
             new MediaRecorder(
                 evidenceStream,
-                options
+                {
+                    mimeType:
+                        mimeType || undefined,
+                    videoBitsPerSecond:
+                        EVIDENCE_VIDEO_BITRATE
+                }
             );
 
         evidenceRecorder.ondataavailable=
@@ -5693,7 +3983,7 @@ async function captureIncidentEvidence(){
 
                 if(
                     event.data &&
-                    event.data.size>0
+                    event.data.size
                 ){
 
                     evidenceChunks.push(
@@ -5701,230 +3991,77 @@ async function captureIncidentEvidence(){
                     );
 
                 }
-            };
 
-        evidenceRecorder.onerror=
-            event=>{
-
-                console.error(
-                    "MEDIA RECORDER ERROR",
-                    event
-                );
-
-                if(status){
-
-                    status.textContent=
-                        "Video sa nepodarilo nahrať.";
-
-                }
-
-                evidenceCaptureBusy=false;
             };
 
         evidenceRecorder.onstop=
-            async()=>{
+            ()=>{
 
-                try{
-
-                    const actualType=
-                        evidenceRecorder.mimeType ||
-                        mime ||
-                        "video/webm";
-
-                    const blob=
-                        new Blob(
-                            evidenceChunks,
-                            {
-                                type:actualType
-                            }
-                        );
-
-                    if(!blob.size){
-
-                        throw new Error(
-                            "Prázdne video."
-                        );
-                    }
-
-                    pendingIncidentEvidence={
-
-                        type:"video",
-
-                        blob:blob,
-
-                        size:blob.size,
-
-                        mime:actualType
-
-                    };
-
-                    if(preview){
-
-                        const url=
-                            URL.createObjectURL(
-                                blob
-                            );
-
-                        preview.innerHTML=
-                            `<video
-                                controls
-                                playsinline
-                                src="${url}"
-                            ></video>`;
-
-                        preview.style.display=
-                            "block";
-
-                        preview.dataset.objectUrl=url;
-                    }
-
-                    if(status){
-
-                        status.textContent=
-                            "Videodôkaz pripravený • "+
-                            formatBytes(blob.size);
-
-                    }
-
-                    if(button){
-
-                        button.disabled=false;
-
-                        button.textContent=
-                            "🎥 NAHRAŤ ZNOVA";
-
-                    }
-
-                }catch(error){
-
-                    console.error(
-                        error
+                const blob=
+                    new Blob(
+                        evidenceChunks,
+                        {
+                            type:
+                                mimeType ||
+                                "video/webm"
+                        }
                     );
 
-                    pendingIncidentEvidence=null;
+                pendingIncidentEvidence={
+                    type:"video",
+                    mime:
+                        blob.type,
+                    size:
+                        blob.size,
+                    blob
+                };
 
-                    if(status){
+                $("evidenceStatus")
+                    .textContent=
+                        "Videodôkaz je pripravený na uloženie.";
 
-                        status.textContent=
-                            "Video sa nepodarilo spracovať.";
-
-                    }
-
-                }finally{
-
-                    stopEvidenceStream();
-
-                    evidenceCaptureBusy=false;
-                }
+                closeEvidenceCamera();
 
             };
 
-        evidenceRecorder.start(250);
+        evidenceRecorder.start();
 
-        if(status){
-
-            status.textContent=
-                "🔴 Nahrávam… maximálne "+
-                MAX_EVIDENCE_VIDEO_SECONDS+
-                " sekúnd.";
-
-        }
-
-        if(button){
-
-            button.textContent=
-                "⏹️ ZASTAVIŤ NAHRÁVANIE";
-
-        }
-
-        let remaining=
-            MAX_EVIDENCE_VIDEO_SECONDS;
+        $("evidenceCameraStatus")
+            .textContent=
+                "Nahrávam… maximálne 15 sekúnd.";
 
         evidenceTimer=
-            setInterval(
+            setTimeout(
                 ()=>{
-
-                    remaining--;
-
                     if(
-                        status &&
                         evidenceRecorder &&
-                        evidenceRecorder.state==="recording"
+                        evidenceRecorder.state!=="inactive"
                     ){
-
-                        status.textContent=
-                            "🔴 Nahrávam… "+
-                            remaining+
-                            " s";
-
-                    }
-
-                    if(
-                        remaining<=0 &&
-                        evidenceRecorder &&
-                        evidenceRecorder.state==="recording"
-                    ){
-
                         evidenceRecorder.stop();
-
                     }
-
                 },
-                1000
+                MAX_EVIDENCE_VIDEO_SECONDS*1000
             );
-
-        evidenceCaptureBusy=false;
 
     }catch(error){
 
         console.error(
-            "EVIDENCE CAPTURE ERROR",
+            "VIDEO RECORD ERROR",
             error
         );
 
-        if(status){
-
-            status.textContent=
-                error.message ||
-                "Dôkaz sa nepodarilo vytvoriť.";
-
-        }
-
-        evidenceCaptureBusy=false;
-    }
-}
-
-function closeEvidenceCamera(){
-
-    stopEvidenceStream();
-
-    evidenceMode=null;
-    evidenceCaptureBusy=false;
-
-    document
-        .getElementById(
-            "evidenceCameraModal"
-        )
-        ?.classList.remove("show");
-
-    const button=
-        document.getElementById(
-            "evidenceCaptureButton"
+        showError(
+            "Video sa nepodarilo nahrať",
+            "Skús to znova."
         );
 
-    if(button){
-
-        button.disabled=false;
-
-        button.textContent=
-            "📷 ODFOTIŤ DÔKAZ";
-
     }
+
 }
 
 
 /* =========================================================
-   SAVE / VIEW EVIDENCE
+   EVIDENCE PERSISTENCE
 ========================================================= */
 
 async function persistPendingEvidence(){
@@ -5965,6 +4102,7 @@ async function persistPendingEvidence(){
     pendingIncidentEvidence=null;
 
     return record;
+
 }
 
 async function viewEvidence(evidenceId){
@@ -6025,7 +4163,6 @@ async function viewEvidence(evidenceId){
             isVideo
                 ? "🎥 VIDEODÔKAZ"
                 : "📷 FOTODÔKAZ",
-
             html+
             `
             <p style="margin-top:10px">
@@ -6033,19 +4170,15 @@ async function viewEvidence(evidenceId){
                 ${formatBytes(record.size)}
             </p>
             `,
-
             []
         );
 
         const modal=
-            document.getElementById(
-                "funModal"
-            );
+            $("funModal");
 
         if(modal){
-
-            modal.dataset.objectUrl=url;
-
+            modal.dataset.objectUrl=
+                url;
         }
 
     }catch(error){
@@ -6055,7 +4188,9 @@ async function viewEvidence(evidenceId){
             "Dôkaz sa nepodarilo načítať.",
             []
         );
+
     }
+
 }
 
 
@@ -6081,8 +4216,7 @@ async function registerIncident(){
     }
 
     const note=
-        document
-        .getElementById("incidentNote")
+        $("incidentNote")
         .value
         .trim();
 
@@ -6118,6 +4252,7 @@ async function registerIncident(){
         );
 
         return;
+
     }
 
     const incident={
@@ -6133,26 +4268,23 @@ async function registerIncident(){
         type:
             selectedIncidentType,
 
-        note:
-            note,
+        note,
 
         date:
-            new Date().toISOString(),
+            $("incidentDate").value,
+
+        title:
+            incidentTitle,
 
         evidenceId:
             evidenceRecord
             ? evidenceRecord.id
-            : "",
+            : null,
 
         evidenceType:
             evidenceRecord
             ? evidenceRecord.type
-            : "",
-
-        evidenceSize:
-            evidenceRecord
-            ? evidenceRecord.size
-            : 0
+            : null
 
     };
 
@@ -6160,114 +4292,28 @@ async function registerIncident(){
         incident
     );
 
-    if(!saveDatabase()){
-
-        cat.incidents.pop();
-
-        if(evidenceRecord){
-
-            try{
-
-                await evidenceDelete(
-                    evidenceRecord.id
-                );
-
-            }catch(error){}
-
-        }
-
-        showError(
-            "Incident sa nepodarilo uložiť",
-            "Úložisko zariadenia odmietlo uloženie."
-        );
-
-        return;
-    }
-
-    document
-        .getElementById("incidentNote")
-        .value="";
-
-    selectIncidentEvidenceNone();
-
-    closeEvidenceCamera();
+    saveDatabase();
 
     renderCurrentCat();
 
-    openScreen("catFile");
+    openScreen(
+        "catFile"
+    );
 
-    document
-        .getElementById("afterIncidentText")
-        .textContent=
-            `Incident „${incidentTitle}“ bol zapísaný do spisu ${cat.name}.`+
-            (
-                evidenceRecord
-                ? ` Dôkaz: ${
-                    evidenceRecord.type==="photo"
-                    ? "fotografia"
-                    : "video"
-                  }.`
-                : ""
-            );
+    $("incidentNote").value="";
+
+    selectIncidentEvidenceNone();
 
     setTimeout(
         ()=>{
-
-            document
-                .getElementById(
-                    "afterIncidentModal"
-                )
-                ?.classList.add("show");
-
+            $("afterIncidentModal")
+                ?.classList.add(
+                    "show"
+                );
         },
-        120
-    );
-}
-
-
-/* =========================================================
-   AFTER INCIDENT
-========================================================= */
-
-function afterIncident(kind){
-
-    const modal=
-        document.getElementById(
-            "afterIncidentModal"
-        );
-
-    modal.classList.remove(
-        "show"
+        250
     );
 
-    let text="";
-
-    if(kind==="vet"){
-
-        text=
-            "Veterinár bol upozornený. Páchateľ tvrdí, že nič nezjedol.";
-
-    }
-
-    if(kind==="police"){
-
-        text=
-            "Polícia bola imaginárne kontaktovaná. Operátor odporučil mačku nestrácať z dohľadu.";
-
-    }
-
-    if(kind==="ignore"){
-
-        text=
-            "Rozumné rozhodnutie. Páchateľ už pravdepodobne plánuje ďalší incident.";
-
-    }
-
-    showFun(
-        "ČO TERAZ?",
-        text,
-        []
-    );
 }
 
 
@@ -6295,12 +4341,11 @@ function showProfileFun(){
             incidents.find(
                 i=>i.id===stats.top
             ) || {}
-          ).title ||
-          stats.top
+        ).title ||
+        stats.top
         : "žiadny";
 
     showFun(
-
         "🕵️ VYŠETROVACÍ PROFIL",
 
         `
@@ -6358,31 +4403,23 @@ function showProfileFun(){
 
             {
                 t:"😼 VYGENEROVAŤ NOVÚ VÝHOVORKU",
-
-                f:
-                    ()=>showProfileFun()
+                f:()=>showProfileFun()
             },
 
             {
                 t:"⚖️ VYNIESŤ ROZSUDOK",
-
-                f:
-                    ()=>showFun(
-                        "⚖️ ROZSUDOK",
-                        randomItem(verdicts),
-                        []
-                    )
+                f:()=>showFun(
+                    "⚖️ ROZSUDOK",
+                    randomItem(verdicts),
+                    []
+                )
             }
 
         ]
 
     );
+
 }
-
-
-/* =========================================================
-   GENERIC FUN MODAL
-========================================================= */
 
 function showFun(
     title,
@@ -6390,160 +4427,121 @@ function showFun(
     choices
 ){
 
-    const modal=
-        document.getElementById(
-            "funModal"
-        );
+    $("funTitle").textContent=
+        title;
 
-    const titleElement=
-        document.getElementById(
-            "funTitle"
-        );
-
-    const textElement=
-        document.getElementById(
-            "funText"
-        );
+    $("funText").innerHTML=
+        text;
 
     const container=
-        document.getElementById(
-            "funChoices"
-        );
-
-    titleElement.textContent=title;
-
-    textElement.innerHTML=text;
+        $("funChoices");
 
     container.innerHTML="";
 
-    (choices || [])
-        .forEach(
-            choice=>{
+    (
+        choices || []
+    ).forEach(
+        choice=>{
 
-                const button=
-                    document.createElement(
-                        "button"
-                    );
-
-                button.className="choice";
-                button.type="button";
-
-                button.innerHTML=
-                    `<strong>
-                        ${escapeHtml(choice.t)}
-                     </strong>`;
-
-                button.addEventListener(
-                    "click",
-                    choice.f
+            const button=
+                document.createElement(
+                    "button"
                 );
 
-                container.appendChild(
-                    button
-                );
+            button.className=
+                "fun-choice";
 
-            }
+            button.type=
+                "button";
+
+            button.textContent=
+                choice.t;
+
+            button.addEventListener(
+                "click",
+                ()=>{
+                    choice.f();
+                }
+            );
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+    $("funModal")
+        .classList.add(
+            "show"
         );
 
-    modal.classList.add("show");
 }
 
 function closeModal(){
 
     const modal=
-        document.getElementById(
-            "funModal"
-        );
+        $("funModal");
 
-    if(
-        modal &&
-        modal.dataset.objectUrl
-    ){
+    if(modal){
 
-        try{
+        const url=
+            modal.dataset.objectUrl;
+
+        if(url){
 
             URL.revokeObjectURL(
-                modal.dataset.objectUrl
+                url
             );
 
-        }catch(error){}
+            delete modal.dataset.objectUrl;
 
-        delete modal.dataset.objectUrl;
+        }
+
+        modal.classList.remove(
+            "show"
+        );
+
     }
 
-    modal?.classList.remove(
-        "show"
-    );
 }
 
+function afterIncident(kind){
 
-/* =========================================================
-   DELETE CAT
-========================================================= */
-
-async function deleteCurrentCat(){
-
-    const cat=
-        cats.find(
-            c=>c.id===currentCatId
+    $("afterIncidentModal")
+        .classList.remove(
+            "show"
         );
 
-    if(!cat){
-        return;
-    }
+    let text="";
 
-    if(
-        !confirm(
-            'Naozaj chceš odstrániť páchateľa "'+
-            cat.name+
-            '"?'
-        )
-    ){
+    if(kind==="vet"){
 
-        return;
-    }
-
-    const evidenceIds=
-        (cat.incidents || [])
-        .map(
-            incident=>
-                incident.evidenceId
-        )
-        .filter(Boolean);
-
-    cats=
-        cats.filter(
-            c=>c.id!==currentCatId
-        );
-
-    if(!saveDatabase()){
-
-        showError(
-            "Páchateľa sa nepodarilo odstrániť",
-            "Úložisko zariadenia odmietlo zmenu."
-        );
-
-        return;
-    }
-
-    for(
-        const evidenceId
-        of evidenceIds
-    ){
-
-        try{
-
-            await evidenceDelete(
-                evidenceId
-            );
-
-        }catch(error){}
+        text=
+            "Veterinár bol upozornený. Páchateľ tvrdí, že nič nezjedol.";
 
     }
 
-    currentCatId=null;
+    if(kind==="police"){
 
-    openScreen("home");
+        text=
+            "Polícia bola imaginárne kontaktovaná. Operátor odporučil mačku nestrácať z dohľadu.";
+
+    }
+
+    if(kind==="ignore"){
+
+        text=
+            "Rozumné rozhodnutie. Páchateľ už pravdepodobne plánuje ďalší incident.";
+
+    }
+
+    showFun(
+        "ČO TERAZ?",
+        text,
+        []
+    );
+
 }
 
 
@@ -6565,150 +4563,87 @@ function buildCriminalFile(){
     const stats=
         getProfileStats(cat);
 
-    const rows=
-        cat.incidents
-        .slice()
-        .reverse()
-        .map(
-            incident=>{
+    const incidentRows=
+        cat.incidents.length
+        ? cat.incidents.map(
+            incident=>`
 
-                const item=
-                    incidents.find(
-                        i=>i.id===incident.type
-                    );
+            <tr>
 
-                const date=
-                    new Date(
-                        incident.date
-                    );
+                <td>
+                    ${escapeHtml(incident.date || "—")}
+                </td>
 
-                return `
+                <td>
+                    ${escapeHtml(
+                        (
+                            incidents.find(
+                                i=>i.id===incident.type
+                            ) || {}
+                        ).title ||
+                        incident.type
+                    )}
+                </td>
 
-                <tr>
+                <td>
+                    ${escapeHtml(
+                        incident.note ||
+                        "Bez poznámky"
+                    )}
+                </td>
 
-                    <td>
-                        ${
-                            date.toLocaleDateString(
-                                "sk-SK"
-                            )
-                        }
+                <td>
+                    ${
+                        incident.evidenceId
+                        ? (
+                            incident.evidenceType==="video"
+                            ? "VIDEO"
+                            : "FOTO"
+                        )
+                        : "—"
+                    }
+                </td>
 
-                        ${
-                            date.toLocaleTimeString(
-                                "sk-SK",
-                                {
-                                    hour:"2-digit",
-                                    minute:"2-digit"
-                                }
-                            )
-                        }
-                    </td>
-
-                    <td>
-                        ${
-                            escapeHtml(
-                                item
-                                ? item.title
-                                : incident.type
-                            )
-                        }
-                    </td>
-
-                    <td>
-                        ${
-                            escapeHtml(
-                                incident.note ||
-                                "—"
-                            )
-                        }
-                    </td>
-
-                    <td>
-                        ${
-                            incident.evidenceId
-                            ? (
-                                incident.evidenceType==="video"
-                                ? "VIDEO"
-                                : "FOTO"
-                              )
-                            : "—"
-                        }
-                    </td>
-
-                </tr>
-
-                `;
-
-            }
-        )
-        .join("");
-
-    const top=
-        stats.top
-        ? (
-            incidents.find(
-                i=>i.id===stats.top
-            ) || {}
-          ).title ||
-          stats.top
-        : "Žiadny evidovaný zločin";
+            </tr>
+            `
+        ).join("")
+        : `
+        <tr>
+            <td colspan="4">
+                Žiadne evidované incidenty.
+            </td>
+        </tr>
+        `;
 
     return `
 
-    <div
-        class="criminal-paper"
-        id="criminalPaper"
-    >
+    <div class="criminal-paper">
 
         <div class="paper-top">
 
             <div class="paper-small">
-
                 MEDZINÁRODNÝ SÚDNY DVOR
-                PRE KRIVDY SPÁCHANÉ MAČKAMI
-
             </div>
 
             <div class="paper-title">
-                CAT NOSE ID
+                KRIMINÁLNY VÝPIS
             </div>
 
             <div class="paper-subtitle">
-
-                CENTRÁLNY REGISTER
-                MAČACÍCH PÁCHATEĽOV
-
-            </div>
-
-            <div
-                class="paper-title"
-                style="font-size:21px"
-            >
-
-                KRIMINÁLNY SPIS PÁCHATEĽA
-
+                REGISTER MAČACEJ KRIMINALITY
             </div>
 
         </div>
-
 
         <div class="paper-stamp">
-
-            PRÍPAD
-            <br>
-            OVERENÝ
-            <br>
-            NOSOM
-
+            OFICIÁLNE OVERENÉ
         </div>
-
 
         <div class="paper-section">
 
             <h3>
-                Identifikácia páchateľa
+                IDENTIFIKÁCIA PÁCHATEĽA
             </h3>
-
 
             <div class="paper-profile">
 
@@ -6716,17 +4651,11 @@ function buildCriminalFile(){
 
                     ${
                         cat.photo
-                        ? `
-                            <img
-                                src="${cat.photo}"
-                                alt="Páchateľ"
-                            >
-                          `
+                        ? `<img src="${cat.photo}" alt="">`
                         : "🐱"
                     }
 
                 </div>
-
 
                 <div class="paper-fields">
 
@@ -6741,18 +4670,30 @@ function buildCriminalFile(){
                     </div>
 
                     <div>
-                        <b>WANTED LEVEL:</b>
+                        <b>Stupeň nebezpečnosti:</b>
                         ${escapeHtml(stats.level)}
                     </div>
 
                     <div>
                         <b>Najčastejší zločin:</b>
-                        ${escapeHtml(top)}
+                        ${escapeHtml(
+                            stats.top
+                            ? (
+                                incidents.find(
+                                    i=>i.id===stats.top
+                                ) || {}
+                            ).title || stats.top
+                            : "Žiadny"
+                        )}
                     </div>
 
                     <div>
-                        <b>Stav:</b>
-                        AKTÍVNY PÁCHATEĽ
+                        <b>Posledná biometrická zhoda:</b>
+                        ${
+                            cat.lastMatch
+                            ? cat.lastMatch+"%"
+                            : "Neuvedená"
+                        }
                     </div>
 
                 </div>
@@ -6761,44 +4702,34 @@ function buildCriminalFile(){
 
         </div>
 
-
         <div class="paper-section">
 
             <h3>
-                Trestný register
+                EVIDOVANÉ SKUTKY
             </h3>
 
-            ${
-                rows
-                ? `
-                <table class="paper-table">
+            <table class="paper-table">
 
-                    <thead>
+                <thead>
 
-                        <tr>
-                            <th>Dátum</th>
-                            <th>Incident</th>
-                            <th>Poznámka</th>
-                            <th>Dôkaz</th>
-                        </tr>
+                    <tr>
+                        <th>Dátum</th>
+                        <th>Skutok</th>
+                        <th>Poznámka</th>
+                        <th>Dôkaz</th>
+                    </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody>
-                        ${rows}
-                    </tbody>
+                <tbody>
 
-                </table>
-                `
-                : `
-                <p>
-                    Žiadne evidované incidenty.
-                </p>
-                `
-            }
+                    ${incidentRows}
+
+                </tbody>
+
+            </table>
 
         </div>
-
 
         <div class="paper-notice">
 
@@ -6823,7 +4754,6 @@ function buildCriminalFile(){
 
         </div>
 
-
         <div style="text-align:center">
 
             <div class="paper-seal">
@@ -6839,7 +4769,6 @@ function buildCriminalFile(){
             </div>
 
         </div>
-
 
         <div class="paper-footer">
 
@@ -6870,6 +4799,7 @@ function buildCriminalFile(){
     </div>
 
     `;
+
 }
 
 function generateCriminalFile(){
@@ -6878,21 +4808,23 @@ function generateCriminalFile(){
         return;
     }
 
-    document
-        .getElementById("paperContainer")
-        .innerHTML=
-            buildCriminalFile();
+    $("paperContainer").innerHTML=
+        buildCriminalFile();
 
-    document
-        .getElementById("fileModal")
-        .classList.add("show");
+    $("fileModal")
+        .classList.add(
+            "show"
+        );
+
 }
 
 function closeFileModal(){
 
-    document
-        .getElementById("fileModal")
-        .classList.remove("show");
+    $("fileModal")
+        .classList.remove(
+            "show"
+        );
+
 }
 
 
@@ -6915,7 +4847,7 @@ function downloadCriminalFile(){
 
 <!doctype html>
 
-<html lang="sk">
+<html lang="${currentLanguage}">
 
 <head>
 
@@ -7144,7 +5076,9 @@ ${buildCriminalFile()}
         safeFileName(cat.name)+
         ".html";
 
-    document.body.appendChild(link);
+    document.body.appendChild(
+        link
+    );
 
     link.click();
 
@@ -7152,10 +5086,13 @@ ${buildCriminalFile()}
 
     setTimeout(
         ()=>{
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(
+                url
+            );
         },
         1500
     );
+
 }
 
 
@@ -7181,7 +5118,7 @@ async function shareCriminalFile(){
 
 <!doctype html>
 
-<html lang="sk">
+<html lang="${currentLanguage}">
 
 <head>
 
@@ -7250,13 +5187,14 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
                     title:
                         "CAT NOSE ID — Kriminálny spis",
 
-                    text:text,
+                    text,
 
                     files:[file]
 
                 });
 
                 return;
+
             }
 
             await navigator.share({
@@ -7264,11 +5202,12 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
                 title:
                     "CAT NOSE ID — Kriminálny spis",
 
-                text:text
+                text
 
             });
 
             return;
+
         }
 
         if(navigator.clipboard){
@@ -7284,6 +5223,7 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
             );
 
             return;
+
         }
 
         showFun(
@@ -7311,14 +5251,14 @@ Vytvorené pre zábavu spoločnosťou FUN ON pre FunOn Park Bratislava.`;
             "Telefón odmietol systémové zdieľanie. Skús to ešte raz alebo použi stiahnutie spisu.",
             []
         );
+
     }
+
 }
 
 
 /* =========================================================
    AI INTEGRATION PLACEHOLDER
-   Sem sa neskôr napojí skutočný AI výsledok.
-   Žiadne demo rozpoznanie.
 ========================================================= */
 
 function showAiResult(
@@ -7335,7 +5275,8 @@ function showAiResult(
         return;
     }
 
-    currentCatId=cat.id;
+    currentCatId=
+        cat.id;
 
     if(
         Number.isFinite(
@@ -7350,23 +5291,18 @@ function showAiResult(
 
     }
 
-    document
-        .getElementById(
-            "identifiedName"
-        )
+    $("identifiedName")
         .textContent=
             cat.name;
 
-    document
-        .getElementById(
-            "identifiedConfidence"
-        )
+    $("identifiedConfidence")
         .textContent=
             Number(confidence)+"%";
 
     openScreen(
         "identified"
     );
+
 }
 
 
@@ -7379,91 +5315,231 @@ function showError(
     text
 ){
 
-    document
-        .getElementById("errorTitle")
-        .textContent=title;
+    showFun(
+        "⚠️ "+title,
+        text,
+        []
+    );
 
-    document
-        .getElementById("errorText")
-        .textContent=text;
-
-    openScreen("error");
 }
 
 
 /* =========================================================
-   ESCAPE KEY
+   NAVIGATION
 ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    event=>{
+const navigationHistory=[];
 
-        if(event.key!=="Escape"){
-            return;
+let navigationBusy=false;
+
+function openScreen(
+    id,
+    options={}
+){
+
+    const current=
+        document.querySelector(
+            ".screen.active"
+        );
+
+    const currentId=
+        current
+        ? current.id
+        : null;
+
+    if(
+        currentId &&
+        currentId!==id &&
+        !options.replace
+    ){
+
+        navigationHistory.push(
+            currentId
+        );
+
+    }
+
+    document
+        .querySelectorAll(
+            ".screen"
+        )
+        .forEach(
+            screen=>{
+                screen.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+    const target=
+        $(id);
+
+    if(!target){
+        return;
+    }
+
+    target.classList.add(
+        "active"
+    );
+
+    window.scrollTo(
+        {
+            top:0,
+            behavior:"instant"
         }
+    );
 
-        if(
-            document
-            .getElementById(
-                "evidenceCameraModal"
-            )
-            ?.classList.contains("show")
-        ){
+    if(id==="catFile"){
+        renderCurrentCat();
+    }
 
-            closeEvidenceCamera();
-            return;
+    if(id==="cats"){
+        renderCatList();
+    }
+
+    if(id==="incident"){
+        renderIncidentOptions();
+        updateIncidentDate();
+    }
+
+}
+
+function goBack(){
+
+    if(navigationBusy){
+        return;
+    }
+
+    navigationBusy=true;
+
+    const previous=
+        navigationHistory.pop();
+
+    if(previous){
+
+        openScreen(
+            previous,
+            {
+                replace:true
+            }
+        );
+
+    }else{
+
+        openScreen(
+            "home",
+            {
+                replace:true
+            }
+        );
+
+    }
+
+    setTimeout(
+        ()=>{
+            navigationBusy=false;
+        },
+        50
+    );
+
+}
+
+function initializeNavigation(){
+
+    window.addEventListener(
+        "popstate",
+        event=>{
+
+            event.preventDefault();
+
+            goBack();
+
         }
+    );
 
-        if(
-            document
-            .getElementById(
-                "funModal"
-            )
-            ?.classList.contains("show")
-        ){
+    document.addEventListener(
+        "keydown",
+        event=>{
 
-            closeModal();
-            return;
-        }
+            if(
+                event.key!=="Escape"
+            ){
+                return;
+            }
 
-        if(
-            document
-            .getElementById(
-                "afterIncidentModal"
-            )
-            ?.classList.contains("show")
-        ){
-
-            document
-                .getElementById(
-                    "afterIncidentModal"
+            if(
+                $("evidenceCameraModal")
+                ?.classList.contains(
+                    "show"
                 )
-                .classList.remove("show");
+            ){
 
-            return;
+                closeEvidenceCamera();
+                return;
+
+            }
+
+            if(
+                $("funModal")
+                ?.classList.contains(
+                    "show"
+                )
+            ){
+
+                closeModal();
+                return;
+
+            }
+
+            if(
+                $("afterIncidentModal")
+                ?.classList.contains(
+                    "show"
+                )
+            ){
+
+                $("afterIncidentModal")
+                    .classList.remove(
+                        "show"
+                    );
+
+                return;
+
+            }
+
+            if(
+                $("fileModal")
+                ?.classList.contains(
+                    "show"
+                )
+            ){
+
+                closeFileModal();
+                return;
+
+            }
+
+            goBack();
+
         }
+    );
 
+}
+
+window.addEventListener(
+    "popstate",
+    ()=>{
         if(
-            document
-            .getElementById(
-                "fileModal"
-            )
-            ?.classList.contains("show")
+            !navigationHistory.length
         ){
-
-            closeFileModal();
             return;
         }
-
-        goBack();
-
     }
 );
 
 
 /* =========================================================
-   CLICK OUTSIDE MODALS
+   MODAL OUTSIDE CLICK
 ========================================================= */
 
 document.addEventListener(
@@ -7471,27 +5547,20 @@ document.addEventListener(
     event=>{
 
         const evidenceModal=
-            document.getElementById(
-                "evidenceCameraModal"
-            );
+            $("evidenceCameraModal");
 
         const funModal=
-            document.getElementById(
-                "funModal"
-            );
+            $("funModal");
 
         const fileModal=
-            document.getElementById(
-                "fileModal"
-            );
+            $("fileModal");
 
         const afterModal=
-            document.getElementById(
-                "afterIncidentModal"
-            );
+            $("afterIncidentModal");
 
         if(
-            event.target===evidenceModal
+            event.target===
+            evidenceModal
         ){
 
             closeEvidenceCamera();
@@ -7499,7 +5568,8 @@ document.addEventListener(
         }
 
         if(
-            event.target===funModal
+            event.target===
+            funModal
         ){
 
             closeModal();
@@ -7507,7 +5577,8 @@ document.addEventListener(
         }
 
         if(
-            event.target===fileModal
+            event.target===
+            fileModal
         ){
 
             closeFileModal();
@@ -7515,7 +5586,8 @@ document.addEventListener(
         }
 
         if(
-            event.target===afterModal
+            event.target===
+            afterModal
         ){
 
             afterModal.classList.remove(
@@ -7529,6 +5601,43 @@ document.addEventListener(
 
 
 /* =========================================================
+   START SCAN PLACEHOLDER
+========================================================= */
+
+$("startScanButton")
+    ?.addEventListener(
+        "click",
+        ()=>{
+
+            showFun(
+                "📷 SKENOVANIE",
+                `
+                Kamera a AI identifikácia
+                budú pripojené v ďalšej fáze.
+                <br><br>
+                Aplikácia je na túto funkcionalitu
+                pripravená.
+                `,
+                []
+            );
+
+        }
+    );
+
+$("openCatsButton")
+    ?.addEventListener(
+        "click",
+        ()=>{
+
+            openScreen(
+                "cats"
+            );
+
+        }
+    );
+
+
+/* =========================================================
    INIT
 ========================================================= */
 
@@ -7538,6 +5647,8 @@ document.addEventListener(
 
         loadDatabase();
 
+        initializeLanguage();
+
         renderCatList();
 
         renderIncidentOptions();
@@ -7545,62 +5656,6 @@ document.addEventListener(
         updateIncidentDate();
 
         selectIncidentEvidenceNone();
-
-        const addIncidentButton=
-            document.getElementById(
-                "addIncidentButton"
-            );
-
-        if(addIncidentButton){
-
-            addIncidentButton.addEventListener(
-                "click",
-                ()=>{
-
-                    if(!currentCatId){
-
-                        showError(
-                            "Nie je vybraná mačka",
-                            "Najprv otvor konkrétny CAT FILE."
-                        );
-
-                        return;
-                    }
-
-                    const cat=
-                        cats.find(
-                            c=>c.id===currentCatId
-                        );
-
-                    if(!cat){
-
-                        showError(
-                            "Profil sa nenašiel",
-                            "Tento profil už neexistuje."
-                        );
-
-                        return;
-                    }
-
-                    document
-                        .getElementById(
-                            "incidentCatName"
-                        )
-                        .textContent=
-                            "Čo dnes spáchal/a "+
-                            cat.name+
-                            "?";
-
-                    renderIncidentOptions();
-
-                    updateIncidentDate();
-
-                    openScreen("incident");
-
-                }
-            );
-
-        }
 
         initializeNavigation();
 
